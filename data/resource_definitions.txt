@@ -1,0 +1,14 @@
+# sign / global (G=global L = local) / name 
+MO,Y,Money
+IR,N,Iron
+FO,N,Food
+WD,N,Wood
+WO,N,Worker
+XP,Y,Experience
+ST,N,Stones
+BR,N,Bricks
+LU,N,Lumber
+CS,N,CutStone
+CO,N,Copper
+GL,N,Glass
+SA,N,Sand

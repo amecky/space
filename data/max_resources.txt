@@ -1,0 +1,13 @@
+# home base level 1 
+# building_id level resource_id amount
+HB,1,WD,500 
+HB,1,FO,500
+# hut
+HT,1,WO,1
+HT,2,WO,2
+HT,3,WO,3
+HT,4,WO,4
+# warehouse
+WH,1,FO,250 
+WH,1,WD,250
+

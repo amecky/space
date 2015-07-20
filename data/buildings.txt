@@ -1,0 +1,42 @@
+#,Sign,size_x,size_y,Permanent,Regular,max_count,destructable (Y/N),Name
+HB,2,2,N,Y,1,N,HomeBase
+# Houses
+HT,1,1,N,Y,3,Y,Hut
+HN,1,1,N,Y,3,Y,Nice Hut
+HO,2,1,N,Y,3,Y,House
+CH,2,1,N,Y,3,Y,Cozy House
+CO,2,1,N,Y,3,Y,Cottage
+MA,2,2,N,Y,3,Y,Mansion
+VI,3,3,N,Y,3,Y,Villa
+HH,3,3,N,Y,3,Y,House Hold
+CD,3,3,N,Y,3,Y,Coral Household
+FH,3,3,N,Y,3,Y,Fortress House
+TH,3,3,N,Y,3,Y,Tower House
+MH,3,3,N,Y,3,Y,Mud House
+MU,3,3,N,Y,3,Y,Mushroom House
+RH,3,3,N,Y,3,Y,Rock House
+# Resource buildings
+PA,2,2,N,N,-1,Y,Patch
+FR,2,2,N,N,3,Y,Foresters Hut
+AB,2,2,N,N,3,Y,Ancient Bar
+WH,3,3,N,N,-1,N,Warehouse
+QA,2,2,N,N,-1,Y,Quarry
+LH,3,2,N,N,-1,Y,Lumber Mill
+SM,3,3,N,N,-1,Y,Stone Mill
+PF,3,3,N,N,-1,Y,Pig Farm
+MP,2,2,N,N,-1,Y,Marble Pit
+SP,2,2,N,N,-1,Y,Sand Pit
+MM,3,3,N,N,-1,Y,Marble Processing Pit
+CM,2,2,N,N,-1,Y,Coral Mining
+LB,3,3,N,N,-1,Y,Laboratory
+FO,3,3,N,N,-1,Y,Foundry
+PR,3,3,N,N,-1,Y,Paint Factory
+CW,3,3,N,N,-1,Y,Coal Workshop
+PO,3,3,N,N,-1,Y,Polunarium Factory
+# Social buildings
+CF,2,2,N,N,-1,Y,Cafeteria
+# Simple resources
+BB,1,1,N,Y,-1,Y,Berry Brush
+FT,1,1,N,N,-1,Y,Fruits
+TR,1,1,N,N,-1,Y,Tree
+AT,1,1,N,N,-1,Y,Apple Tree

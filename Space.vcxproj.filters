@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{a7f0842a-56da-4584-ab53-b5d08f78ddf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{78adfb6a-35e3-4d8e-bdfd-7d307d520783}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="registry.txt">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="requirements.txt">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="buildings.txt">
+      <Filter>resources</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GlobalTimer.h" />
+    <ClInclude Include="Parser.h" />
+    <ClInclude Include="PriceRegistry.h" />
+    <ClInclude Include="Resources.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="World.h" />
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="WorkQueue.h" />
+    <ClInclude Include="files.h" />
+    <ClInclude Include="Tiles.h" />
+    <ClInclude Include="CSVFile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GlobalTimer.cpp" />
+    <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="PriceRegistry.cpp" />
+    <ClCompile Include="Space.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="World.cpp" />
+    <ClCompile Include="WorkQueue.cpp" />
+    <ClCompile Include="files.cpp" />
+    <ClCompile Include="CSVFile.cpp" />
+    <ClCompile Include="Resources.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="resource_definitions.txt">
+      <Filter>resources</Filter>
+    </Text>
+    <Text Include="max_resources.txt">
+      <Filter>resources</Filter>
+    </Text>
+    <Text Include="data\12.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="data\buildings.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="data\max_resources.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="data\registry.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="data\requirements.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="data\resource_definitions.txt">
+      <Filter>data</Filter>
+    </Text>
+    <Text Include="data\tasks.txt">
+      <Filter>data</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
