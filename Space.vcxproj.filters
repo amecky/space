@@ -23,32 +23,7 @@
     <None Include="buildings.txt">
       <Filter>resources</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GlobalTimer.h" />
-    <ClInclude Include="Parser.h" />
-    <ClInclude Include="PriceRegistry.h" />
-    <ClInclude Include="Resources.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="World.h" />
-    <ClInclude Include="Common.h" />
-    <ClInclude Include="WorkQueue.h" />
-    <ClInclude Include="files.h" />
-    <ClInclude Include="Tiles.h" />
-    <ClInclude Include="CSVFile.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="GlobalTimer.cpp" />
-    <ClCompile Include="Parser.cpp" />
-    <ClCompile Include="PriceRegistry.cpp" />
-    <ClCompile Include="Space.cpp" />
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="World.cpp" />
-    <ClCompile Include="WorkQueue.cpp" />
-    <ClCompile Include="files.cpp" />
-    <ClCompile Include="CSVFile.cpp" />
-    <ClCompile Include="Resources.cpp" />
+    <None Include="src\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="resource_definitions.txt">
@@ -78,5 +53,31 @@
     <Text Include="data\tasks.txt">
       <Filter>data</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\CSVFile.h" />
+    <ClInclude Include="src\files.h" />
+    <ClInclude Include="src\GlobalTimer.h" />
+    <ClInclude Include="src\Parser.h" />
+    <ClInclude Include="src\PriceRegistry.h" />
+    <ClInclude Include="src\Resources.h" />
+    <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\targetver.h" />
+    <ClInclude Include="src\Tiles.h" />
+    <ClInclude Include="src\WorkQueue.h" />
+    <ClInclude Include="src\World.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\CSVFile.cpp" />
+    <ClCompile Include="src\files.cpp" />
+    <ClCompile Include="src\GlobalTimer.cpp" />
+    <ClCompile Include="src\Parser.cpp" />
+    <ClCompile Include="src\PriceRegistry.cpp" />
+    <ClCompile Include="src\Resources.cpp" />
+    <ClCompile Include="src\Space.cpp" />
+    <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="src\WorkQueue.cpp" />
+    <ClCompile Include="src\World.cpp" />
   </ItemGroup>
 </Project>
