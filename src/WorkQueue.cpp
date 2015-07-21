@@ -65,7 +65,7 @@ void WorkQueue::createWork(int price_type,int x,int y, int building_id, int leve
 	_queue.push_back(item);	
 }
 
-void WorkQueue::show() {
+void WorkQueue::show() const {
 	printf("Queue:\n");
 	for ( size_t i = 0; i < _queue.size(); ++i ) {
 		int remaining = _queue[i].duration - _queue[i].timer;

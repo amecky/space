@@ -5,18 +5,19 @@
 // ------------------------------------------------------
 // CSVLine
 // ------------------------------------------------------
-TextLine::TextLine(const std::string& str) {
+TextLine::TextLine(const std::string& str) : _delimiter(',') {
 	set(str);
 }
 
 void TextLine::set(const std::string& str,const char delimiter) {
 	_content = str;
 	_num_delimiters = 0;
+	_delimiter = delimiter;
 	for ( int i = 0; i < _content.length();++i ) {
 		if ( _content[i] == delimiter ) {
 			++_num_delimiters;
 		}
-	}
+	}	
 }
 
 const int TextLine::num_tokens() const {
@@ -31,7 +32,7 @@ const int TextLine::find_pos(int field_index) const {
 	}
 	int cnt = 0;
 	for ( int i = 0; i < _content.length();++i ) {
-		if ( _content[i] == ',' ) {
+		if ( _content[i] == _delimiter ) {
 			++cnt;
 		}
 		if ( cnt == field_index ) {

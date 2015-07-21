@@ -98,7 +98,7 @@
     <ClInclude Include="src\Parser.h" />
     <ClInclude Include="src\PriceRegistry.h" />
     <ClInclude Include="src\Resources.h" />
-    <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="src\targetver.h" />
     <ClInclude Include="src\Tiles.h" />
     <ClInclude Include="src\WorkQueue.h" />
@@ -111,8 +111,8 @@
     <ClCompile Include="src\Parser.cpp" />
     <ClCompile Include="src\PriceRegistry.cpp" />
     <ClCompile Include="src\Resources.cpp" />
+    <ClCompile Include="src\Simulation.cpp" />
     <ClCompile Include="src\Space.cpp" />
-    <ClCompile Include="src\stdafx.cpp" />
     <ClCompile Include="src\WorkQueue.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>

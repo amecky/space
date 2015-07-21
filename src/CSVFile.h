@@ -20,6 +20,7 @@ public:
 private:
 	int _num_delimiters;
 	std::string _content;
+	char _delimiter;
 };
 
 class CSVFile {

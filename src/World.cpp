@@ -207,7 +207,7 @@ void Island::showResources(const Resources& res,bool complete) {
 // ------------------------------------------------------
 // show status
 // ------------------------------------------------------
-void Island::status() {	
+void Island::status() const {	
 	printf("Global Resources:\n");
 	for (int i = 0; i < _context->resource_registry.size(); ++i) {
 		if (_context->resource_registry.isGlobal(i)) {
@@ -239,7 +239,7 @@ void Island::showBuildingDefinitions() {
 // ------------------------------------------------------
 // show map
 // ------------------------------------------------------
-void Island::showMap(int centerX, int centerY) {
+void Island::showMap(int centerX, int centerY) const {
 
 	int xmin = centerX - 8;
 	int xmax = centerX + 8;
@@ -648,7 +648,7 @@ bool Island::isUsed(int x, int y) {
 // ------------------------------------------------------
 // is collectable - check if building at position has pending collections
 // ------------------------------------------------------
-bool Island::isCollectable(int x,int y) {
+bool Island::isCollectable(int x,int y) const {
 	for ( size_t i = 0; i < _collectables.size(); ++i ) {
 		if ( _collectables[i].tile_x == x && _collectables[i].tile_y == y ) {
 			return true;
@@ -664,6 +664,7 @@ World::World() : _selected(-1) {
 	_context.price_registry.load_requirements();
 	_context.price_registry.load_max_resources();
 	_context.collect_mode = CM_IMMEDIATE;
+	_context.time_multiplier = 1;
 }
 
 Island* World::createIsland() {
@@ -683,8 +684,12 @@ Island* World::createIsland() {
 	return i;
 }
 
-Island* World::getIsland(int index) {
+const Island* World::getIsland(int index) const {
 	return _islands[index];
+}
+
+const Island* World::getSelectedIsland() const {
+	return _islands[_selected];
 }
 
 void World::selectIsland(int index) {
@@ -744,4 +749,8 @@ void World::load() {
 		}
         fclose(f);
     }
+}
+
+const WorldContext* World::getContext() const {
+	return &_context;
 }

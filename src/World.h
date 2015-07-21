@@ -23,7 +23,7 @@ struct WorldContext {
 	BuildingRegistry building_definitions;
 	ResourceRegistry resource_registry;
 	CollectMode collect_mode;
-
+	int time_multiplier;
 	WorldContext() : price_registry(&resource_registry,&building_definitions) {}
 };
 
@@ -56,8 +56,8 @@ public:
 	void add(int x,int y,const Sign& s);
 	void addResource(const Sign& sign,int value);
 	void addResource(const char* sign,int value);
-	void status();
-	void showMap(int centerX,int centerY);
+	void status() const;
+	void showMap(int centerX,int centerY) const;
 	void showBuildingDefinitions();
 	bool start(int x,int y,int level);
 	bool upgrade(int x,int y);
@@ -75,7 +75,7 @@ private:
 	void calculateMaxResources();
 	bool is_available(const Resources& costs);
 	bool isUsed(int x, int y);
-	bool isCollectable(int x,int y);
+	bool isCollectable(int x,int y) const;
 	void showResources(const Resources& res,bool complete = true);
 	void addResources(const Resources& r);
 	void subResources(const Resources& r);
@@ -100,12 +100,14 @@ public:
 		}
 	}
 	Island* createIsland();
-	Island* getIsland(int index);
+	const Island* getIsland(int index) const;
+	const Island* getSelectedIsland() const;
 	void selectIsland(int index);
 	void tick(int timeUnits);
 	void addResource(const Sign& sign, int value);
 	void save();
 	void load();
+	const WorldContext* getContext() const;
 private:
 	int _selected;
 	Islands _islands;

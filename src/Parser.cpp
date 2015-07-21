@@ -88,7 +88,6 @@ namespace parse {
 		CommandLine cl;
 		
 		cl.line.set(p,' ');
-
 		cl.type = Token::TOK_UNKNOWN;
 
 		if ( cl.line.num_tokens() > 0 ) {
@@ -98,65 +97,13 @@ namespace parse {
 			for ( int i = 0; i < NUM_TOKENS; ++i ) {
 				if (strncmp(TOKENS[i].name, buffer, len) == 0 && strlen(TOKENS[i].name) == len ) {
 					idx = i;
+					cl.type = TOKENS[i].type;
 				}
 			}
-			if ( idx != -1 ) {
-				cl.type = TOKENS[idx].type;
-				int pc = TOKENS[idx].param_count;
-				if ( cl.line.num_tokens() != (pc +1 )) {
-					printf("Missing argument\n");
-				}
+			if ( idx == -1 ) {							
+				printf("Illegal command: %s\n",buffer);
 			}
-		}
-		/*
-        int cnt = 0;
-        int dataIndex = 0;
-        while (*p != 0) {
-            if (str::isCharacter(*p)) {
-                const char* ident = p;
-                while (str::isCharacter(*p)) {
-                    ++p;
-                }
-				int del = p - ident;
-				int idx = -1;
-				for ( int i = 0; i < NUM_TOKENS; ++i ) {
-					if (strncmp(TOKENS[i].name, ident, del) == 0 && strlen(TOKENS[i].name) == del ) {
-						idx = i;
-					}
-				}
-				if ( idx == -1 ) {
-					printf("Error: Unknown command line\n");
-					idx = 0;
-				}						
-				else {
-					cl.type = TOKENS[idx].type;
-					int pc = TOKENS[idx].param_count;
-					int cnt = 0;
-					while ( *p != 0) {
-                        ++p;
-                        while (str::isWhitespace(*p)) {
-                            ++p;
-                        }
-                        if (str::isDigit(*p)) {
-                            char* out;
-                            float value = str::strtof(p, &out);
-                            p = out;
-							cl.values[cnt++] = value;
-                        }
-                    }
-
-					cl.count = cnt;					
-					if (cnt != pc) {
-						printf("Missing arguments!!\n");
-						cl.type = Token::TOK_UNKNOWN;
-					}
-                }
-            }
-			else {
-                ++p;
-            }
-        }
-		*/
+		}		
 		return cl;
 	}
 }

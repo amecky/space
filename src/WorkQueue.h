@@ -83,7 +83,7 @@ public:
 	const int event_size() const {
 		return _buffer.size;
 	}
-	void show();
+	void show() const;
 	void save(FILE* f);
 	void load(FILE* f);
 private:
