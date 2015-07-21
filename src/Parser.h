@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include "CSVFile.h"
 
 struct Token {
 
@@ -40,6 +42,7 @@ struct CommandLine {
 		}
 	}
 
+	TextLine line;
 };
 
 namespace parse {

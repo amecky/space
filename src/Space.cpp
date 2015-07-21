@@ -23,6 +23,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 		std::cout << "Turn: ";
 		std::cin.getline(buffer,256);
 		CommandLine line = parse::extract(buffer);
+		
 		if ( line.type == Token::TOK_QUIT ) {
 			world.save();
 			running = false;

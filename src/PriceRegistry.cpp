@@ -14,7 +14,7 @@ void ResourceRegistry::load() {
 	CSVFile file;
 	if ( file.load("resource_definitions.txt","data") ) {
 		for ( size_t i = 0; i < file.size(); ++i ) {
-			const CSVLine& l = file.get(i);
+			const TextLine& l = file.get(i);
 			ResourceDefinition def;
 			def.id = i;
 			def.sign = l.get_sign(0);
@@ -58,7 +58,7 @@ void BuildingRegistry::load() {
 	// HB,2,2,N,Y,1,S,HomeBase
 	if ( file.load("buildings.txt","data") ) {
 		for ( size_t i = 0; i < file.size(); ++i ) {
-			const CSVLine& l = file.get(i);
+			const TextLine& l = file.get(i);
 			BuildingDefinition def;
 			def.id = i;
 			def.sign = l.get_sign(0);
@@ -202,7 +202,7 @@ void PriceRegistry::load(const char* fileName) {
 	CSVFile file;
 	if ( file.load(fileName,"data") ) {
 		for ( size_t i = 0; i < file.size(); ++i ) {
-			const CSVLine& l = file.get(i);
+			const TextLine& l = file.get(i);
 			RegistryEntry entry;
 			Sign s = l.get_sign(0);
 			entry.building_type = _building_registry->getIndex(s);
@@ -243,7 +243,7 @@ void PriceRegistry::load_requirements() {
 	CSVFile file;
 	if ( file.load("requirements.txt","data") ) {
 		for ( size_t i = 0; i < file.size(); ++i ) {
-			const CSVLine& l = file.get(i);
+			const TextLine& l = file.get(i);
 			BuildRequirement br;
 			Sign s = l.get_sign(0);
 			br.building_type = _building_registry->getIndex(s);
@@ -265,7 +265,7 @@ void PriceRegistry::load_max_resources() {
 	CSVFile file;
 	if ( file.load("max_resources.txt","data") ) {
 		for ( size_t i = 0; i < file.size(); ++i ) {
-			const CSVLine& l = file.get(i);
+			const TextLine& l = file.get(i);
 			MaxResourceDefinition def;
 			// HB,1,WD,500 
 			Sign s = l.get_sign(0);

@@ -5,20 +5,27 @@
 // ------------------------------------------------------
 // CSVLine
 // ------------------------------------------------------
-CSVLine::CSVLine(const std::string& str) {
+TextLine::TextLine(const std::string& str) {
+	set(str);
+}
+
+void TextLine::set(const std::string& str,const char delimiter) {
 	_content = str;
 	_num_delimiters = 0;
 	for ( int i = 0; i < _content.length();++i ) {
-		if ( _content[i] == ',' ) {
+		if ( _content[i] == delimiter ) {
 			++_num_delimiters;
 		}
 	}
 }
 
+const int TextLine::num_tokens() const {
+	return _num_delimiters + 1;
+}
 // ------------------------------------------------------
 // find pos in string for field index
 // ------------------------------------------------------
-const int CSVLine::find_pos(int field_index) const {
+const int TextLine::find_pos(int field_index) const {
 	if ( field_index == 0 ) {
 		return 0;
 	}
@@ -37,7 +44,7 @@ const int CSVLine::find_pos(int field_index) const {
 // ------------------------------------------------------
 // get int
 // ------------------------------------------------------
-const int CSVLine::get_int(int index) const {
+const int TextLine::get_int(int index) const {
 	int idx = find_pos(index);
 	if ( idx != -1 ) {
 		int v;
@@ -58,17 +65,19 @@ const int CSVLine::get_int(int index) const {
 // ------------------------------------------------------
 // get string
 // ------------------------------------------------------
-void CSVLine::get_string(int index,char* dest) const {
+int TextLine::get_string(int index,char* dest) const {
 	int idx = find_pos(index);
 	if ( idx != -1 ) {
 		int npos = find_pos(index+1);
 		if ( npos != -1 ) {			
 			std::string str = _content.substr(idx,npos-idx-1);		
 			strcpy(dest,str.c_str());
+			return str.length();
 		}
 		else {
 			std::string str = _content.substr(idx);		
 			strcpy(dest,str.c_str());
+			return str.length();
 		}
 	}
 }
@@ -76,7 +85,7 @@ void CSVLine::get_string(int index,char* dest) const {
 // ------------------------------------------------------
 // get char
 // ------------------------------------------------------
-const char CSVLine::get_char(int index) const {
+const char TextLine::get_char(int index) const {
 	int idx = find_pos(index);
 	if ( idx != -1 ) {
 		return _content[idx];
@@ -87,7 +96,7 @@ const char CSVLine::get_char(int index) const {
 // ------------------------------------------------------
 // get bool
 // ------------------------------------------------------
-const bool CSVLine::get_bool(int index) const {
+const bool TextLine::get_bool(int index) const {
 	int idx = find_pos(index);
 	if ( idx != -1 ) {
 		char c = _content[idx];
@@ -102,7 +111,7 @@ const bool CSVLine::get_bool(int index) const {
 // ------------------------------------------------------
 // get sign
 // ------------------------------------------------------
-const Sign CSVLine::get_sign(int index) const {
+const Sign TextLine::get_sign(int index) const {
 	int idx = find_pos(index);
 	Sign v;
 	if ( idx != -1 ) {		
@@ -139,7 +148,7 @@ bool CSVFile::load(const char* fileName,const char* directory) {
 		if (myfile.is_open()) {
 			while (std::getline(myfile, line)) {
 				if (line.find("#") == std::string::npos && line.find(",") != std::string::npos) {
-					_lines.push_back(CSVLine(line));					
+					_lines.push_back(TextLine(line));					
 				}
 			}
 			myfile.close();
@@ -151,7 +160,7 @@ bool CSVFile::load(const char* fileName,const char* directory) {
 // ------------------------------------------------------
 // get line
 // ------------------------------------------------------
-const CSVLine& CSVFile::get(int index) const {
+const TextLine& CSVFile::get(int index) const {
 	assert(index >= 0 && index < _lines.size());
 	return _lines[index];
 }

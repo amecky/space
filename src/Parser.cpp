@@ -85,8 +85,30 @@ const int NUM_TOKENS = 18;
 namespace parse {
 
 	CommandLine extract(const char* p) {
-		CommandLine line;
-		line.type = Token::TOK_UNKNOWN;
+		CommandLine cl;
+		
+		cl.line.set(p,' ');
+
+		cl.type = Token::TOK_UNKNOWN;
+
+		if ( cl.line.num_tokens() > 0 ) {
+			char buffer[256];
+			int idx = -1;
+			int len = cl.line.get_string(0,buffer);
+			for ( int i = 0; i < NUM_TOKENS; ++i ) {
+				if (strncmp(TOKENS[i].name, buffer, len) == 0 && strlen(TOKENS[i].name) == len ) {
+					idx = i;
+				}
+			}
+			if ( idx != -1 ) {
+				cl.type = TOKENS[idx].type;
+				int pc = TOKENS[idx].param_count;
+				if ( cl.line.num_tokens() != (pc +1 )) {
+					printf("Missing argument\n");
+				}
+			}
+		}
+		/*
         int cnt = 0;
         int dataIndex = 0;
         while (*p != 0) {
@@ -107,7 +129,7 @@ namespace parse {
 					idx = 0;
 				}						
 				else {
-					line.type = TOKENS[idx].type;
+					cl.type = TOKENS[idx].type;
 					int pc = TOKENS[idx].param_count;
 					int cnt = 0;
 					while ( *p != 0) {
@@ -119,14 +141,14 @@ namespace parse {
                             char* out;
                             float value = str::strtof(p, &out);
                             p = out;
-							line.values[cnt++] = value;
+							cl.values[cnt++] = value;
                         }
                     }
 
-					line.count = cnt;					
+					cl.count = cnt;					
 					if (cnt != pc) {
 						printf("Missing arguments!!\n");
-						line.type = Token::TOK_UNKNOWN;
+						cl.type = Token::TOK_UNKNOWN;
 					}
                 }
             }
@@ -134,7 +156,8 @@ namespace parse {
                 ++p;
             }
         }
-		return line;
+		*/
+		return cl;
 	}
 }
 

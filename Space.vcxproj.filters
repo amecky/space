@@ -5,33 +5,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="resources">
-      <UniqueIdentifier>{a7f0842a-56da-4584-ab53-b5d08f78ddf9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="data">
       <UniqueIdentifier>{78adfb6a-35e3-4d8e-bdfd-7d307d520783}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
-    <None Include="registry.txt">
-      <Filter>resources</Filter>
-    </None>
-    <None Include="requirements.txt">
-      <Filter>resources</Filter>
-    </None>
-    <None Include="buildings.txt">
-      <Filter>resources</Filter>
-    </None>
-    <None Include="src\ReadMe.txt" />
+    <None Include="Todo.md" />
+    <None Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="resource_definitions.txt">
-      <Filter>resources</Filter>
-    </Text>
-    <Text Include="max_resources.txt">
-      <Filter>resources</Filter>
-    </Text>
     <Text Include="data\12.txt">
       <Filter>data</Filter>
     </Text>

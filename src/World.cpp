@@ -598,7 +598,7 @@ void Island::load_txt(int index) {
 	//_queue.clear();
 	if ( file.load("i_d_1.txt","data") ) {
 		for ( size_t i = 0; i < file.size(); ++i ) {
-			const CSVLine& l = file.get(i);
+			const TextLine& l = file.get(i);
 			Sign s = l.get_sign(0);
 			int x = l.get_int(1);
 			int y = l.get_int(2);

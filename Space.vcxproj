@@ -76,11 +76,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="buildings.txt" />
-    <None Include="ReadMe.txt" />
-    <None Include="registry.txt" />
-    <None Include="requirements.txt" />
-    <None Include="src\ReadMe.txt" />
+    <None Include="ReadMe.md" />
+    <None Include="Todo.md" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\12.txt" />
