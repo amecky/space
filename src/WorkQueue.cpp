@@ -44,6 +44,21 @@ void WorkQueue::processQueueCommon(int timeUnits) {
 }
 
 // ------------------------------------------------------
+// remove work at location for specific price_type
+// ------------------------------------------------------
+void WorkQueue::remove(int price_type, int x, int y) {
+	Queue::iterator it = _queue.begin();
+	while (it != _queue.end()) {
+		if ( it->tile_x == x && it->tile_y == y && it->price_index == price_type) {
+			it = _queue.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+}
+
+// ------------------------------------------------------
 // create work item
 // ------------------------------------------------------
 void WorkQueue::createWork(int price_type,int x,int y, int building_id, int level,int duration) {

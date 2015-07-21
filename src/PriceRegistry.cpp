@@ -206,12 +206,16 @@ void PriceRegistry::load(const char* fileName) {
 			RegistryEntry entry;
 			Sign s = l.get_sign(0);
 			entry.building_type = _building_registry->getIndex(s);
+			if (entry.building_type == -1) {
+				printf("ERROR: invalid building type at %d\n", i);
+				l.print();
+			}
 			entry.level = l.get_int(1);
 			entry.price_type = -1;
 			char pt = l.get_char(2);
-			for (int i = 0; i < 6; ++i) {
-				if (pt == PRICE_TYPES[i]) {
-					entry.price_type = i;
+			for (int j = 0; j < 6; ++j) {
+				if (pt == PRICE_TYPES[j]) {
+					entry.price_type = j;
 				}
 			}
 			char flag = l.get_char(3);
@@ -227,6 +231,10 @@ void PriceRegistry::load(const char* fileName) {
 			entry.duration = l.get_int(4);
 			Sign r = l.get_sign(5);
 			entry.resource_id = _resource_registry->getIndex(r);
+			if (entry.resource_id == -1) {
+				printf("ERROR: invalid resource type at %d\n", i);
+				l.print();
+			}
 			entry.amount = l.get_int(6);
 			//printf("-> entry %d %d %d\n",entry.building_type,entry.level,entry.price_type);
 			_entries.push_back(entry);
@@ -300,7 +308,7 @@ void PriceRegistry::add_max_resources(int building_id, int level, Resources* res
 // get index
 // ------------------------------------------------------
 int PriceRegistry::getIndex(int price_type, int stage, int building_type, int level) {
-	printf("get index %d %d %d\n",price_type,stage,building_type,level);
+	//printf("get index %d %d %d\n",price_type,stage,building_type,level);
 	for ( size_t i = 0; i < _entries.size(); ++i ) {
 		RegistryEntry& entry = _entries[i];
 		if (entry.price_type == price_type && entry.level == level && entry.building_type == building_type && entry.stage == stage) {

@@ -1,12 +1,4 @@
-// Space.cpp : Defines the entry point for the console application.
-//
-
-//#include "stdafx.h"
-#include "GlobalTimer.h"
-#include <iostream>
-#include "World.h"
 #include "Parser.h"
-#include <map>
 #include "Simulation.h"
 
 int main(int argc,char* argv[]) {

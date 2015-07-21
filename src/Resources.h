@@ -19,6 +19,12 @@ struct Resources {
 			_values[i] = 0;
 		}
 	}
+
+	void add(const Resources& other) {
+		for ( int i = 0; i < MAX_RESOURCES;++i ) {
+			_values[i] += other._values[i];
+		}
+	}
 	
 	void add(int type,int value) {
 		if ( type >= 0 && type < MAX_RESOURCES) {

@@ -3,6 +3,9 @@
 #include <vector>
 #include "Common.h"
 
+// ------------------------------------------------------
+// TextLine
+// ------------------------------------------------------
 class TextLine {
 
 public:
@@ -17,12 +20,16 @@ public:
 	const bool get_bool(int index) const;
 	int get_string(int index,char* dest) const;
 	const int num_tokens() const;
+	void print() const;
 private:
 	int _num_delimiters;
 	std::string _content;
 	char _delimiter;
 };
 
+// ------------------------------------------------------
+// CSVFile
+// ------------------------------------------------------
 class CSVFile {
 
 typedef std::vector<TextLine> Lines;

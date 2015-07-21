@@ -21,42 +21,53 @@ BB 1 R C 0 F 10
 # -----------------------------
 # build
 PA,1,B,S,0,MO,10
-# start
-#1	Watermelons	3:00	Coin 7	HumanHead 1	Income; CostFood 15	Bestsellers active 3	
+# start level 1
 PA,1,W,S,180,MO,7 
 PA,1,W,S,180,WO,1 
 PA,1,W,F,0,WO,1 
 PA,1,W,C,0,XP,3 
 PA,1,W,C,0,FO,15
-#2	Pumpkins	30:00	Coin 40	HumanHead 1	CostFood 50	Bestsellers active 15	CostFood 100 /hr	CostGem 3
-PA 2 W S 1800 M 40
-PA 2 W S 1800 W 1 
-PA 2 W F 0 W 1 
-PA 2 W C 0 X 15 
-PA 2 W C 0 f 50
-#3	Corn	1:00:00	Coin 80	HumanHead 1	CostFood 80	Bestsellers active 25	CostFood 80 /hr	CostGem 6
-PA 3 W S 3600 M 80
-PA 3 W S 3600 W 1 
-PA 3 W F 0 W 1 
-PA 3 W C 0 X 25 
-PA 3 W C 0 f 80
-#4	Wheat	1:30:00	Coin 130	HumanHead 1	CostFood 140	Bestsellers active 40	CostFood 93 /hr	CostGem 9
-PA 4 W S 5400 M 130 
-PA 4 W S 5400 W 1 
-PA 4 W F 0 W 1 
-PA 4 W C 0 X 140 
-PA 4 W C 0 f 40
+# start level2
+PA,2,W,S,1800,MO,40
+PA,2,W,S,1800,WO,1 
+PA,2,W,F,0,WO,1 
+PA,2,W,C,0,XP,15 
+PA,2,W,C,0,FO,50
+# start level 3
+PA,3,W,S,3600,MO,80
+PA,3,W,S,3600,WO,1 
+PA,3,W,F,0,WO,1 
+PA,3,W,C,0,XP,25 
+PA,3,W,C,0,FO,80
+# start level 4
+PA,4,W,S,5400,MO,130 
+PA,4,W,S,5400,WO,1 
+PA,4,W,F,0,WO,1 
+PA,4,W,C,0,XP,140 
+PA,4,W,C,0,FO,40
 # upgrade
-PA 2 U S 30 W 1
-PA 2 U S 30 M 20
-PA 2 U F 0 W 1
-PA 2 U F 0 X 2
-# 3	1:00	Coin 50 HumanHead 1	CostFood 5 Bestsellers active 2	CostGem 1
-# 4	3:00	Coin 100 HumanHead 1 CostFood 5 Bestsellers active 2	CostGem 1
+# level 2
+PA,2,U,S,60,WO,1
+PA,2,U,S,60,MO,20
+PA,2,U,F,0,WO,1
+PA,2,U,F,0,XP,2
+PA,2,U,F,0,FO,5
+# level 3
+PA,3,U,S,60,WO,1
+PA,3,U,S,60,MO,50
+PA,3,U,F,0,WO,1
+PA,3,U,F,0,XP,2
+PA,3,U,F,0,FO,5
+# level 4
+PA,4,U,S,180,WO,1
+PA,4,U,S,180,MO,100
+PA,4,U,F,0,WO,1
+PA,4,U,F,0,XP,2
+PA,4,U,F,0,FO,5
 # -----------------------------
 # Hut
 # -----------------------------
-#1	1:00	CostFood 20 Wood20 HumanHead 1	Coin 10 Bestsellers active 10 HumanHead 1	CostGem 1
+#1	1:00
 # build
 HT,1,B,S,60,WO,1
 HT,1,B,S,60,FO,20
@@ -65,41 +76,41 @@ HT,1,B,S,60,MO,10
 HT,1,B,F,0,WO,2
 HT,1,U,F,0,XP,10
 # upgrade
-#2	1:00	CostFood 10 Wood10 HumanHead 1	Coin 5 Bestsellers active 10	CostGem 1
-HT 2 U S 60 f 10
-HT 2 U S 60 w 10
-HT 2 U S 60 W 1
-HT 2 U F 0 W 1
-HT 2 U F 0 X 10
-#3	2:00	CostFood 20 Wood20 HumanHead 1	Coin 5 Bestsellers active 10	CostGem 1
-HT 3 U S 120 f 20
-HT 3 U S 120 w 20
-HT 3 U S 120 W 1
-HT 3 U F 0 W 1
-HT 3 U F 0 X 10
-#4	3:00	CostFood 30 Wood30 HumanHead 1	Coin 5 Bestsellers active 10	CostGem 1
-HT 4 U S 180 f 30
-HT 4 U S 180 w 30
-HT 4 U S 180 W 1
-HT 4 U F 0 W 1
-HT 4 U F 0 X 10
+# level 2
+HT,2,U,S,60,FO,10
+HT,2,U,S,60,WD,10
+HT,2,U,S,60,WO,1
+HT,2,U,F,0,WO,1
+HT,2,U,F,0,XP,10
+# level 3
+HT,3,U,S,120,FO,20
+HT,3,U,S,120,WD,20
+HT,3,U,S,120,WO,1
+HT,3,U,F,0,WO,1
+HT,3,U,F,0,XP,10
+# level 4
+HT,4,U,S,180,FO,30
+HT,4,U,S,180,WD,30
+HT,4,U,S,180,WO,1
+HT,4,U,F,0,WO,1
+HT,4,U,F,0,XP,10
 # regular
-# Time: 2:00 / Money: 4 / Exp: 1
-HT 1 R S 120 M 0
-HT 1 R C 0 M 4
-HT 1 R C 0 X 1
-# Time: 2:00 / Money: 9 / Exp: 2
-HT 2 R S 240 M 0
-HT 2 R C 0 M 9
-HT 2 R C 0 X 2
-# Time: 2:00 / Money: 12 / Exp: 3
-HT 3 R S 240 M 0
-HT 3 R C 120 M 12
-HT 3 R C 120 X 3
-# Time: 2:00 / Money: 15 / Exp: 4
-HT 4 R S 240 M 0
-HT 4 R C 0 M 15
-HT 4 R C 0 X 4
+# level 1
+HT,1,R,S,120,MO,0
+HT,1,R,C,0,MO,4
+HT,1,R,C,0,XP,1
+# level 2
+HT,2,R,S,240,MO,0
+HT,2,R,C,0,MO,9
+HT,2,R,C,0,XP,2
+# level 3
+HT,3,R,S,240,MO,0
+HT,3,R,C,120,MO,12
+HT,3,R,C,120,XP,3
+# level 4
+HT,4,R,S,240,MO,0
+HT,4,R,C,0,MO,15
+HT,4,R,C,0,XP,4
 # -----------------------------
 # Ancient Bar
 # -----------------------------

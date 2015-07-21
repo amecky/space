@@ -23,6 +23,10 @@ void TextLine::set(const std::string& str,const char delimiter) {
 const int TextLine::num_tokens() const {
 	return _num_delimiters + 1;
 }
+
+void TextLine::print() const {
+	printf("%s\n", _content.c_str());
+}
 // ------------------------------------------------------
 // find pos in string for field index
 // ------------------------------------------------------

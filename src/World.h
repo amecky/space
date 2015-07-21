@@ -76,7 +76,7 @@ private:
 	bool is_available(const Resources& costs);
 	bool isUsed(int x, int y);
 	bool isCollectable(int x,int y) const;
-	void showResources(const Resources& res,bool complete = true);
+	//void showResources(const Resources& res,bool complete = true);
 	void addResources(const Resources& r);
 	void subResources(const Resources& r);
 	CollectMode _collect_mode;
@@ -100,14 +100,14 @@ public:
 		}
 	}
 	Island* createIsland();
-	const Island* getIsland(int index) const;
-	const Island* getSelectedIsland() const;
+	Island* getIsland(int index) const;
+	Island* getSelectedIsland() const;
 	void selectIsland(int index);
 	void tick(int timeUnits);
 	void addResource(const Sign& sign, int value);
 	void save();
 	void load();
-	const WorldContext* getContext() const;
+	WorldContext* getContext();
 private:
 	int _selected;
 	Islands _islands;

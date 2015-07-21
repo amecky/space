@@ -2,19 +2,24 @@ TODO
 ------------------------------------------
 - [ ] fill registry with prices
 - [ ] task system (?)
-- [ ] add describe with details about building
 - [ ] start -> if CM_MANUAL check if it is not done (pending)
-- [ ] include SRESULT struct as general result code for methods
 - [ ] add world level system based on experience
 - [ ] tasks are based on world level
 - [ ] build island map (1 Home base and 1 Hut and x tress and y fruits spread randomly)
-- [ ] command line - add char* as paramter (like build 6 6 HT)
 - [ ] island - define supported buildings / resources
 - [ ] island define size (make Tiles size dynamic)
 - [ ] check that every ID (sign / first col) in CSV file is unique
 - [ ] save current time
 - [ ] load - load current time and adjust all queues (tick with timeUnits)
 - [ ] load - check if there are all required regular josb running
+- [ ] registry - verify foreign keys (mainly sign) - report error
+
+21.07.2015
+- [x] add describe with details about building
+- [x] move commands to separate classes and add to Simulation
+- [x] command line - add char* as paramter (like build 6 6 HT)
+- [x] include SRESULT struct as general result code for methods - WON'T FIX
+- [x] build command -> show resources of costs
 
 20.07.2015
 - [x] requirements -> use CSV format

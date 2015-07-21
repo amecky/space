@@ -137,22 +137,33 @@ void Island::tick(int timeUnits) {
 				c.tile_y = e.tile_y;
 				_collectables.push_back(c);
 			}
-			else if (e.work_type == PT_BUILD) {
-				Tile& t = _tiles.get(e.tile_x,e.tile_y);
-				t.building_id = e.building_id;
-				t.level = 1;
-				t.active = false;
+			else if (e.work_type == PT_UPGRADE) {
+				Tile& t = _tiles.get(e.tile_x, e.tile_y);
+				++t.level;
+				// remove old regular work
+				_queue.remove(PT_REGULAR,e.tile_x, e.tile_y);
+				// create new
 				calculateMaxResources();
-				if (_context->price_registry.get(PT_REGULAR, 0, e.building_id, e.level, &saved)) {
-					const Tile& t = _tiles.get(e.tile_x,e.tile_y);
-					// check if this is still valid
-					if ( t.building_id == e.building_id && t.level == e.level) {
-						_queue.createWork(PT_REGULAR,e.tile_x,e.tile_y,e.building_id,e.level,_context->price_registry.getDuration(PT_REGULAR, e.building_id, e.level));
+				Resources tmp;
+				if (_context->price_registry.get(PT_REGULAR, 0, t.building_id, t.level, &tmp)) {
+					createWork(PT_REGULAR, e.tile_x, e.tile_y, t.building_id, t.level);
+				}
+			}
+			else if (e.work_type == PT_BUILD) {
+				BuildingDefinition def;
+				_context->building_definitions.getDefinition(e.building_id, &def);
+				if (_tiles.set(e.building_id, 1, e.tile_x, e.tile_y, def.size_x, def.size_y)) {
+					_queue.remove(PT_REGULAR, e.tile_x, e.tile_y);
+					calculateMaxResources();
+					Resources tmp;
+					if (_context->price_registry.get(PT_REGULAR, 0, def.id, 1, &tmp)) {
+						createWork(PT_REGULAR, e.tile_x, e.tile_y, def.id, 1);
 					}
 				}
 			}		
 			else if ( e.work_type == PT_DELETE) {
 				Tile& t = _tiles.get(e.tile_x,e.tile_y);
+				// FIXME: remove all tiles
 				t.building_id = -1;
 			}
 		}
@@ -191,6 +202,7 @@ void Island::tick(int timeUnits) {
 // ------------------------------------------------------
 // show resources
 // ------------------------------------------------------
+/*
 void Island::showResources(const Resources& res,bool complete) {
 	printf("Resources:\n");
 	for ( int i = 0; i < _context->resource_registry.size(); ++i ) {
@@ -204,6 +216,7 @@ void Island::showResources(const Resources& res,bool complete) {
 		}
 	}	
 }
+*/
 // ------------------------------------------------------
 // show status
 // ------------------------------------------------------
@@ -323,7 +336,7 @@ bool Island::collect(int x, int y) {
 			if (_context->price_registry.get(it->price_type, 2, it->building_id, it->level, &saved)) {
 				//_resources.add(saved);
 				addResources(saved);
-				showResources(saved,false);
+				res::show_resources(_context->resource_registry,saved,false);
 			}
 			if (_context->price_registry.get(PT_REGULAR, 0, it->building_id, it->level, &saved)) {
 				_queue.createWork(PT_REGULAR,x,y,it->building_id,it->level,_context->price_registry.getDuration(PT_REGULAR,it->building_id,it->level));
@@ -431,12 +444,28 @@ bool Island::describe(int x,int y) {
 	const Tile& t = _tiles.get(x,y);
 	printf("Building: %s\n",_context->building_definitions.getName(t.building_id));
 	printf("   Level: %d\n",t.level);
-	printf("Available work:\n");
 	Resources tmp;
-	for ( int i = 1; i <= t.level; ++i ) {		
-		printf(" Level %d\n",i);
+	if (_context->price_registry.get(PT_REGULAR, 2, t.building_id, t.level, &tmp)) {
+		printf("Regular income:\n");
+		printf("Duration: %d\n", _context->price_registry.getDuration(PT_REGULAR, t.building_id, t.level));
+		res::show_resources(_context->resource_registry, tmp, false);
+	}
+	printf("Available work:\n");	
+	for ( int i = 1; i <= t.level; ++i ) {				
 		if ( _context->price_registry.get(PT_WORK,0,t.building_id,i,&tmp)) {
+			printf(" Level %d\n", i);
+			printf("Duration: %d\n", _context->price_registry.getDuration(PT_WORK, t.building_id, i));
+			printf("Costs:\n");
 			res::show_resources(_context->resource_registry,tmp,false);
+		}		
+		if (_context->price_registry.get(PT_WORK, 1, t.building_id, i, &tmp)) {
+			printf("Income:\n");
+			Resources collect;
+			if (_context->price_registry.get(PT_WORK, 2, t.building_id, i, &collect)) {
+				tmp.add(collect);
+
+			}
+			res::show_resources(_context->resource_registry, tmp, false);
 		}
 	}
 	// FIXME: list start options
@@ -510,7 +539,7 @@ bool Island::checkRequirements(int building_id, int level) {
 bool Island::createWork(int price_type, int x, int y, int building_id, int level) {
 	Resources costs;
 	if (_context->price_registry.get(price_type, 0, building_id, level, &costs)) {
-		showResources(costs,false);
+		res::show_resources(_context->resource_registry,costs,false);
 		if (is_available(costs)) {
 			// descrease resoruces
 			subResources(costs);
@@ -684,11 +713,11 @@ Island* World::createIsland() {
 	return i;
 }
 
-const Island* World::getIsland(int index) const {
+Island* World::getIsland(int index) const {
 	return _islands[index];
 }
 
-const Island* World::getSelectedIsland() const {
+Island* World::getSelectedIsland() const {
 	return _islands[_selected];
 }
 
@@ -751,6 +780,6 @@ void World::load() {
     }
 }
 
-const WorldContext* World::getContext() const {
+WorldContext* World::getContext() {
 	return &_context;
 }
