@@ -85,6 +85,7 @@ int TextLine::get_string(int index,char* dest) const {
 			return str.length();
 		}
 	}
+	return 0;
 }
 
 // ------------------------------------------------------

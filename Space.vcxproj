@@ -76,6 +76,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="data\new_buildings.txt" />
+    <None Include="data\resources.txt" />
     <None Include="ReadMe.md" />
     <None Include="Todo.md" />
   </ItemGroup>
@@ -97,6 +99,7 @@
     <ClInclude Include="src\GlobalTimer.h" />
     <ClInclude Include="src\Parser.h" />
     <ClInclude Include="src\PriceRegistry.h" />
+    <ClInclude Include="src\RegistryReader.h" />
     <ClInclude Include="src\Resources.h" />
     <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="src\targetver.h" />
@@ -110,6 +113,7 @@
     <ClCompile Include="src\GlobalTimer.cpp" />
     <ClCompile Include="src\Parser.cpp" />
     <ClCompile Include="src\PriceRegistry.cpp" />
+    <ClCompile Include="src\RegistryReader.cpp" />
     <ClCompile Include="src\Resources.cpp" />
     <ClCompile Include="src\Simulation.cpp" />
     <ClCompile Include="src\Space.cpp" />

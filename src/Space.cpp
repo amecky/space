@@ -1,5 +1,6 @@
 #include "Parser.h"
 #include "Simulation.h"
+#include "RegistryReader.h"
 
 int main(int argc,char* argv[]) {
 	Simulation sim;
@@ -17,7 +18,7 @@ int main(int argc,char* argv[]) {
 		else {
 			sim.execute_command(line.type,line.line);
 		}
-	}
+	}	
 	return 0;
 }
 

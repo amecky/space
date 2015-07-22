@@ -5,6 +5,7 @@
 #include <vector>
 #include "files.h"
 #include "CSVFile.h"
+#include "RegistryReader.h"
 
 // ------------------------------------------------------
 // ResourceRegistry
@@ -54,6 +55,24 @@ const int ResourceRegistry::getIndex(const Sign& c) const {
 // load
 // ------------------------------------------------------
 void BuildingRegistry::load() {
+	const char* names[] = {"sign","size_x","size_y","permanent","regular","max_amount","destructable","name"};
+	RegistryReader r(names,8);
+	if ( r.load("buildings.txt","data") ) {
+		for ( int i = 0; i < r.size(); ++i ) {
+			BuildingDefinition def;
+			def.id = i;
+			def.sign = r.get_sign(i,"sign");
+			def.size_x = r.get_int(i,"size_x"); 
+			def.size_y = r.get_int(i,"size_y");
+			def.permanent = r.get_bool(i,"permanent");
+			def.regular = r.get_bool(i,"regular");
+			def.max_count = r.get_int(i,"max_count");
+			def.destructable = r.get_bool(i,"destructable");
+			r.get_string(i,"name",def.name);
+			_definitions.push_back(def);
+		}
+	}
+	/*
 	CSVFile file;
 	// HB,2,2,N,Y,1,S,HomeBase
 	if ( file.load("buildings.txt","data") ) {
@@ -72,6 +91,7 @@ void BuildingRegistry::load() {
 			_definitions.push_back(def);
 		}
 	}	
+	*/
 	// verify data
 	int doublet = 0;
 	for ( size_t i = 0; i < _definitions.size(); ++i ) {

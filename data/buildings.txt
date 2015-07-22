@@ -1,42 +1,37 @@
-#,Sign,size_x,size_y,Permanent,Regular,max_count,destructable (Y/N),Name
-HB,2,2,N,Y,1,N,HomeBase
-# Houses
-HT,1,1,N,Y,3,Y,Hut
-HN,1,1,N,Y,3,Y,Nice Hut
-HO,2,1,N,Y,3,Y,House
-CH,2,1,N,Y,3,Y,Cozy House
-CO,2,1,N,Y,3,Y,Cottage
-MA,2,2,N,Y,3,Y,Mansion
-VI,3,3,N,Y,3,Y,Villa
-HH,3,3,N,Y,3,Y,House Hold
-CD,3,3,N,Y,3,Y,Coral Household
-FH,3,3,N,Y,3,Y,Fortress House
-TH,3,3,N,Y,3,Y,Tower House
-MH,3,3,N,Y,3,Y,Mud House
-MU,3,3,N,Y,3,Y,Mushroom House
-RH,3,3,N,Y,3,Y,Rock House
-# Resource buildings
-PA,2,2,N,N,-1,Y,Patch
-FR,2,2,N,N,3,Y,Foresters Hut
-AB,2,2,N,N,3,Y,Ancient Bar
-WH,3,3,N,N,-1,N,Warehouse
-QA,2,2,N,N,-1,Y,Quarry
-LH,3,2,N,N,-1,Y,Lumber Mill
-SM,3,3,N,N,-1,Y,Stone Mill
-PF,3,3,N,N,-1,Y,Pig Farm
-MP,2,2,N,N,-1,Y,Marble Pit
-SP,2,2,N,N,-1,Y,Sand Pit
-MM,3,3,N,N,-1,Y,Marble Processing Pit
-CM,2,2,N,N,-1,Y,Coral Mining
-LB,3,3,N,N,-1,Y,Laboratory
-FO,3,3,N,N,-1,Y,Foundry
-PR,3,3,N,N,-1,Y,Paint Factory
-CW,3,3,N,N,-1,Y,Coal Workshop
-PO,3,3,N,N,-1,Y,Polunarium Factory
-# Social buildings
-CF,2,2,N,N,-1,Y,Cafeteria
-# Simple resources
-BB,1,1,N,Y,-1,Y,Berry Brush
-FT,1,1,N,N,-1,Y,Fruits
-TR,1,1,N,N,-1,Y,Tree
-AT,1,1,N,N,-1,Y,Apple Tree
+sign : HB , size_x : 2 , size_y : 2 , permanent : N , regular : Y , max_amount :  1 , destructable : N , name : "Home Base"
+sign : HT , size_x : 1 , size_y : 1 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Hut"
+sign : HN , size_x : 1 , size_y : 1 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Nice Hut"
+sign : HO , size_x : 2 , size_y : 1 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "House"
+sign : CH , size_x : 2 , size_y : 1 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Cozy House"
+sign : CO , size_x : 2 , size_y : 1 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Cottage"
+sign : MA , size_x : 2 , size_y : 2 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Mansion"
+sign : VI , size_x : 3 , size_y : 3 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Villa"
+sign : HH , size_x : 3 , size_y : 3 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "House Hold"
+sign : CD , size_x : 3 , size_y : 3 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Coral Household"
+sign : FH , size_x : 3 , size_y : 3 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Fortress House"
+sign : TH , size_x : 3 , size_y : 3 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Tower House"
+sign : MH , size_x : 3 , size_y : 3 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Mud House"
+sign : MU , size_x : 3 , size_y : 3 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Mushroom House"
+sign : RH , size_x : 3 , size_y : 3 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Rock House"
+sign : PA , size_x : 2 , size_y : 2 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Patch"
+sign : FR , size_x : 2 , size_y : 2 , permanent : N , regular : N , max_amount :  3 , destructable : Y , name : "Foresters Hut"
+sign : AB , size_x : 2 , size_y : 2 , permanent : N , regular : N , max_amount :  3 , destructable : Y , name : "Ancient Bar"
+sign : WH , size_x : 3 , size_y : 3 , permanent : N , regular : N , max_amount : -1 , destructable : N , name : "Warehouse"
+sign : QA , size_x : 2 , size_y : 2 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Quarry"
+sign : LH , size_x : 3 , size_y : 2 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Lumber Mill"
+sign : SM , size_x : 3 , size_y : 3 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Stone Mill"
+sign : PF , size_x : 3 , size_y : 3 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Pig Farm"
+sign : MP , size_x : 2 , size_y : 2 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Marble Pit"
+sign : SP , size_x : 2 , size_y : 2 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Sand Pit"
+sign : MM , size_x : 3 , size_y : 3 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Marble Processing Pit"
+sign : CM , size_x : 2 , size_y : 2 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Coral Mining"
+sign : LB , size_x : 3 , size_y : 3 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Laboratory"
+sign : FO , size_x : 3 , size_y : 3 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Foundry"
+sign : PR , size_x : 3 , size_y : 3 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Paint Factory"
+sign : CW , size_x : 3 , size_y : 3 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Coal Workshop"
+sign : PO , size_x : 3 , size_y : 3 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Polunarium Factory"
+sign : CF , size_x : 2 , size_y : 2 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Cafeteria"
+sign : BB , size_x : 1 , size_y : 1 , permanent : N , regular : Y , max_amount : -1 , destructable : Y , name : "Berry Brush"
+sign : FT , size_x : 1 , size_y : 1 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Fruits"
+sign : TR , size_x : 1 , size_y : 1 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Tree"
+sign : AT , size_x : 1 , size_y : 1 , permanent : N , regular : N , max_amount : -1 , destructable : Y , name : "Apple Tree"

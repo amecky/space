@@ -5,7 +5,46 @@ is based on games like "The Tribez" and similiar.
 
 # Key concepts
 
+The simulation is based on one world. The world itself can have many islands.
 
+The simulation can run in two different modes:
+Immediate - This means that every resource will be collected immediately after a work unit has finished
+Collect - The user has to collect the resources which are marked as collectable after a work unit has finished
+
+# Defining the world
+
+The following will describe the basic parts of the simulation. Everything
+is defined in CSV files so nothing is actually hardcoded. The references
+are handled by signs. These are basically two letter words used as
+unqiue identifier.
+
+# Work
+
+The simulation supports six different kind of work items.
+There are three different stages when a work is executed.
+First it will be started (S). This may costs certain resources.
+The prices are defined in the price registry and described below.
+After the duration the work will be finished (F). Depending on the
+simulation mode the resources will be collected (C) immediately or
+the user has to do it.
+
+## WORK
+
+Starts the work on building.
+
+## UPGRADE
+
+Will upgrade a building
+
+## DELETE
+
+If the building is destructable it will remove the building
+
+## BUILD
+
+## PERMANENT
+
+## REGULAR
 
 ## Resources
 
@@ -72,6 +111,7 @@ from this list.
 |resource | the symbol of the resource         |
 |max      | the maximum amount of the resource |
 
+```
 HB,1,WD,500 
 HB,1,FO,500
 # hut
@@ -79,6 +119,9 @@ HT,1,WO,1
 HT,2,WO,2
 HT,3,WO,3
 HT,4,WO,4
+```
+
+For example the first line means that the HB (home base) with level 1 will add 500 WD (wood) to the maximum resources.
 
 ## Requirements
 
@@ -88,3 +131,7 @@ HB,2,HT,3,3
 ```
 
 ## Price registry
+
+# GUI
+
+There is none. Right now it is an ascii based UI with a command line.

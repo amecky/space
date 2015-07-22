@@ -12,6 +12,12 @@
   <ItemGroup>
     <None Include="Todo.md" />
     <None Include="ReadMe.md" />
+    <None Include="data\resources.txt">
+      <Filter>data</Filter>
+    </None>
+    <None Include="data\new_buildings.txt">
+      <Filter>data</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\12.txt">
@@ -49,6 +55,7 @@
     <ClInclude Include="src\WorkQueue.h" />
     <ClInclude Include="src\World.h" />
     <ClInclude Include="src\Simulation.h" />
+    <ClInclude Include="src\RegistryReader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CSVFile.cpp" />
@@ -61,5 +68,6 @@
     <ClCompile Include="src\WorkQueue.cpp" />
     <ClCompile Include="src\World.cpp" />
     <ClCompile Include="src\Simulation.cpp" />
+    <ClCompile Include="src\RegistryReader.cpp" />
   </ItemGroup>
 </Project>
