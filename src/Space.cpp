@@ -4,6 +4,7 @@
 
 int main(int argc,char* argv[]) {
 	Simulation sim;
+	sim.intialize();
 	char buffer[256];
 	bool running = true;	
 	while ( running ) {

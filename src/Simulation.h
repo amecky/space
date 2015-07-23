@@ -272,6 +272,7 @@ typedef std::map<Token::TokenType, SimCommand*> Commands;
 public:
 	Simulation();
 	~Simulation();
+	void intialize();
 	void tick();	
 	void execute_command(Token::TokenType type,const TextLine& line);
 	void quit();

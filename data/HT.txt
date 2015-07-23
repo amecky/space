@@ -1,0 +1,52 @@
+# -----------------------------
+# Hut
+# -----------------------------
+#
+# build 
+#
+building : HT , level : 1 , work : B , stage : S , duration:  60 , resource : WO , amount : 1
+building : HT , level : 1 , work : B , stage : S , duration:  60 , resource : FO , amount : 20
+building : HT , level : 1 , work : B , stage : S , duration:  60 , resource : WD , amount : 20
+building : HT , level : 1 , work : B , stage : S , duration:  60 , resource : MO , amount : 10
+building : HT , level : 1 , work : B , stage : F , duration:   0 , resource : WO , amount : 2
+building : HT , level : 1 , work : U , stage : F , duration:   0 , resource : XP , amount : 10
+#
+# upgrade
+#
+# level 2
+building : HT , level : 2 , work : U , stage : S , duration:  60 , resource : FO , amount : 10
+building : HT , level : 2 , work : U , stage : S , duration:  60 , resource : WD , amount : 10
+building : HT , level : 2 , work : U , stage : S , duration:  60 , resource : WO , amount : 1
+building : HT , level : 2 , work : U , stage : F , duration:   0 , resource : WO , amount : 1
+building : HT , level : 2 , work : U , stage : F , duration:   0 , resource : XP , amount : 10
+# level 3
+building : HT , level : 3 , work : U , stage : S , duration: 120 , resource : FO , amount : 20
+building : HT , level : 3 , work : U , stage : S , duration: 120 , resource : WD , amount : 20
+building : HT , level : 3 , work : U , stage : S , duration: 120 , resource : WO , amount : 1
+building : HT , level : 3 , work : U , stage : F , duration:   0 , resource : WO , amount : 1
+building : HT , level : 3 , work : U , stage : F , duration:   0 , resource : XP , amount : 10
+# level 4
+building : HT , level : 4 , work : U , stage : S , duration: 180 , resource : FO , amount : 30
+building : HT , level : 4 , work : U , stage : S , duration: 180 , resource : WD , amount : 30
+building : HT , level : 4 , work : U , stage : S , duration: 180 , resource : WO , amount : 1
+building : HT , level : 4 , work : U , stage : F , duration:   0 , resource : WO , amount : 1
+building : HT , level : 4 , work : U , stage : F , duration:   0 , resource : XP , amount : 10
+#
+# regular
+#
+# level 1
+building : HT , level : 1 , work : R , stage : S , duration: 120 , resource : MO , amount : 0
+building : HT , level : 1 , work : R , stage : C , duration:   0 , resource : MO , amount : 4
+building : HT , level : 1 , work : R , stage : C , duration:   0 , resource : XP , amount : 1
+# level 2
+building : HT , level : 2 , work : R , stage : S , duration: 240 , resource : MO , amount : 0
+building : HT , level : 2 , work : R , stage : C , duration:   0 , resource : MO , amount : 9
+building : HT , level : 2 , work : R , stage : C , duration:   0 , resource : XP , amount : 2
+# level 3
+building : HT , level : 3 , work : R , stage : S , duration: 240 , resource : MO , amount : 0
+building : HT , level : 3 , work : R , stage : C , duration:   0 , resource : MO , amount : 12
+building : HT , level : 3 , work : R , stage : C , duration:   0 , resource : XP , amount : 3
+# level 4
+building : HT , level : 4 , work : R , stage : S , duration: 240 , resource : MO , amount : 0
+building : HT , level : 4 , work : R , stage : C , duration:   0 , resource : MO , amount : 15
+building : HT , level : 4 , work : R , stage : C , duration:   0 , resource : XP , amount : 4

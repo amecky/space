@@ -22,9 +22,10 @@ struct WorldContext {
 	PriceRegistry price_registry;
 	BuildingRegistry building_definitions;
 	ResourceRegistry resource_registry;
+	TaskRegistry task_registry;
 	CollectMode collect_mode;
 	int time_multiplier;
-	WorldContext() : price_registry(&resource_registry,&building_definitions) {}
+	WorldContext() : price_registry(&resource_registry,&building_definitions) , task_registry(&building_definitions) {}
 };
 
 // ------------------------------------------------------

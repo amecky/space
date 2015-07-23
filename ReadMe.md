@@ -46,11 +46,17 @@ If the building is destructable it will remove the building
 
 ## REGULAR
 
+# Registry
+
+There are several registries for each type. The types are described
+below. The acutal data is defined in txt files. The format is a kind
+of named csv file or a shortened form of JSON. Although this makes
+the files itself much more verbose it just helps to edit the data.
+All files are located in the data subdirectory.
+
 ## Resources
 
 First we need to define the resources that are available within our world.
-
-The resources are defined as a CSV file located in the data subdirectory. 
 The file is called resource_definitions.txt. Every definition has a sign
 which is a two character symbol which must be unique within this list.
 There is also a flag defining the resource is global or local. The resource
@@ -64,12 +70,12 @@ All local resources are only available on each island.
 |Name   | full name of the resource                                     |
 
 Example:
+
 ```
-# sign / global (G=global L = local) / name 
-MO,Y,Money
-IR,N,Iron
-FO,N,Food
-WO,N,Worker
+sign : MO , global : Y , name : "Money"
+sign : IR , global : N , name : "Iron"
+sign : FO , global : N , name : "Food"
+sign : WD , global : N , name : "Wood"
 ```
 
 ## Buildings
@@ -89,9 +95,9 @@ file consists of
 
 Example:
 ```
-HB,2,2,N,Y,1,N,HomeBase
-HT,1,1,N,Y,3,Y,Hut
-HN,1,1,N,Y,3,Y,Nice Hut
+sign : HB , size_x : 2 , size_y : 2 , permanent : N , regular : Y , max_amount :  1 , destructable : N , name : "Home Base"
+sign : HT , size_x : 1 , size_y : 1 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Hut"
+sign : HN , size_x : 1 , size_y : 1 , permanent : N , regular : Y , max_amount :  3 , destructable : Y , name : "Nice Hut"
 ```
 
 The Hut with the symbol HT will occupy one tile in each direction. It produces no permanent resources.
@@ -109,25 +115,33 @@ from this list.
 |Sign     | the symbol of the building         |
 |level    | the level of the building          |
 |resource | the symbol of the resource         |
-|max      | the maximum amount of the resource |
+|amount   | the maximum amount of the resource |
 
 ```
-HB,1,WD,500 
-HB,1,FO,500
-# hut
-HT,1,WO,1
-HT,2,WO,2
-HT,3,WO,3
-HT,4,WO,4
+building : WH , level : 1 , resource : FO , amount : 250 
+building : WH , level : 1 , resource : WD , amount : 250
 ```
 
-For example the first line means that the HB (home base) with level 1 will add 500 WD (wood) to the maximum resources.
+For example Warehouse (WH) with level 1 will contribute 250 food and 250 wood to the maximum storable resources
+on this island.
 
 ## Requirements
 
-# home base level 2 requires 3 houses level 3
+In order to upgrade or build certain buildings there might be requirements which must be fullfilled.
+For example it might be necessary to have 3 Huts of level 4 before the player can upgrade the home base
+to level 2.
+The requirements are defined in requirements.txt
+
+| field            | description                            |
+|------------------|----------------------------------------|
+|building          | the symbol of the building             |
+|level             | the level of the building              |
+|required_building | the required building                  |
+|required_level    | the required level of these buildings  |
+|required_amount   | the required amount of these buildings |
+
 ```
-HB,2,HT,3,3
+building : HB , level : 2 , required_building : HT , required_level : 3 , required_amount : 3
 ```
 
 ## Price registry

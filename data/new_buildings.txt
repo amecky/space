@@ -1,0 +1,3 @@
+sign: HB , size_x : 2 , size_y : 2 , permanent : "This is short text" , regular : Y , max_count : 1 , destructable : N , name : "Home Base"
+sign: HT , size_x : 1 , size_y : 1 , permanent : N , regular : Y , max_count : 3 , destructable : Y , name : "Hut"
+sign: HN , size_x : 1 , size_y : 1 , permanent : N , regular : Y , max_count : 3 , destructable : Y , name : "Nice Hut"

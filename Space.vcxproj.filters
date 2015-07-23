@@ -18,6 +18,12 @@
     <None Include="data\new_buildings.txt">
       <Filter>data</Filter>
     </None>
+    <None Include="data\HT.txt">
+      <Filter>data</Filter>
+    </None>
+    <None Include="data\islands.txt">
+      <Filter>data</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\12.txt">

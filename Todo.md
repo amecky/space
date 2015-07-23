@@ -13,6 +13,15 @@ TODO
 - [ ] load - load current time and adjust all queues (tick with timeUnits)
 - [ ] load - check if there are all required regular josb running
 - [ ] registry - verify foreign keys (mainly sign) - report error
+- [ ] convert all txt files to the new named csv format
+- [ ] price registry - extract prices into individual files like HT.txt
+- [ ] every island is split into areas which are visible or not and user needs to buy areas
+- [ ] add hidden attribute to tiles
+- [ ] read area definition from file containig tiles
+- [ ] world -> load islands.txt and process this file
+
+23.07.2015
+- [x] price registry - take all signs from buildings registry and try to read files
 
 21.07.2015
 - [x] add describe with details about building

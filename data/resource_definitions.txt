@@ -1,14 +1,17 @@
-# sign / global (G=global L = local) / name 
-MO,Y,Money
-IR,N,Iron
-FO,N,Food
-WD,N,Wood
-WO,N,Worker
-XP,Y,Experience
-ST,N,Stones
-BR,N,Bricks
-LU,N,Lumber
-CS,N,CutStone
-CO,N,Copper
-GL,N,Glass
-SA,N,Sand
+# 
+# resource definitions
+#
+sign : MO , global : Y , name : "Money"
+sign : IR , global : N , name : "Iron"
+sign : FO , global : N , name : "Food"
+sign : WD , global : N , name : "Wood"
+sign : WO , global : N , name : "Worker"
+sign : XP , global : Y , name : "Experience"
+sign : ST , global : N , name : "Stones"
+sign : BR , global : N , name : "Bricks"
+sign : LU , global : N , name : "Lumber"
+sign : CS , global : N , name : "CutStone"
+sign : CO , global : N , name : "Copper"
+sign : GL , global : N , name : "Glass"
+sign : SA , global : N , name : "Sand"
+sign : LV , global : Y , name : "Level"

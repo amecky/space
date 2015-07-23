@@ -689,9 +689,11 @@ bool Island::isCollectable(int x,int y) const {
 World::World() : _selected(-1) {
 	_context.building_definitions.load();
 	_context.resource_registry.load();		
-	_context.price_registry.load("registry.txt");
+	//_context.price_registry.load("registry.txt");
+	_context.price_registry.load();
 	_context.price_registry.load_requirements();
 	_context.price_registry.load_max_resources();
+	_context.task_registry.load();
 	_context.collect_mode = CM_IMMEDIATE;
 	_context.time_multiplier = 1;
 }

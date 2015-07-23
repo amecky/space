@@ -1,0 +1,7 @@
+#
+# island definitions
+#
+island : 0 , area : 0 , size_x : 32 , size_y : 32 , start_x :  0 , start_y :  0 , costs : MO , amount : 7000 , locked : N , file : "in_0_ar_0"
+island : 0 , area : 1 , size_x : 32 , size_y : 32 , start_x : 32 , start_y :  0 , costs : MO , amount : 7000 , locked : Y , file : "in_0_ar_1"
+island : 0 , area : 2 , size_x : 32 , size_y : 32 , start_x :  0 , start_y : 32 , costs : MO , amount : 7000 , locked : Y , file : "in_0_ar_2"
+island : 0 , area : 3 , size_x : 32 , size_y : 32 , start_x : 32 , start_y : 32 , costs : MO , amount : 7000 , locked : Y , file : "in_0_ar_3"

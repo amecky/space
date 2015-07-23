@@ -1,4 +1,4 @@
-# requirements
-# building / level / required building / required amount / required level
-# home base level 2 requires 3 houses level 3
-HB,2,HT,3,3
+#
+# requirements for building or upgrading buildings
+#
+building : HB , level : 2 , required_building : HT , required_level : 3 , required_amount : 3
