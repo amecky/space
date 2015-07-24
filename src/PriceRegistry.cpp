@@ -340,11 +340,11 @@ void PriceRegistry::load_requirements() {
 					_requirements.push_back(br);   
 				}
 				else {
-				printf("ERROR: invalid required building %s\n",s.c_str());
+					printf("ERROR: invalid required building %s at line %d\n",s.c_str(),r.get_line_nr(i));
 			}
 			}
 			else {
-				printf("ERROR: invalid building %s\n",s.c_str());
+				printf("ERROR: invalid building %s at line %d\n",s.c_str(),r.get_line_nr(i));
 			}
 		}
 	}	

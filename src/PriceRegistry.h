@@ -29,6 +29,7 @@ public:
 		assert(index >= 0 && index < size());
 		return _items[index];
 	}
+	
 protected:
 	Items _items;
 };

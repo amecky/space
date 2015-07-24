@@ -9,9 +9,10 @@ TODO
 - [ ] save current time
 - [ ] load - load current time and adjust all queues (tick with timeUnits)
 - [ ] load - check if there are all required regular josb running
-- [ ] registry - verify foreign keys (mainly sign) - report error
+- [ ] registry - show line number and proper error message
 
 24.07.2015
+- [x] registry - verify foreign keys (mainly sign) - report error
 - [x] price registry - extract prices into individual files like HT.txt
 - [x] convert all txt files to the new named csv format
 - [x] every island is split into areas which are visible or not and user needs to buy areas

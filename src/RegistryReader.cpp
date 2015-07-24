@@ -45,11 +45,11 @@ int RegistryReader::find_end(const std::string& str,int start) const {
 // ------------------------------------------------------
 // get int
 // ------------------------------------------------------
-int RegistryReader::get_int(int line_nr,const char* name) const {
-	assert ( line_nr >= 0 && line_nr < _lines.size());
+int RegistryReader::get_int(int index,const char* name) const {
+	assert ( index >= 0 && index < _lines.size());
 	int idx = find_index(name);
 	if ( idx != -1 ) {
-		const Entry& e = _lines[line_nr];
+		const Entry& e = _lines[index];
 		int p = e.positions[idx];
 		int end = find_end(e.line,p);
 		std::string str = e.line.substr(p,end);		
@@ -63,11 +63,11 @@ int RegistryReader::get_int(int line_nr,const char* name) const {
 // ------------------------------------------------------
 // get char
 // ------------------------------------------------------
-char RegistryReader::get_char(int line_nr,const char* name) const {
-	assert ( line_nr >= 0 && line_nr < _lines.size());
+char RegistryReader::get_char(int index,const char* name) const {
+	assert ( index >= 0 && index < _lines.size());
 	int idx = find_index(name);
 	if ( idx != -1 ) {
-		const Entry& e = _lines[line_nr];
+		const Entry& e = _lines[index];
 		int p = e.positions[idx];
 		return e.line[p];
 	}
@@ -77,11 +77,11 @@ char RegistryReader::get_char(int line_nr,const char* name) const {
 // ------------------------------------------------------
 // get bool
 // ------------------------------------------------------
-bool RegistryReader::get_bool(int line_nr,const char* name) const {
-	assert ( line_nr >= 0 && line_nr < _lines.size());
+bool RegistryReader::get_bool(int index,const char* name) const {
+	assert ( index >= 0 && index < _lines.size());
 	int idx = find_index(name);
 	if ( idx != -1 ) {
-		const Entry& e = _lines[line_nr];
+		const Entry& e = _lines[index];
 		int p = e.positions[idx];
 		char c = e.line[p];
 		if ( c == 'Y' || c == 'y' ) {
@@ -95,12 +95,12 @@ bool RegistryReader::get_bool(int line_nr,const char* name) const {
 // ------------------------------------------------------
 // get sign
 // ------------------------------------------------------
-Sign RegistryReader::get_sign(int line_nr,const char* name) const {
-	assert ( line_nr >= 0 && line_nr < _lines.size());
+Sign RegistryReader::get_sign(int index,const char* name) const {
+	assert ( index >= 0 && index < _lines.size());
 	int idx = find_index(name);
 	Sign s('X','X');
 	if ( idx != -1 ) {
-		const Entry& e = _lines[line_nr];
+		const Entry& e = _lines[index];
 		int p = e.positions[idx];
 		char c = e.line[p];
 		char n = e.line[p+1];
@@ -112,10 +112,10 @@ Sign RegistryReader::get_sign(int line_nr,const char* name) const {
 // ------------------------------------------------------
 // get string
 // ------------------------------------------------------
-int RegistryReader::get_string(int line_nr,const char* name,char* dest) const {
+int RegistryReader::get_string(int index,const char* name,char* dest) const {
 	int idx = find_index(name);
 	if ( idx != -1 ) {
-		const Entry& e = _lines[line_nr];
+		const Entry& e = _lines[index];
 		int p = e.positions[idx];
 		if ( e.line[p] == '"') {
 			++p;
@@ -137,6 +137,14 @@ int RegistryReader::get_string(int line_nr,const char* name,char* dest) const {
 }
 
 // ------------------------------------------------------
+// get real line number
+// ------------------------------------------------------
+int RegistryReader::get_line_nr(int index) const {
+	assert ( index >= 0 && index < _lines.size());
+	return _lines[index].line_nr;
+}
+
+// ------------------------------------------------------
 // load
 // ------------------------------------------------------
 bool RegistryReader::load(const char* fileName,const char* directory) {
@@ -152,6 +160,7 @@ bool RegistryReader::load(const char* fileName,const char* directory) {
 					Entry e;
 					e.line = line;
 					e.count = _num_fields;
+					e.line_nr = cnt;
 					for ( int i = 0; i < _num_fields; ++i ) {
 						if ( line.find(_field_names[i]) != std::string::npos) {
 							size_t idx =  line.find(_field_names[i]);							

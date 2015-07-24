@@ -1,6 +1,0 @@
-# building_type / level / PriceType (W/U/D/B/P/R) / flag (S/F/C) / duration / resource sign / amount
-# berry brush
-# start
-BB 1 R S 120 M 0
-BB 1 R C 0 F 10
-

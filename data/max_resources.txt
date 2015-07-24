@@ -1,14 +1,14 @@
 #
 # max resource definitions
 #
-building : HB , level : 1 , resource : WD , amount : 500 
-building : HB , level : 1 , resource : FO , amount : 500
+building : WH , level : 1 , resource : WD , amount : 500 
+building : WH , level : 1 , resource : FO , amount : 500
 # hut
 building : HT , level : 1 , resource : WO , amount : 1
 building : HT , level : 2 , resource : WO , amount : 2
 building : HT , level : 3 , resource : WO , amount : 3
 building : HT , level : 4 , resource : WO , amount : 4
 # warehouse
-building : WH , level : 1 , resource : FO , amount : 250 
-building : WH , level : 1 , resource : WD , amount : 250
+building : WH , level : 2 , resource : FO , amount : 750 
+building : WH , level : 2 , resource : WD , amount : 750
 

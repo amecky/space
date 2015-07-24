@@ -78,6 +78,7 @@
   <ItemGroup>
     <None Include="data\AB.txt" />
     <None Include="data\AT.txt" />
+    <None Include="data\BB.txt" />
     <None Include="data\HT.txt" />
     <None Include="data\in_0_ar_0.txt" />
     <None Include="data\islands.txt" />

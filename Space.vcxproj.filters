@@ -42,6 +42,9 @@
     <None Include="data\AT.txt">
       <Filter>data</Filter>
     </None>
+    <None Include="data\BB.txt">
+      <Filter>data</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\12.txt">
@@ -51,9 +54,6 @@
       <Filter>data</Filter>
     </Text>
     <Text Include="data\max_resources.txt">
-      <Filter>data</Filter>
-    </Text>
-    <Text Include="data\registry.txt">
       <Filter>data</Filter>
     </Text>
     <Text Include="data\requirements.txt">
