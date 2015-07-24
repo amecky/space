@@ -3,18 +3,59 @@
 #include "files.h"
 #include <assert.h>
 #include "CSVFile.h"
+#include <vector>
+#include <string>
 
-Island::Island(WorldContext* context) : _context(context) {
-	_tiles.clear();	
+Island::Island(WorldContext* context,int size_x,int size_y) : _context(context) {
+	_tiles = new Tiles(size_x,size_y);
+	_tiles->clear();	
 	
 }
 
 
-Island::~Island(void) {
+Island::~Island() {
+	delete _tiles;
 }
 
 void Island::setCollectMode(CollectMode cm) {
 	_collect_mode = cm;
+}
+
+// ------------------------------------------------------
+// create area
+// ------------------------------------------------------
+void Island::createArea(const AreaDefinition& definition) {
+	for ( int y = 0; y < definition.size_y; ++y) {
+		for ( int x = 0; x < definition.size_x; ++x ) {
+			int xp = definition.start_x + x;
+			int yp = definition.start_y + y;
+			if ( definition.locked) {
+				_tiles->set_state(xp,yp,TS_LOCKED);
+			}
+		}
+	}
+	std::vector<std::string> content;
+	if ( file::read(definition.file,"data",content)) {
+		size_t len = content.size();
+		for ( int i = (len - 1); i >= 0; --i ) {
+			std::string line = content[i];
+			for ( int j = 0; j < definition.size_x; ++j ) {
+				int xp = definition.start_x + j;
+				int yp = (definition.start_y + definition.size_y - 1) - i;
+				char f = line[j *2];
+				char s = line[j*2 +1];
+				Sign sgn(f,s);
+				int bid = _context->building_definitions.getIndex(sgn);
+				if ( bid != -1 ) {
+					add(xp,yp,sgn);
+				}
+				if ( f == 'x' && s == 'x' ) {
+					_tiles->set_state(xp,yp,TS_UNDEFINED);
+				}
+			}
+		}
+	}
+	calculateMaxResources();
 }
 
 // ------------------------------------------------------
@@ -24,9 +65,9 @@ void Island::calculateMaxResources() {
 	for (int i = 0; i < _maxResources.total; ++i) {
 		_maxResources.set(i, 0);
 	}
-	for (int i = 0; i < GRID_SIZE * GRID_SIZE; ++i) {
-		if (_tiles.getBuildingID(i) != -1) {
-			_context->price_registry.add_max_resources(_tiles.getBuildingID(i), _tiles.getLevel(i), &_maxResources);
+	for (int i = 0; i < _tiles->total; ++i) {
+		if (_tiles->getBuildingID(i) != -1) {
+			_context->price_registry.add_max_resources(_tiles->getBuildingID(i), _tiles->getLevel(i), &_maxResources);
 		}
 	}
 }
@@ -37,7 +78,7 @@ void Island::calculateMaxResources() {
 void Island::add(int x,int y,const Sign& s) {
 	BuildingDefinition def;
 	_context->building_definitions.getDefinition(s,&def);
-	if (_tiles.set(def.id,1,x,y,def.size_x,def.size_y)) {
+	if (_tiles->set(def.id,1,x,y,def.size_x,def.size_y)) {
 		calculateMaxResources();
 		Resources tmp;
 		if (_context->price_registry.get(PT_REGULAR, 0, def.id, 1, &tmp)) {		
@@ -57,7 +98,7 @@ void Island::add(const char* s,int x,int y) {
 	BuildingDefinition def;
 	Sign sign(s[0],s[1]);
 	_context->building_definitions.getDefinition(sign,&def);
-	if (_tiles.set(def.id,1,x,y,def.size_x,def.size_y)) {
+	if (_tiles->set(def.id,1,x,y,def.size_x,def.size_y)) {
 		calculateMaxResources();
 		Resources tmp;
 		if (_context->price_registry.get(PT_REGULAR, 0, def.id, 1, &tmp)) {		
@@ -138,7 +179,7 @@ void Island::tick(int timeUnits) {
 				_collectables.push_back(c);
 			}
 			else if (e.work_type == PT_UPGRADE) {
-				Tile& t = _tiles.get(e.tile_x, e.tile_y);
+				Tile& t = _tiles->get(e.tile_x, e.tile_y);
 				++t.level;
 				// remove old regular work
 				_queue.remove(PT_REGULAR,e.tile_x, e.tile_y);
@@ -152,7 +193,7 @@ void Island::tick(int timeUnits) {
 			else if (e.work_type == PT_BUILD) {
 				BuildingDefinition def;
 				_context->building_definitions.getDefinition(e.building_id, &def);
-				if (_tiles.set(e.building_id, 1, e.tile_x, e.tile_y, def.size_x, def.size_y)) {
+				if (_tiles->set(e.building_id, 1, e.tile_x, e.tile_y, def.size_x, def.size_y)) {
 					_queue.remove(PT_REGULAR, e.tile_x, e.tile_y);
 					calculateMaxResources();
 					Resources tmp;
@@ -162,7 +203,7 @@ void Island::tick(int timeUnits) {
 				}
 			}		
 			else if ( e.work_type == PT_DELETE) {
-				Tile& t = _tiles.get(e.tile_x,e.tile_y);
+				Tile& t = _tiles->get(e.tile_x,e.tile_y);
 				// FIXME: remove all tiles
 				t.building_id = -1;
 			}
@@ -185,8 +226,8 @@ void Island::tick(int timeUnits) {
 	/* No permanents at the moment
 	Resources res;
 	for ( int i = 0; i < GRID_SIZE * GRID_SIZE; ++i ) {
-		if ( _context->building_definitions.runs_permanent(_tiles.getBuildingID(i))) {
-			if ( _context->price_registry.get(PT_PERMANENT,true,_tiles.getBuildingID(i),_tiles.getLevel(i),&res) ) {
+		if ( _context->building_definitions.runs_permanent(_tiles->getBuildingID(i))) {
+			if ( _context->price_registry.get(PT_PERMANENT,true,_tiles->getBuildingID(i),_tiles->getLevel(i),&res) ) {
 				_resources.add(res,timeUnits);
 			}
 		}
@@ -263,8 +304,8 @@ void Island::showMap(int centerX, int centerY) const {
 		xmin += d;
 		xmax += d;
 	}
-	if (xmax >= GRID_SIZE) {
-		int d = GRID_SIZE - 8;
+	if (xmax >= _tiles->width) {
+		int d = _tiles->width - 8;
 		xmin -= d;
 		xmax -= d;
 	}
@@ -273,37 +314,44 @@ void Island::showMap(int centerX, int centerY) const {
 		ymin += d;
 		ymax += d;
 	}
-	if (ymax >= GRID_SIZE) {
-		int d = GRID_SIZE - 8;
+	if (ymax >= _tiles->height) {
+		int d = _tiles->height - 8;
 		ymin -= d;
 		ymax -= d;
 	}
-
 	for ( int y = ymax - 1; y >= ymin; --y ) {
 		printf("%2d ", y);
 		for ( int x = xmin; x < xmax; ++x ) {
-			int idx = x + y * GRID_SIZE;
-			if ( _tiles.getBuildingID(idx) != -1 ) {
-				//printf("%s%1d", _building_definitions.getSign(_tiles.getBuildingID(idx)), _tiles.getLevel(idx));
-				printf("%s", _context->building_definitions.getSign(_tiles.getBuildingID(idx)));
-				if ( _tiles.isActive(idx)) {			
-					printf("#");
-				}
-				else {
-					printf(" ");
-				}
-				if ( isCollectable(x,y)) {
-					printf("*");
-				}
-				else {
-					printf(" ");
-				}
+			int idx = x + y * _tiles->width;
+			if ( _tiles->has_state(x,y,TS_LOCKED)) {
+				printf("??  ");
 			}
-			else if ( _tiles._tiles[idx].ref_id != -1 ) {
-				printf("xx  ");
+			else if ( _tiles->has_state(x,y,TS_UNDEFINED)) {
+				printf("    ");
 			}
 			else {
-				printf("-   ");
+				if ( _tiles->getBuildingID(idx) != -1 ) {
+					//printf("%s%1d", _building_definitions.getSign(_tiles->getBuildingID(idx)), _tiles->getLevel(idx));
+					printf("%s", _context->building_definitions.getSign(_tiles->getBuildingID(idx)));
+					if ( _tiles->isActive(idx)) {			
+						printf("#");
+					}
+					else {
+						printf(" ");
+					}
+					if ( isCollectable(x,y)) {
+						printf("*");
+					}
+					else {
+						printf(" ");
+					}
+				}
+				else if ( _tiles->_tiles[idx].ref_id != -1 ) {
+					printf("xx  ");
+				}
+				else {
+					printf("-   ");
+				}
 			}
 		}
 		printf("\n");
@@ -319,8 +367,8 @@ void Island::showMap(int centerX, int centerY) const {
 // collect resources
 // ------------------------------------------------------
 bool Island::collect(int x, int y) {
-	int idx = x + y * GRID_SIZE;
-	if (_tiles.getBuildingID(idx) == -1) {
+	int idx = x + y * _tiles->width;
+	if (_tiles->getBuildingID(idx) == -1) {
 		printf("Error: There is no building at %d %d\n", x, y);
 		return false;
 	}
@@ -358,14 +406,14 @@ bool Island::collect(int x, int y) {
 // start creating new building
 // ------------------------------------------------------
 bool Island::build(int x,int y,int building_id) {
-	int idx = x + y * GRID_SIZE;
-	if ( !_tiles.is_empty(x,y)) {
+	int idx = x + y * _tiles->width;
+	if ( !_tiles->is_empty(x,y)) {
 		printf("Error: There is already a building at %d %d\n",x,y);
 		return false;
 	}
 	BuildingDefinition def;
 	_context->building_definitions.getDefinition(building_id,&def);
-	if ( !_tiles.has_space(x,y,def.size_x,def.size_y)) {
+	if ( !_tiles->has_space(x,y,def.size_x,def.size_y)) {
 		printf("Error: There is not enough space to place the building at %d %d\n",x,y);
 		return false;
 	}
@@ -377,7 +425,7 @@ bool Island::build(int x,int y,int building_id) {
 		printf("Error: No duration defined in registry\n");
 		return false;
 	}
-	int index = x + y * GRID_SIZE;
+	int index = x + y * _tiles->width;
 	if (checkRequirements(building_id, 1)) {
 		createWork(PT_BUILD,x,y,building_id,1);
 		return true;
@@ -389,25 +437,25 @@ bool Island::build(int x,int y,int building_id) {
 // start work at building
 // ------------------------------------------------------
 bool Island::start(int x,int y,int level) {
-	int idx = x + y * GRID_SIZE;
-	if ( _tiles.getBuildingID(idx) == -1 ) {
+	int idx = x + y * _tiles->width;
+	if ( _tiles->getBuildingID(idx) == -1 ) {
 		printf("Error: There is no building at %d %d\n",x,y);
 		return false;
 	}	
-	if ( _tiles.isActive(idx)) {
+	if ( _tiles->isActive(idx)) {
 		printf("Error: The building is already active\n");
 		return false;
 	}
-	if ( level > _tiles.getLevel(idx) ) {
+	if ( level > _tiles->getLevel(idx) ) {
 		printf("Error: The selected level %d is not supported yet - You need to upgrade\n",level);
 		return false;
 	}
 	Resources tmp;
-	if ( !_context->price_registry.get(PT_WORK,0,_tiles.getBuildingID(idx),level,&tmp)) {
+	if ( !_context->price_registry.get(PT_WORK,0,_tiles->getBuildingID(idx),level,&tmp)) {
 		printf("Error: The selected level %d is not supported yet - You need to upgrade\n",level);
 		return false;
 	}
-	createWork(PT_WORK,x,y,_tiles.getBuildingID(idx),level);
+	createWork(PT_WORK,x,y,_tiles->getBuildingID(idx),level);
 	return true;
 }
 
@@ -415,18 +463,18 @@ bool Island::start(int x,int y,int level) {
 // upgrade building
 // ------------------------------------------------------
 bool Island::upgrade(int x,int y) {
-	int idx = x + y * GRID_SIZE;
-	if ( _tiles.getBuildingID(idx) == -1 ) {
+	int idx = x + y * _tiles->width;
+	if ( _tiles->getBuildingID(idx) == -1 ) {
 		printf("Error: There is no building at %d %d\n",x,y);
 		return false;
 	}
 	// FIXME: check if there is only a regular work item
-	if ( _tiles.isActive(idx)) {
+	if ( _tiles->isActive(idx)) {
 		printf("Error: The building is active - upgrade is not available\n");
 		return false;
 	}
-	if (checkRequirements(_tiles.getBuildingID(idx), _tiles.getLevel(idx) + 1)) {
-		createWork(PT_UPGRADE,x,y,_tiles.getBuildingID(idx),_tiles.getLevel(idx)+1);
+	if (checkRequirements(_tiles->getBuildingID(idx), _tiles->getLevel(idx) + 1)) {
+		createWork(PT_UPGRADE,x,y,_tiles->getBuildingID(idx),_tiles->getLevel(idx)+1);
 		return true;
 	}
 	return false;
@@ -436,12 +484,12 @@ bool Island::upgrade(int x,int y) {
 // describe building
 // ------------------------------------------------------
 bool Island::describe(int x,int y) {
-	int idx = x + y * GRID_SIZE;
-	if ( _tiles.getBuildingID(idx) == -1 ) {
+	int idx = x + y * _tiles->width;
+	if ( _tiles->getBuildingID(idx) == -1 ) {
 		printf("Error: There is no building at %d %d\n",x,y);
 		return false;
 	}
-	const Tile& t = _tiles.get(x,y);
+	const Tile& t = _tiles->get(x,y);
 	printf("Building: %s\n",_context->building_definitions.getName(t.building_id));
 	printf("   Level: %d\n",t.level);
 	Resources tmp;
@@ -476,21 +524,21 @@ bool Island::describe(int x,int y) {
 // move
 // ------------------------------------------------------
 bool Island::move(int oldX,int oldY,int x,int y) {
-	int oldIndex = oldX + oldY * GRID_SIZE;
-	int index = x + y * GRID_SIZE;
-	if ( _tiles.is_empty(oldX,oldY) ) {
+	int oldIndex = oldX + oldY * _tiles->width;
+	int index = x + y * _tiles->width;
+	if ( _tiles->is_empty(oldX,oldY) ) {
 		printf("Error: There is no building at %d %d\n",x,y);
 		return false;
 	}
-	if ( _tiles.isActive(oldIndex)) {
+	if ( _tiles->isActive(oldIndex)) {
 		printf("Error: The building is active - you cannot move an active building\n");
 		return false;
 	}
-	if ( !_tiles.is_empty(x,y)) {
+	if ( !_tiles->is_empty(x,y)) {
 		printf("Error: There is already a building at %d %d\n",x,y);
 		return false;
 	}
-	_tiles.move(oldIndex,index);
+	_tiles->move(oldIndex,index);
 	return true;
 }
 
@@ -498,12 +546,12 @@ bool Island::move(int oldX,int oldY,int x,int y) {
 // remove building
 // ------------------------------------------------------
 bool Island::remove(int x,int y) {
-	int idx = x + y * GRID_SIZE;
-	if ( _tiles.is_empty(x,y)) {
+	int idx = x + y * _tiles->width;
+	if ( _tiles->is_empty(x,y)) {
 		printf("Error: There is no building at %d %d\n",x,y);
 		return false;
 	}
-	Tile& t = _tiles.get(x,y);
+	Tile& t = _tiles->get(x,y);
 	if ( !_context->building_definitions.isDestructable(t.building_id)) {
 		printf("Error: You cannot remove this building\n");
 		return false;
@@ -519,8 +567,8 @@ bool Island::checkRequirements(int building_id, int level) {
 	BuildRequirement requirement;
 	if (_context->price_registry.getRequirement(building_id, level, &requirement)) {
 		int cnt = 0;
-		for (int i = 0; i < GRID_SIZE*GRID_SIZE; ++i) {
-			if ( _tiles.match(i,requirement) ) {
+		for (int i = 0; i < _tiles->total; ++i) {
+			if ( _tiles->match(i,requirement) ) {
 				++cnt;
 			}
 		}
@@ -569,9 +617,9 @@ void Island::save(int index) {
 			fwrite(&_resources._values[i],sizeof(int),1,f);
         }
 		// save tiles
-		for (int y = 0; y < GRID_SIZE; ++y) {
-			for (int x = 0; x < GRID_SIZE; ++x) {
-				const Tile& t = _tiles.get(x,y);
+		for (int y = 0; y < _tiles->height; ++y) {
+			for (int x = 0; x < _tiles->width; ++x) {
+				const Tile& t = _tiles->get(x,y);
 				fwrite(&t, sizeof(Tile), 1, f);
 			}
 		}   
@@ -588,8 +636,8 @@ void Island::load(int index) {
 	sprintf(buffer,"i_%d.bin",index);
 	FILE *f = fopen(buffer,"rb");
 	//_queue.clear();
-	int max = GRID_SIZE * GRID_SIZE;
-	_tiles.clear();
+	int max = _tiles->total;
+	_tiles->clear();
 	if (f) {
         int num = 0;
 		// load resources
@@ -601,11 +649,11 @@ void Island::load(int index) {
 		res::show_resources(_context->resource_registry,_resources,false);
 
 		// load buildings
-		for (int y = 0; y < GRID_SIZE; ++y) {
-			for (int x = 0; x < GRID_SIZE; ++x) {	
+		for (int y = 0; y < _tiles->height; ++y) {
+			for (int x = 0; x < _tiles->width; ++x) {	
 				Tile t;
 				fread(&t, sizeof(Tile), 1, f);
-				_tiles.set(x,y,t);
+				_tiles->set(x,y,t);
 			}
 		}
 		_queue.load(f);
@@ -623,7 +671,7 @@ void Island::load(int index) {
 // ------------------------------------------------------
 void Island::load_txt(int index) {
 	CSVFile file;
-	_tiles.clear();
+	_tiles->clear();
 	//_queue.clear();
 	if ( file.load("i_d_1.txt","data") ) {
 		for ( size_t i = 0; i < file.size(); ++i ) {
@@ -660,7 +708,7 @@ bool Island::is_available(const Resources& costs) {
 // is used - check if tile is already in use
 // ------------------------------------------------------
 bool Island::isUsed(int x, int y) {
-	if (!_tiles.is_empty(x,y)) {
+	if (!_tiles->is_empty(x,y)) {
 		return true;
 	}
 	/*
@@ -689,7 +737,6 @@ bool Island::isCollectable(int x,int y) const {
 World::World() : _selected(-1) {
 	_context.building_definitions.load();
 	_context.resource_registry.load();		
-	//_context.price_registry.load("registry.txt");
 	_context.price_registry.load();
 	_context.price_registry.load_requirements();
 	_context.price_registry.load_max_resources();
@@ -698,19 +745,8 @@ World::World() : _selected(-1) {
 	_context.time_multiplier = 1;
 }
 
-Island* World::createIsland() {
-	Island* i = new Island(&_context);
-	// build some forrest
-	// place some fruits	
-	// create home base
-	i->add("HB",8,8);
-	// create hut	
-	i->add("HT",8,10);
-	// add initial resources
-	i->addResource("MO",1000);
-	i->addResource("FO",100);
-	i->addResource("WD",100);
-	i->addResource("WO", 1);
+Island* World::createIsland(int width,int height) {
+	Island* i = new Island(&_context,width,height);
 	_islands.push_back(i);
 	return i;
 }
@@ -774,7 +810,7 @@ void World::load() {
 		// load islands
 		fread(&num,sizeof(int),1,f);
 		for ( int i = 0; i < num; ++i ) {
-			Island* is = new Island(&_context);
+			Island* is = new Island(&_context,32,32);
 			is->load(i);
 			_islands.push_back(is);
 		}

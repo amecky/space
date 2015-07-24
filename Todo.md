@@ -5,20 +5,22 @@ TODO
 - [ ] start -> if CM_MANUAL check if it is not done (pending)
 - [ ] add world level system based on experience
 - [ ] tasks are based on world level
-- [ ] build island map (1 Home base and 1 Hut and x tress and y fruits spread randomly)
-- [ ] island - define supported buildings / resources
-- [ ] island define size (make Tiles size dynamic)
 - [ ] check that every ID (sign / first col) in CSV file is unique
 - [ ] save current time
 - [ ] load - load current time and adjust all queues (tick with timeUnits)
 - [ ] load - check if there are all required regular josb running
 - [ ] registry - verify foreign keys (mainly sign) - report error
-- [ ] convert all txt files to the new named csv format
-- [ ] price registry - extract prices into individual files like HT.txt
-- [ ] every island is split into areas which are visible or not and user needs to buy areas
-- [ ] add hidden attribute to tiles
-- [ ] read area definition from file containig tiles
-- [ ] world -> load islands.txt and process this file
+
+24.07.2015
+- [x] price registry - extract prices into individual files like HT.txt
+- [x] convert all txt files to the new named csv format
+- [x] every island is split into areas which are visible or not and user needs to buy areas
+- [x] add hidden attribute to tiles -> TS_LOCKED bit
+- [x] read area definition from file containig tiles
+- [x] world -> load islands.txt and process this file
+- [x] build island map (1 Home base and 1 Hut and x tress and y fruits spread randomly)
+- [x] island - define supported buildings / resources
+- [x] island define size (make Tiles size dynamic)
 
 23.07.2015
 - [x] price registry - take all signs from buildings registry and try to read files

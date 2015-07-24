@@ -147,20 +147,20 @@ CSVFile::~CSVFile() {}
 // ------------------------------------------------------
 bool CSVFile::load(const char* fileName,const char* directory) {
 	char buffer[256];
-		sprintf(buffer,"%s\\%s",directory,fileName);
-		std::string line;
-		std::ifstream myfile(buffer);
-		_lines.clear();
-		if (myfile.is_open()) {
-			while (std::getline(myfile, line)) {
-				if (line.find("#") == std::string::npos && line.find(",") != std::string::npos) {
-					_lines.push_back(TextLine(line));					
-				}
+	sprintf(buffer,"%s\\%s",directory,fileName);
+	std::string line;
+	std::ifstream myfile(buffer);
+	_lines.clear();
+	if (myfile.is_open()) {
+		while (std::getline(myfile, line)) {
+			if (line.find("#") == std::string::npos && line.find(",") != std::string::npos) {
+				_lines.push_back(TextLine(line));					
 			}
-			myfile.close();
-			return true;
 		}
-		return false;
+		myfile.close();
+		return true;
+	}
+	return false;
 }
 
 // ------------------------------------------------------

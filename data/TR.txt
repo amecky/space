@@ -1,0 +1,7 @@
+# -----------------------------
+# Tree
+# -----------------------------
+# remove
+building : TR , level : 1 , work : D , stage : S , duration: 30 , resource : WO , amount : 1
+building : TR , level : 1 , work : D , stage : F , duration:  0 , resource : WO , amount : 1
+building : TR , level : 1 , work : D , stage : F , duration:  0 , resource : WD , amount : 10

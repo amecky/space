@@ -18,8 +18,6 @@ Simulation::Simulation() {
 	_commands[Token::TOK_REMOVE] = new SimRemove(&_world);
 	_commands[Token::TOK_LOAD] = new SimLoad(&_world);
 	_commands[Token::TOK_MOVE] = new SimMove(&_world);
-	//Island* island = _world.createIsland();
-	//Island* next = _world.createIsland();
 	_world.addResource(Sign('M','O'),1000);
 	_world.selectIsland(0);
 }
@@ -51,13 +49,34 @@ void Simulation::intialize() {
 		int sx = 0;
 		int sy = 0;
 		for ( size_t i = 0; i < defs.size(); ++i ) {
-			sx += defs[i].size_x;
-			sy += defs[i].size_y;
-		}
-		++it;
+			if ( defs[i].start_x + defs[i].size_x > sx ) {
+				sx = defs[i].start_x + defs[i].size_x;
+			}
+			if ( defs[i].start_y + defs[i].size_y > sy ) {
+				sy = defs[i].start_y + defs[i].size_y;
+			}
+		}		
 		printf("island %d size %d %d\n",id,sx,sy);
+		Island* il = _world.createIsland(sx,sy);
+		for ( size_t i = 0; i < defs.size(); ++i ) {
+			const AreaDefinition& ad = defs[i];
+			il->createArea(ad);
+		}	
+		++it;
 	}
 	printf("islands %d\n",islands.size());
+	_world.selectIsland(0);
+	const char* names[] = {"island","resource","amount"};
+	RegistryReader reader(names,3);
+	if ( reader.load("island_resources.txt","data")) {
+		for ( size_t i = 0; i < reader.size(); ++i ) {
+			int is_idx = reader.get_int(i,"island");
+			Sign s = reader.get_sign(i,"resource");
+			int amount = reader.get_int(i,"amount");
+			Island* il = _world.getIsland(is_idx);
+			il->addResource(s,amount);
+		}
+	}
 }
 
 // ------------------------------------------------------

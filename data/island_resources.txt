@@ -1,0 +1,3 @@
+island : 0 , resource : WO , amount : 1
+island : 0 , resource : WD , amount : 500
+island : 0 , resource : FO , amount : 500

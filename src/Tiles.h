@@ -1,19 +1,30 @@
 #pragma once
 #include <stdio.h>
-
-const int GRID_SIZE = 256;
+#include "utils.h"
+// tile is not defined and cannot be used
+const int TS_UNDEFINED = 1;
+// tile active
+const int TS_ACTIVE    = 2;
+// tile empty 
+const int TS_EMPTY     = 3;
+// tile is part of an unlocked area
+const int TS_LOCKED    = 4;
 // ------------------------------------------------------
 // Tile
 // ------------------------------------------------------
 struct Tile {
 
 	int building_id;
-	bool active;
+	int state;
 	int level;
 	int ref_id;
 
-	Tile() : building_id(-1) , active(false) , level(0) , ref_id(-1) {}
-	Tile(int bid,int lvl) : building_id(bid) , active(false) , level(lvl) , ref_id(-1) {}
+	Tile() : building_id(-1) , level(0) , ref_id(-1) {
+		bits::set(&state,TS_EMPTY);
+	}
+	Tile(int bid,int lvl) : building_id(bid) , level(lvl) , ref_id(-1) {
+		bits::set(&state,TS_EMPTY);
+	}
 
 };
 
@@ -22,53 +33,66 @@ struct Tile {
 // ------------------------------------------------------
 struct Tiles {
 
-	Tile _tiles[GRID_SIZE * GRID_SIZE];
+	Tile* _tiles;
+	int width;
+	int height;
+	int total;
+
+	Tiles(int w,int h) : width(w) , height(h) {
+		total = w * h;
+		_tiles = new Tile[total];
+	}
+
+	~Tiles() {
+		delete[] _tiles;
+	}
 
 	void clear() {
-		for ( int i = 0; i< GRID_SIZE * GRID_SIZE; ++i ) {
+		for ( int i = 0; i < total; ++i ) {
 			_tiles[i].building_id = -1;
 			_tiles[i].ref_id = -1;
-			_tiles[i].active = false;
 			_tiles[i].level = 0;
+			_tiles[i].state = 0;
+			bits::set(&_tiles[i].state,TS_EMPTY);
 		}
 	}
 
 	void set(int x,int y,const Tile& t) {
-		_tiles[x + y * GRID_SIZE] = t;
+		_tiles[x + y * width] = t;
 	}
 
 	const Tile& get(int x,int y) const {
-		return _tiles[x + y * GRID_SIZE];
+		return _tiles[x + y * width];
 	}
 
 	const int get_index(int x,int y) const {
-		return x + y * GRID_SIZE;
+		return x + y * width;
 	}
 
 	Tile& get(int x,int y) {
-		return _tiles[x + y * GRID_SIZE];
+		return _tiles[x + y * width];
 	}
 
 	const int getBuildingID(int index) const {
-		if ( index >= 0 && index < (GRID_SIZE * GRID_SIZE)) {
+		if ( index >= 0 && index < total) {
 			return _tiles[index].building_id;
 		}
 		return -1;
 	}
 
 	const int getLevel(int index) const {
-		if ( index >= 0 && index < (GRID_SIZE * GRID_SIZE)) {
+		if ( index >= 0 && index < total) {
 			return _tiles[index].level;
 		}
 		return -1;
 	}
 
 	const bool isActive(int index) const {
-		return _tiles[index].active;
+		return bits::is_set(_tiles[index].state,TS_ACTIVE);
 	}
 	
 	const bool is_valid(int x,int y) const {
-		if ( x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
+		if ( x >= 0 && x < width && y >= 0 && y < height) {
 			return true;
 		}
 		return false;
@@ -77,13 +101,13 @@ struct Tiles {
 	const bool is_empty(int x,int y) const {
 		if ( is_valid(x,y)) {
 			const Tile& t = get(x,y);
-			return t.building_id == -1 && t.ref_id == -1;
+			return t.building_id == -1 && t.ref_id == -1 && !bits::is_set(t.state,TS_LOCKED);
 		}
 		return false;
 	}
 
 	void setActive(int index,bool active) {
-		_tiles[index].active = active;
+		bits::set(&_tiles[index].state,TS_ACTIVE);
 	}
 
 	const bool match(int index,const BuildRequirement& requirement) const {
@@ -127,7 +151,7 @@ struct Tiles {
 			return is_empty(x,y);
 		}
 		int dy = y - size_y + 1;
-		if ( (x + size_x) >= GRID_SIZE ) {
+		if ( (x + size_x) >= width ) {
 			return false;
 		}
 		if ( (y - size_y) < 0 ) {
@@ -143,5 +167,15 @@ struct Tiles {
 			}
 		}
 		return true;
+	}
+
+	void set_state(int x,int y,int state) {
+		//printf("%d %d = %d\n",x,y,_tiles[x + y * width].state);
+		bits::set(&_tiles[x + y * width].state,state);
+		//printf("%d %d = %d (%d)\n",x,y,_tiles[x + y * width].state,state);
+	}
+
+	bool has_state(int x,int y,int state) {
+		return bits::is_set(_tiles[x + y * width].state,state);
 	}
 };

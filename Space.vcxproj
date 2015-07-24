@@ -76,10 +76,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="data\AB.txt" />
+    <None Include="data\AT.txt" />
     <None Include="data\HT.txt" />
+    <None Include="data\in_0_ar_0.txt" />
     <None Include="data\islands.txt" />
+    <None Include="data\island_resources.txt" />
     <None Include="data\new_buildings.txt" />
+    <None Include="data\PA.txt" />
     <None Include="data\resources.txt" />
+    <None Include="data\TR.txt" />
     <None Include="ReadMe.md" />
     <None Include="Todo.md" />
   </ItemGroup>
@@ -106,6 +112,7 @@
     <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="src\targetver.h" />
     <ClInclude Include="src\Tiles.h" />
+    <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\WorkQueue.h" />
     <ClInclude Include="src\World.h" />
   </ItemGroup>
@@ -119,6 +126,7 @@
     <ClCompile Include="src\Resources.cpp" />
     <ClCompile Include="src\Simulation.cpp" />
     <ClCompile Include="src\Space.cpp" />
+    <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\WorkQueue.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>

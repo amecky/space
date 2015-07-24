@@ -24,6 +24,24 @@
     <None Include="data\islands.txt">
       <Filter>data</Filter>
     </None>
+    <None Include="data\in_0_ar_0.txt">
+      <Filter>data</Filter>
+    </None>
+    <None Include="data\AB.txt">
+      <Filter>data</Filter>
+    </None>
+    <None Include="data\TR.txt">
+      <Filter>data</Filter>
+    </None>
+    <None Include="data\PA.txt">
+      <Filter>data</Filter>
+    </None>
+    <None Include="data\island_resources.txt">
+      <Filter>data</Filter>
+    </None>
+    <None Include="data\AT.txt">
+      <Filter>data</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\12.txt">
@@ -62,6 +80,7 @@
     <ClInclude Include="src\World.h" />
     <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="src\RegistryReader.h" />
+    <ClInclude Include="src\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CSVFile.cpp" />
@@ -75,5 +94,6 @@
     <ClCompile Include="src\World.cpp" />
     <ClCompile Include="src\Simulation.cpp" />
     <ClCompile Include="src\RegistryReader.cpp" />
+    <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
 </Project>

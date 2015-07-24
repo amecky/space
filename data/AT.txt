@@ -1,0 +1,10 @@
+# -----------------------------
+# Apple tree
+# -----------------------------
+# Remove
+building : AT , level : 1 , work : D , stage : S , duration: 60 , resource : WO , amount : 1
+building : AT , level : 1 , work : D , stage : S , duration: 60 , resource : FO , amount : 10
+building : AT , level : 1 , work : D , stage : F , duration:  0 , resource : WO , amount : 1
+building : AT , level : 1 , work : D , stage : F , duration:  0 , resource : XP , amount : 10
+building : AT , level : 1 , work : D , stage : F , duration:  0 , resource : WD , amount : 20
+building : AT , level : 1 , work : D , stage : F , duration:  0 , resource : FO , amount : 50

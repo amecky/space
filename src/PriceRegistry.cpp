@@ -316,73 +316,36 @@ void PriceRegistry::load(const char* fileName) {
 				_entries.push_back(entry);
 			}
 		}
-		//printf("entries: %d\n",_entries.size());
 	}
-	/*
-	//HT,1,B,S,60,WO,1
-	CSVFile file;
-	if ( file.load(fileName,"data") ) {
-		for ( size_t i = 0; i < file.size(); ++i ) {
-			const TextLine& l = file.get(i);
-			RegistryEntry entry;
-			Sign s = l.get_sign(0);
-			entry.building_type = _building_registry->getIndex(s);
-			if (entry.building_type == -1) {
-				printf("ERROR: invalid building type at %d\n", i);
-				l.print();
-			}
-			entry.level = l.get_int(1);
-			entry.price_type = -1;
-			char pt = l.get_char(2);
-			for (int j = 0; j < 6; ++j) {
-				if (pt == PRICE_TYPES[j]) {
-					entry.price_type = j;
-				}
-			}
-			char flag = l.get_char(3);
-			if ( flag == 'S' ) {
-				entry.stage = 0;
-			}
-			else if (flag == 'F') {
-				entry.stage = 1;
-			}
-			else {
-				entry.stage = 2;
-			}
-			entry.duration = l.get_int(4);
-			Sign r = l.get_sign(5);
-			entry.resource_id = _resource_registry->getIndex(r);
-			if (entry.resource_id == -1) {
-				printf("ERROR: invalid resource type at %d\n", i);
-				l.print();
-			}
-			entry.amount = l.get_int(6);
-			//printf("-> entry %d %d %d\n",entry.building_type,entry.level,entry.price_type);
-			_entries.push_back(entry);
-		}
-	}	
-	*/
-	
 }
 
 // ------------------------------------------------------
 // load registry
 // ------------------------------------------------------
 void PriceRegistry::load_requirements() {
-	// HB,2,HT,3,3
-	CSVFile file;
-	if ( file.load("requirements.txt","data") ) {
-		for ( size_t i = 0; i < file.size(); ++i ) {
-			const TextLine& l = file.get(i);
+	const char* names[] = {"building","level","required_building","required_level","required_amount"};
+	RegistryReader r(names,5);
+	if ( r.load("requirements.txt","data") ) {
+		for ( int i = 0; i < r.size(); ++i ) {
 			BuildRequirement br;
-			Sign s = l.get_sign(0);
+			Sign s = r.get_sign(i,"building");
 			br.building_type = _building_registry->getIndex(s);
-			br.level = l.get_int(1);
-			Sign r = l.get_sign(2);
-			br.required_building = _building_registry->getIndex(r);
-			br.required_level = l.get_int(3);
-			br.required_count = l.get_int(4);
-			_requirements.push_back(br);      
+			if ( br.building_type != -1 ) {
+				br.level = r.get_int(i,"level");
+				Sign req = r.get_sign(i,"required_building");
+				br.required_building = _building_registry->getIndex(req);
+				if ( br.required_building != -1 ) {
+					br.required_level = r.get_int(i,"required_level");
+					br.required_count = r.get_int(i,"required_amount");
+					_requirements.push_back(br);   
+				}
+				else {
+				printf("ERROR: invalid required building %s\n",s.c_str());
+			}
+			}
+			else {
+				printf("ERROR: invalid building %s\n",s.c_str());
+			}
 		}
 	}	
 	printf("requirements: %d\n",_requirements.size());
@@ -392,21 +355,32 @@ void PriceRegistry::load_requirements() {
 // load max resources
 // ------------------------------------------------------
 void PriceRegistry::load_max_resources() {
-	CSVFile file;
-	if ( file.load("max_resources.txt","data") ) {
-		for ( size_t i = 0; i < file.size(); ++i ) {
-			const TextLine& l = file.get(i);
+	// building : HB , level : 1 , resource : WD , amount : 500 
+	const char* names[] = {"building","level","resource","amount"};
+	RegistryReader r(names,4);
+	if ( r.load("max_resources.txt","data") ) {
+		for ( int i = 0; i < r.size(); ++i ) {
 			MaxResourceDefinition def;
 			// HB,1,WD,500 
-			Sign s = l.get_sign(0);
+			Sign s = r.get_sign(i,"building");
 			def.building_id = _building_registry->getIndex(s);
-			def.level = l.get_int(1);
-			Sign r = l.get_sign(2);
-			def.resource_id = _resource_registry->getIndex(r);
-			def.amount = l.get_int(3);
-			_max_resources.push_back(def);
-		}		
-	}
+			if ( def.building_id == -1 ) {
+				printf("ERROR: Invalid building %s\n",s.c_str());
+			}
+			else {
+				def.level = r.get_int(i,"level");
+				Sign res = r.get_sign(i,"resource");
+				def.resource_id = _resource_registry->getIndex(res);
+				if ( def.resource_id != -1 ) {
+					def.amount = r.get_int(i,"amount");
+					_max_resources.push_back(def);
+				}
+				else {
+					printf("ERROR: Invalid resource definition %s\n",res.c_str());
+				}
+			}
+		}
+	}	
 	printf("max resource definition: %d\n", _max_resources.size());
 }
 

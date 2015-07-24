@@ -49,7 +49,7 @@ class Island {
 typedef std::vector<Collectable> Collectables;
 
 public:
-	Island(WorldContext* context);
+	Island(WorldContext* context,int size_x,int size_y);
 	~Island();
 	void setCollectMode(CollectMode cm);
 	void tick(int timeUnits);
@@ -70,6 +70,7 @@ public:
 	bool collect(int x, int y);
 	bool remove(int x, int y);
 	bool describe(int x, int y);
+	void createArea(const AreaDefinition& definition);
 private:
 	bool createWork(int price_type,int x,int y,int building_id, int level);
 	bool checkRequirements(int building_id, int level);
@@ -83,7 +84,7 @@ private:
 	CollectMode _collect_mode;
 	Resources _resources;
 	Resources _maxResources;
-	Tiles _tiles;
+	Tiles* _tiles;
 	WorkQueue _queue;
 	Collectables _collectables;
 	WorldContext* _context;
@@ -100,7 +101,7 @@ public:
 			delete _islands[i];
 		}
 	}
-	Island* createIsland();
+	Island* createIsland(int width,int height);
 	Island* getIsland(int index) const;
 	Island* getSelectedIsland() const;
 	void selectIsland(int index);
