@@ -18,6 +18,7 @@ Simulation::Simulation() {
 	_commands[Token::TOK_REMOVE] = new SimRemove(&_world);
 	_commands[Token::TOK_LOAD] = new SimLoad(&_world);
 	_commands[Token::TOK_MOVE] = new SimMove(&_world);
+	_commands[Token::TOK_TASKS] = new SimTasks(&_world);
 	_world.addResource(Sign('M','O'),1000);
 	_world.selectIsland(0);
 }

@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-Island::Island(WorldContext* context,int size_x,int size_y) : _context(context) {
+Island::Island(WorldContext* context,int id,int size_x,int size_y) : _context(context) , _id(id) {
 	_tiles = new Tiles(size_x,size_y);
 	_tiles->clear();	
 	
@@ -207,7 +207,11 @@ void Island::tick(int timeUnits) {
 				// FIXME: remove all tiles
 				t.building_id = -1;
 			}
+
+			_context->task_registry.handle_event(_id, e);
+
 		}
+		
 	}
 
 	// immediate mode -> process all collectables directly
@@ -750,12 +754,14 @@ World::World() : _selected(-1) {
 	_context.requirements_registry.load("requirements.txt");
 	_context.max_resources_registry.load("max_resources.txt");
 	_context.task_registry.load("tasks.txt");
+	_context.reward_registry.load("rewards.txt");
 	_context.collect_mode = CM_IMMEDIATE;
 	_context.time_multiplier = 1;
 }
 
 Island* World::createIsland(int width,int height) {
-	Island* i = new Island(&_context,width,height);
+	int id = _islands.size();
+	Island* i = new Island(&_context,id,width,height);
 	_islands.push_back(i);
 	return i;
 }
@@ -819,12 +825,32 @@ void World::load() {
 		// load islands
 		fread(&num,sizeof(int),1,f);
 		for ( int i = 0; i < num; ++i ) {
-			Island* is = new Island(&_context,32,32);
+			Island* is = new Island(&_context,i,32,32);
 			is->load(i);
 			_islands.push_back(is);
 		}
         fclose(f);
     }
+}
+
+void World::show_tasks() {
+	TaskList tasks;
+	Reward rewards[16];
+	_context.task_registry.get_active_tasks(_selected,tasks);
+	for (size_t i = 0; i < tasks.size(); ++i) {
+		printf("Task:\n");
+		printf("  %s\n", tasks[i].text);
+		if (_context.reward_registry.contains(tasks[i].id)) {
+			int cnt = _context.reward_registry.get(tasks[i].id, rewards, 16);
+			if (cnt > 0) {
+				printf("Rewards: \n  ");
+				for (int j = 0; j < cnt; ++j) {
+					printf("%d %s  ", rewards[j].amount,_context.resource_registry.getName(rewards[j].resource_id));
+				}
+				printf("\n");
+			}
+		}
+	}
 }
 
 WorldContext* World::getContext() {

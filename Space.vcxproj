@@ -85,6 +85,7 @@
     <None Include="data\island_resources.txt" />
     <None Include="data\new_buildings.txt" />
     <None Include="data\PA.txt" />
+    <None Include="data\rewards.txt" />
     <None Include="data\TR.txt" />
     <None Include="ReadMe.md" />
     <None Include="Todo.md" />
@@ -114,6 +115,7 @@
     <ClInclude Include="src\registries\RegistryReader.h" />
     <ClInclude Include="src\registries\RequirementsRegistry.h" />
     <ClInclude Include="src\registries\ResourceRegistry.h" />
+    <ClInclude Include="src\registries\RewardsRegistry.h" />
     <ClInclude Include="src\registries\TaskRegistry.h" />
     <ClInclude Include="src\Resources.h" />
     <ClInclude Include="src\Simulation.h" />
@@ -135,6 +137,7 @@
     <ClCompile Include="src\registries\RegistryReader.cpp" />
     <ClCompile Include="src\registries\RequirementsRegistry.cpp" />
     <ClCompile Include="src\registries\ResourceRegistry.cpp" />
+    <ClCompile Include="src\registries\RewardsRegistry.cpp" />
     <ClCompile Include="src\registries\TaskRegistry.cpp" />
     <ClCompile Include="src\Resources.cpp" />
     <ClCompile Include="src\Simulation.cpp" />

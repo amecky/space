@@ -1,5 +1,8 @@
 #
 # tasks
 #
-island : 0 , job_id : 0 , type : B , building : HT , level : 3 , amount : 2 , text : "Build 2 Huts"
-island : 0 , job_id : 1 , type : C , building : HT , level : 1 , amount : 2 , text : "Collect taxes from 2 Huts"
+id : 1 , island : 0 , type : B , resource : -- , building : HT , level : 1 , amount : 3 , previous : -1 , text : "Build 2 Huts"
+id : 2 , island : 0 , type : C , resource : MO , building : HT , level : 1 , amount : 2 , previous :  2 , text : "Collect tax from 2 Huts"
+
+
+

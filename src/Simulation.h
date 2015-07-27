@@ -253,6 +253,24 @@ public:
 		return 4;
 	}
 };
+
+// ------------------------------------------------------
+// tasks
+// ------------------------------------------------------
+class SimTasks : public SimCommand {
+
+public:
+	SimTasks(World* w) : SimCommand(w) {}
+	void execute(const TextLine& line) {
+		_world->show_tasks();
+	}
+	void write_syntax() {
+		printf("tasks - lists all active tasks\n");
+	}
+	int num_params() {
+		return 0;
+	}
+};
 /*
 else if (line.type == Token::TOK_LOAD_TXT) {
 island->load_txt(line.values[0]);

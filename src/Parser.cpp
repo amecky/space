@@ -77,10 +77,11 @@ static Token TOKENS[] = {
 	{ "remove", Token::TOK_REMOVE, 2 },
 	{ "ldtxt", Token::TOK_LOAD_TXT, 1 },
 	{ "switch", Token::TOK_SWITCH, 1 },
-	{ "describe", Token::TOK_DESCRIBE, 2 }
+	{ "describe", Token::TOK_DESCRIBE, 2 },
+	{ "tasks", Token::TOK_TASKS, 0 }
 };
 
-const int NUM_TOKENS = 18;
+const int NUM_TOKENS = 19;
 
 namespace parse {
 

@@ -45,6 +45,9 @@
     <None Include="data\BB.txt">
       <Filter>data</Filter>
     </None>
+    <None Include="data\rewards.txt">
+      <Filter>data</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\12.txt">
@@ -106,6 +109,9 @@
     <ClInclude Include="src\registries\TaskRegistry.h">
       <Filter>registries</Filter>
     </ClInclude>
+    <ClInclude Include="src\registries\RewardsRegistry.h">
+      <Filter>registries</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CSVFile.cpp" />
@@ -140,6 +146,9 @@
       <Filter>registries</Filter>
     </ClCompile>
     <ClCompile Include="src\registries\TaskRegistry.cpp">
+      <Filter>registries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\registries\RewardsRegistry.cpp">
       <Filter>registries</Filter>
     </ClCompile>
   </ItemGroup>

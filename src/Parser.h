@@ -22,7 +22,8 @@ struct Token {
 		TOK_REMOVE,
 		TOK_LOAD_TXT,
 		TOK_SWITCH,
-		TOK_DESCRIBE
+		TOK_DESCRIBE,
+		TOK_TASKS
 	};
 
 	const char* name;

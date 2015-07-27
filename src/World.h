@@ -5,6 +5,7 @@
 #include "registries\ResourceRegistry.h"
 #include "registries\IslandRegistry.h"
 #include "registries\TaskRegistry.h"
+#include "registries\RewardsRegistry.h"
 #include "Tiles.h"
 #include <vector>
 #include "WorkQueue.h"
@@ -29,13 +30,15 @@ struct WorldContext {
 	TaskRegistry task_registry;
 	RequirementsRegistry requirements_registry;
 	MaxResourcesRegistry max_resources_registry;
+	RewardRegistry reward_registry;
 	CollectMode collect_mode;
 	int time_multiplier;
 	WorldContext() 
 		: price_registry(&resource_registry,&building_definitions) 
 		, task_registry(&building_definitions)
 		, requirements_registry(&building_definitions) 
-		, max_resources_registry(&resource_registry,&building_definitions) {
+		, max_resources_registry(&resource_registry,&building_definitions) 
+		, reward_registry(&resource_registry) {
 	}
 };
 
@@ -60,7 +63,7 @@ class Island {
 typedef std::vector<Collectable> Collectables;
 
 public:
-	Island(WorldContext* context,int size_x,int size_y);
+	Island(WorldContext* context,int id,int size_x,int size_y);
 	~Island();
 	void setCollectMode(CollectMode cm);
 	void tick(int timeUnits);
@@ -99,6 +102,7 @@ private:
 	WorkQueue _queue;
 	Collectables _collectables;
 	WorldContext* _context;
+	int _id;
 };
 
 class World {
@@ -120,6 +124,7 @@ public:
 	void addResource(const Sign& sign, int value);
 	void save();
 	void load();
+	void show_tasks();
 	WorldContext* getContext();
 private:
 	int _selected;
