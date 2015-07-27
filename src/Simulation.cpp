@@ -1,6 +1,6 @@
 #include "Simulation.h"
 #include <stdio.h>
-#include "RegistryReader.h"
+#include "registries\RegistryReader.h"
 #include <map>
 // ------------------------------------------------------
 // constructor
@@ -35,7 +35,7 @@ Simulation::~Simulation() {
 
 void Simulation::intialize() {
 	IslandRegistry registry;
-	registry.load();
+	registry.load("islands.txt");
 	std::map<int,std::vector<AreaDefinition>> islands;
 	// group by island
 	for ( size_t i = 0; i < registry.size(); ++i ) {

@@ -8,13 +8,13 @@
     <Filter Include="data">
       <UniqueIdentifier>{78adfb6a-35e3-4d8e-bdfd-7d307d520783}</UniqueIdentifier>
     </Filter>
+    <Filter Include="registries">
+      <UniqueIdentifier>{ad8ee99a-879a-4774-a1f9-92647fcdb40c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Todo.md" />
     <None Include="ReadMe.md" />
-    <None Include="data\resources.txt">
-      <Filter>data</Filter>
-    </None>
     <None Include="data\new_buildings.txt">
       <Filter>data</Filter>
     </None>
@@ -72,28 +72,75 @@
     <ClInclude Include="src\files.h" />
     <ClInclude Include="src\GlobalTimer.h" />
     <ClInclude Include="src\Parser.h" />
-    <ClInclude Include="src\PriceRegistry.h" />
     <ClInclude Include="src\Resources.h" />
     <ClInclude Include="src\targetver.h" />
     <ClInclude Include="src\Tiles.h" />
     <ClInclude Include="src\WorkQueue.h" />
     <ClInclude Include="src\World.h" />
     <ClInclude Include="src\Simulation.h" />
-    <ClInclude Include="src\RegistryReader.h" />
     <ClInclude Include="src\utils.h" />
+    <ClInclude Include="src\registries\PriceRegistry.h">
+      <Filter>registries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\registries\RegistryReader.h">
+      <Filter>registries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\registries\RequirementsRegistry.h">
+      <Filter>registries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\registries\MaxResourcesRegistry.h">
+      <Filter>registries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\registries\BaseRegistry.h">
+      <Filter>registries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\registries\ResourceRegistry.h">
+      <Filter>registries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\registries\BuildingRegistry.h">
+      <Filter>registries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\registries\IslandRegistry.h">
+      <Filter>registries</Filter>
+    </ClInclude>
+    <ClInclude Include="src\registries\TaskRegistry.h">
+      <Filter>registries</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CSVFile.cpp" />
     <ClCompile Include="src\files.cpp" />
     <ClCompile Include="src\GlobalTimer.cpp" />
     <ClCompile Include="src\Parser.cpp" />
-    <ClCompile Include="src\PriceRegistry.cpp" />
     <ClCompile Include="src\Resources.cpp" />
     <ClCompile Include="src\Space.cpp" />
     <ClCompile Include="src\WorkQueue.cpp" />
     <ClCompile Include="src\World.cpp" />
     <ClCompile Include="src\Simulation.cpp" />
-    <ClCompile Include="src\RegistryReader.cpp" />
     <ClCompile Include="src\utils.cpp" />
+    <ClCompile Include="src\registries\PriceRegistry.cpp">
+      <Filter>registries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\registries\RegistryReader.cpp">
+      <Filter>registries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\registries\RequirementsRegistry.cpp">
+      <Filter>registries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\registries\MaxResourcesRegistry.cpp">
+      <Filter>registries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\registries\ResourceRegistry.cpp">
+      <Filter>registries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\registries\BuildingRegistry.cpp">
+      <Filter>registries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\registries\IslandRegistry.cpp">
+      <Filter>registries</Filter>
+    </ClCompile>
+    <ClCompile Include="src\registries\TaskRegistry.cpp">
+      <Filter>registries</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

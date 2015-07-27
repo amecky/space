@@ -67,7 +67,7 @@ void Island::calculateMaxResources() {
 	}
 	for (int i = 0; i < _tiles->total; ++i) {
 		if (_tiles->getBuildingID(i) != -1) {
-			_context->price_registry.add_max_resources(_tiles->getBuildingID(i), _tiles->getLevel(i), &_maxResources);
+			_context->max_resources_registry.add(_tiles->getBuildingID(i), _tiles->getLevel(i), &_maxResources);
 		}
 	}
 }
@@ -450,6 +450,10 @@ bool Island::start(int x,int y,int level) {
 		printf("Error: The selected level %d is not supported yet - You need to upgrade\n",level);
 		return false;
 	}
+	if ( _collect_mode == CM_MANUAL && isCollectable(x,y)) {
+		printf("ERROR: You need to collect the resources before you can start work again\n");
+		return false;
+	}
 	Resources tmp;
 	if ( !_context->price_registry.get(PT_WORK,0,_tiles->getBuildingID(idx),level,&tmp)) {
 		printf("Error: The selected level %d is not supported yet - You need to upgrade\n",level);
@@ -565,7 +569,7 @@ bool Island::remove(int x,int y) {
 // ------------------------------------------------------
 bool Island::checkRequirements(int building_id, int level) {
 	BuildRequirement requirement;
-	if (_context->price_registry.getRequirement(building_id, level, &requirement)) {
+	if (_context->requirements_registry.getRequirement(building_id, level, &requirement)) {
 		int cnt = 0;
 		for (int i = 0; i < _tiles->total; ++i) {
 			if ( _tiles->match(i,requirement) ) {
@@ -735,12 +739,17 @@ bool Island::isCollectable(int x,int y) const {
 }
 
 World::World() : _selected(-1) {
-	_context.building_definitions.load();
-	_context.resource_registry.load();		
-	_context.price_registry.load();
-	_context.price_registry.load_requirements();
-	_context.price_registry.load_max_resources();
-	_context.task_registry.load();
+	_context.building_definitions.load("buildings.txt");
+	_context.resource_registry.load("resource_definitions.txt");		
+	char buffer[256];
+	for ( size_t i = 0; i < _context.building_definitions.size(); ++i ) {
+		const BuildingDefinition& def = _context.building_definitions.get(i);
+		sprintf(buffer,"%s.txt",def.sign.c_str());
+		_context.price_registry.load(buffer);
+	}
+	_context.requirements_registry.load("requirements.txt");
+	_context.max_resources_registry.load("max_resources.txt");
+	_context.task_registry.load("tasks.txt");
 	_context.collect_mode = CM_IMMEDIATE;
 	_context.time_multiplier = 1;
 }

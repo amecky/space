@@ -1,14 +1,15 @@
 #pragma once
 #include <stdio.h>
 #include "utils.h"
+#include "registries\RequirementsRegistry.h"
 // tile is not defined and cannot be used
-const int TS_UNDEFINED = 1;
+const int TS_UNDEFINED   = 1;
 // tile active
-const int TS_ACTIVE    = 2;
+const int TS_ACTIVE      = 2;
 // tile empty 
-const int TS_EMPTY     = 3;
+const int TS_EMPTY       = 3;
 // tile is part of an unlocked area
-const int TS_LOCKED    = 4;
+const int TS_LOCKED      = 4;
 // ------------------------------------------------------
 // Tile
 // ------------------------------------------------------

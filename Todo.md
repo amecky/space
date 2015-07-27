@@ -1,17 +1,21 @@
 TODO
 ------------------------------------------
+- [ ] add tile type (regular,stone,rocks,water,sand)
 - [ ] fill registry with prices
 - [ ] task system (?)
-- [ ] start -> if CM_MANUAL check if it is not done (pending)
 - [ ] add world level system based on experience
 - [ ] tasks are based on world level
-- [ ] check that every ID (sign / first col) in CSV file is unique
 - [ ] save current time
 - [ ] load - load current time and adjust all queues (tick with timeUnits)
-- [ ] load - check if there are all required regular josb running
-- [ ] registry - show line number and proper error message
+
+27.07.2015
+- [x] start -> if CM_MANUAL check if it is not done (pending)
+- [x] check that every ID (sign / first col) in CSV file is unique
+- [x] extract registries into individual files
+- [x] registry - show line number and proper error message
 
 24.07.2015
+- [x] load - check if there are all required regular josb running
 - [x] registry - verify foreign keys (mainly sign) - report error
 - [x] price registry - extract prices into individual files like HT.txt
 - [x] convert all txt files to the new named csv format

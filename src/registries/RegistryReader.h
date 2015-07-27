@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <assert.h>
-#include "Common.h"
+#include "..\Common.h"
 
 const int MAX_FIELDS = 16;
 

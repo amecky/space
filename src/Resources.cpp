@@ -1,5 +1,5 @@
 #include "Resources.h"
-#include "PriceRegistry.h"
+#include "registries\ResourceRegistry.h"
 
 namespace res {
 

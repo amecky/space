@@ -1,6 +1,5 @@
 #include "Parser.h"
 #include "Simulation.h"
-#include "RegistryReader.h"
 #include "utils.h"
 
 int main(int argc,char* argv[]) {

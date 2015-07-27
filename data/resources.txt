@@ -1,6 +1,0 @@
-#
-# resource definitions
-#
-sign : MO , global : Y , name : Money , size_x : 10
-sign : FO , global : N , name : Food  , size_y : 20
-sign : WD , global : N , name : Wood  , size_x : 30

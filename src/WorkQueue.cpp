@@ -1,6 +1,6 @@
 #include "WorkQueue.h"
 #include "Resources.h"
-#include "PriceRegistry.h"
+#include "registries\PriceRegistry.h"
 
 WorkQueue::WorkQueue(void) {
 }

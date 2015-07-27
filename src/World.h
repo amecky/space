@@ -1,6 +1,10 @@
 #pragma once
 #include "Resources.h"
-#include "PriceRegistry.h"
+#include "registries\PriceRegistry.h"
+#include "registries\MaxResourcesRegistry.h"
+#include "registries\ResourceRegistry.h"
+#include "registries\IslandRegistry.h"
+#include "registries\TaskRegistry.h"
 #include "Tiles.h"
 #include <vector>
 #include "WorkQueue.h"
@@ -23,9 +27,16 @@ struct WorldContext {
 	BuildingRegistry building_definitions;
 	ResourceRegistry resource_registry;
 	TaskRegistry task_registry;
+	RequirementsRegistry requirements_registry;
+	MaxResourcesRegistry max_resources_registry;
 	CollectMode collect_mode;
 	int time_multiplier;
-	WorldContext() : price_registry(&resource_registry,&building_definitions) , task_registry(&building_definitions) {}
+	WorldContext() 
+		: price_registry(&resource_registry,&building_definitions) 
+		, task_registry(&building_definitions)
+		, requirements_registry(&building_definitions) 
+		, max_resources_registry(&resource_registry,&building_definitions) {
+	}
 };
 
 // ------------------------------------------------------
