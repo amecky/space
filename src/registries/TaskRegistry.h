@@ -5,8 +5,6 @@
 // ------------------------------------------------------
 // Task registry
 // ------------------------------------------------------
-// island : 0 , id : 2 , type : B , resource : -- , building : HT , level : 1 , amount : 3 , previous : -1 , text : "Build 2 Huts"
-
 struct Task {
 
 	int id;
@@ -30,11 +28,10 @@ public:
 	const char** get_field_names() const;
 	int get_field_num() const;
 	bool load_entry(const RegistryReader& reader,int index,Task* t);	
-	void get_active_tasks(int island,TaskList& tasks);
-	int handle_event(int island,const Event& event);
-	virtual bool validate_data();
+	const Task& get(int id) const;
+	Task& get(int id);
+	void get_tasks(int island,int previous,TaskList& list);
 private:
-	void add(int previous);
+	
 	BuildingRegistry* _building_registry;
-	TaskList _active_tasks;
 };

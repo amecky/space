@@ -29,14 +29,21 @@ bool RewardRegistry::load_entry(const RegistryReader& reader, int index, Reward*
 	return valid;
 }
 
+// ------------------------------------------------------
+// contains
+// ------------------------------------------------------
 const bool RewardRegistry::contains(int task_id) const {
 	for (size_t i = 0; i < _items.size(); ++i) {
 		if (_items[i].task_id == task_id) {
 			return true;
 		}
 	}
+	return false;
 }
 
+// ------------------------------------------------------
+// get all rewards for the specified task
+// ------------------------------------------------------
 int RewardRegistry::get(int task_id, Reward* rewards, int max) {
 	int cnt = 0;
 	for (size_t i = 0; i < _items.size(); ++i) {

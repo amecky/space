@@ -9,7 +9,7 @@ int main(int argc,char* argv[]) {
 	bool running = true;	
 	while ( running ) {
 		sim.tick();
-		std::cout << "Turn: ";
+		std::cout << ":> ";
 		std::cin.getline(buffer,256);
 		CommandLine line = parse::extract(buffer);		
 		if ( line.type == Token::TOK_QUIT ) {

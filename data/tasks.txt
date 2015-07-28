@@ -1,8 +1,9 @@
 #
 # tasks
 #
-id : 1 , island : 0 , type : B , resource : -- , building : HT , level : 1 , amount : 3 , previous : -1 , text : "Build 2 Huts"
-id : 2 , island : 0 , type : C , resource : MO , building : HT , level : 1 , amount : 2 , previous :  2 , text : "Collect tax from 2 Huts"
+id : 1 , island :  0 , type : B , resource : -- , building : HT , level : 1 , amount :   3 , previous : -1 , text : "Build 2 Huts"
+id : 2 , island :  0 , type : C , resource : MO , building : HT , level : 1 , amount :   2 , previous :  2 , text : "Collect tax from 2 Huts"
+id : 3 , island : -1 , type : C , resource : MO , building : -- , level : 1 , amount : 300 , previous : -1 , text : "Collect 300 money"
 
 
 

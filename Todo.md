@@ -7,6 +7,7 @@ TODO
 - [ ] tasks are based on world level
 - [ ] save current time
 - [ ] load - load current time and adjust all queues (tick with timeUnits)
+- [ ] serialize state of the registries (basically only task registry)
 
 27.07.2015
 - [x] start -> if CM_MANUAL check if it is not done (pending)

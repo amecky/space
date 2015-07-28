@@ -112,6 +112,7 @@
     <ClInclude Include="src\registries\RewardsRegistry.h">
       <Filter>registries</Filter>
     </ClInclude>
+    <ClInclude Include="src\TaskQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CSVFile.cpp" />
@@ -151,5 +152,6 @@
     <ClCompile Include="src\registries\RewardsRegistry.cpp">
       <Filter>registries</Filter>
     </ClCompile>
+    <ClCompile Include="src\TaskQueue.cpp" />
   </ItemGroup>
 </Project>

@@ -78,6 +78,7 @@ void Simulation::intialize() {
 			il->addResource(s,amount);
 		}
 	}
+	_world.getContext()->task_queue.init(islands.size());
 }
 
 // ------------------------------------------------------

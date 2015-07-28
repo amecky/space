@@ -9,6 +9,7 @@
 #include "Tiles.h"
 #include <vector>
 #include "WorkQueue.h"
+#include "TaskQueue.h"
 
 // ------------------------------------------------------
 // collect mode
@@ -33,12 +34,15 @@ struct WorldContext {
 	RewardRegistry reward_registry;
 	CollectMode collect_mode;
 	int time_multiplier;
+	TaskQueue task_queue;
+
 	WorldContext() 
 		: price_registry(&resource_registry,&building_definitions) 
 		, task_registry(&building_definitions)
 		, requirements_registry(&building_definitions) 
 		, max_resources_registry(&resource_registry,&building_definitions) 
-		, reward_registry(&resource_registry) {
+		, reward_registry(&resource_registry) 
+		, task_queue(&task_registry) {
 	}
 };
 
@@ -72,8 +76,7 @@ public:
 	void addResource(const Sign& sign,int value);
 	void addResource(const char* sign,int value);
 	void status() const;
-	void showMap(int centerX,int centerY) const;
-	void showBuildingDefinitions();
+	void showMap(int centerX,int centerY) const;	
 	bool start(int x,int y,int level);
 	bool upgrade(int x,int y);
 	bool build(int x, int y, int building_id);
@@ -100,6 +103,7 @@ private:
 	Resources _maxResources;
 	Tiles* _tiles;
 	WorkQueue _queue;
+	
 	Collectables _collectables;
 	WorldContext* _context;
 	int _id;
@@ -126,6 +130,7 @@ public:
 	void load();
 	void show_tasks();
 	WorldContext* getContext();
+	void showBuildingDefinitions();
 private:
 	int _selected;
 	Islands _islands;

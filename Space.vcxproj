@@ -120,6 +120,7 @@
     <ClInclude Include="src\Resources.h" />
     <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="src\targetver.h" />
+    <ClInclude Include="src\TaskQueue.h" />
     <ClInclude Include="src\Tiles.h" />
     <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\WorkQueue.h" />
@@ -142,6 +143,7 @@
     <ClCompile Include="src\Resources.cpp" />
     <ClCompile Include="src\Simulation.cpp" />
     <ClCompile Include="src\Space.cpp" />
+    <ClCompile Include="src\TaskQueue.cpp" />
     <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\WorkQueue.cpp" />
     <ClCompile Include="src\World.cpp" />

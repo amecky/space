@@ -106,7 +106,7 @@ class SimBuildings : public SimCommand {
 public:
 	SimBuildings(World* w) : SimCommand(w) {}
 	void execute(const TextLine& line) {
-		_world->getSelectedIsland()->showBuildingDefinitions();
+		_world->showBuildingDefinitions();
 	}
 	void write_syntax() {
 		printf("buildings - lists all available buildings\n");

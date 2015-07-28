@@ -6,7 +6,8 @@
 #include <vector>
 #include <string>
 
-Island::Island(WorldContext* context,int id,int size_x,int size_y) : _context(context) , _id(id) {
+Island::Island(WorldContext* context,int id,int size_x,int size_y) 
+	: _context(context) , _id(id) {
 	_tiles = new Tiles(size_x,size_y);
 	_tiles->clear();	
 	
@@ -208,7 +209,7 @@ void Island::tick(int timeUnits) {
 				t.building_id = -1;
 			}
 
-			_context->task_registry.handle_event(_id, e);
+			_context->task_queue.handle_event(_id, e);
 
 		}
 		
@@ -245,24 +246,6 @@ void Island::tick(int timeUnits) {
 }
 
 // ------------------------------------------------------
-// show resources
-// ------------------------------------------------------
-/*
-void Island::showResources(const Resources& res,bool complete) {
-	printf("Resources:\n");
-	for ( int i = 0; i < _context->resource_registry.size(); ++i ) {
-		if ( complete) {
-			printf("%10s : %d\n",_context->resource_registry.getName(i),res.get(i));
-		}
-		else {
-			if ( res.get(i) > 0 ) {
-				printf("%10s : %d\n",_context->resource_registry.getName(i),res.get(i));
-			}
-		}
-	}	
-}
-*/
-// ------------------------------------------------------
 // show status
 // ------------------------------------------------------
 void Island::status() const {	
@@ -285,13 +268,6 @@ void Island::status() const {
 			printf("  %s at %d %d\n",_context->building_definitions.getName(_collectables[i].building_id),_collectables[i].tile_x,_collectables[i].tile_y);
 		}
 	}
-}
-
-// ------------------------------------------------------
-// show building definitions
-// ------------------------------------------------------
-void Island::showBuildingDefinitions() {
-	_context->building_definitions.show();
 }
 
 // ------------------------------------------------------
@@ -834,23 +810,31 @@ void World::load() {
 }
 
 void World::show_tasks() {
-	TaskList tasks;
+	ActiveTasks tasks;
 	Reward rewards[16];
-	_context.task_registry.get_active_tasks(_selected,tasks);
+	_context.task_queue.get_active_tasks(_selected,tasks);
 	for (size_t i = 0; i < tasks.size(); ++i) {
-		printf("Task:\n");
-		printf("  %s\n", tasks[i].text);
-		if (_context.reward_registry.contains(tasks[i].id)) {
-			int cnt = _context.reward_registry.get(tasks[i].id, rewards, 16);
+		printf("Task: ");
+		printf("%s  ", tasks[i].task->text);
+		if (_context.reward_registry.contains(tasks[i].task->id)) {
+			int cnt = _context.reward_registry.get(tasks[i].task->id, rewards, 16);
 			if (cnt > 0) {
-				printf("Rewards: \n  ");
+				printf("Rewards: ");
 				for (int j = 0; j < cnt; ++j) {
-					printf("%d %s  ", rewards[j].amount,_context.resource_registry.getName(rewards[j].resource_id));
-				}
-				printf("\n");
+					printf("%d %s ", rewards[j].amount,_context.resource_registry.getName(rewards[j].resource_id));
+				}				
 			}
 		}
+		printf("\n");
+		printf(" => %d / %d\n",tasks[i].count,tasks[i].task->amount);		
 	}
+}
+
+// ------------------------------------------------------
+// show building definitions
+// ------------------------------------------------------
+void World::showBuildingDefinitions() {
+	_context.building_definitions.show();
 }
 
 WorldContext* World::getContext() {
