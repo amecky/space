@@ -9,3 +9,14 @@ namespace bits {
 	bool is_set(int value,int index);
 }
 
+namespace reg {
+
+	int translate_work(char c);
+
+	const char* translate_work(int idx);
+
+	int translate_stage(char s);
+
+	const char* translate_stage(int id);
+}
+

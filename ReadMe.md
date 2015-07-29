@@ -146,6 +146,91 @@ building : HB , level : 2 , required_building : HT , required_level : 3 , requir
 
 ## Price registry
 
+There is no single defining the costs of any work. For every building there should be a corresponding
+file using the sign as name. For example for the building HT (Hut) there should be a HT.txt file.
+
+| field   | description                         |
+|---------|-------------------------------------|
+|building | the building type                   |
+|level    | the level of the building           |  
+|work     | the type of work                    |
+|stage    | stage of the work                   |
+|duration | the duration of the work in seconds |
+|resource | the resource that it will cost      |
+|amount   | the amount of the resource          |
+
+### Work types
+
+| Sign  | Name  | description                     |
+|-------|-------|---------------------------------|
+| W     | Work      | start working at a building |
+| U     | Upgrade   | start upgrading a building  |
+| D     | Delete    | deletes a building          |
+| B     | Build     | build a new building        |
+| P     | Permanent | permanent work              |
+| R     | Regular   | regular work                |
+
+### Stages
+
+There are three different stages of work. First there is start (S). All resources and there amount
+will be used when you start a work. After the duration the work will be finished (F). If the
+world is running in manual collection mode then there is also collectable (C). Otherwise
+the collectable resources will be picked up immediately.
+
+Example:
+
+```
+building : HT , level : 1 , work : B , stage : S , duration:  60 , resource : WO , amount : 1
+building : HT , level : 1 , work : B , stage : S , duration:  60 , resource : FO , amount : 20
+building : HT , level : 1 , work : B , stage : S , duration:  60 , resource : WD , amount : 20
+building : HT , level : 1 , work : B , stage : S , duration:  60 , resource : MO , amount : 10
+building : HT , level : 1 , work : B , stage : F , duration:   0 , resource : WO , amount : 2
+building : HT , level : 1 , work : U , stage : F , duration:   0 , resource : XP , amount : 10
+```
+
+## Islands
+
+## Tasks
+
+| field   | description                                      |
+|---------|--------------------------------------------------|
+|id       | the id of the task                               |
+|island   | the type of resource                             | 
+|type     | the amount of the resource that will be rewarded |
+|resource | the resource type - can be empty (--)            |
+|building | the building type - can be empty (--)            |
+|level    | required level of the building                   |
+|amount   | the actual amount                                |
+|previous | the previous task that must be fullfilled        |
+|text     | Some text as description                         |
+
+Example:
+
+```
+id : 1 , island :  0 , type : D , resource : FO , building : BB , level : 1 , amount :   1 , previous : -1 , text : "Pick Berries by removing one berry brush"
+id : 2 , island :  0 , type : D , resource : WD , building : TR , level : 1 , amount :   2 , previous :  1 , text : "Chop down 2 trees"
+id : 3 , island : -1 , type : C , resource : MO , building : -- , level : 1 , amount : 300 , previous : -1 , text : "Collect 300 money"
+```
+
+## Rewards
+
+There should be some rewards for task. The rewards are defined in the rewards.txt
+
+| field    | description                                      |
+|----------|--------------------------------------------------|
+|task_id   | the id of the task                               |
+|resource  | the type of resource                             | 
+|amount    | the amount of the resource that will be rewarded |
+
+Example:
+
+```
+task_id : 1 , resource : XP , amount : 10
+task_id : 1 , resource : MO , amount : 100
+```
+
 # GUI
 
 There is none. Right now it is an ascii based UI with a command line.
+
+# Commands

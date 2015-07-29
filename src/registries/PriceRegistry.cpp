@@ -6,7 +6,7 @@
 #include "..\files.h"
 #include "RegistryReader.h"
 #include "ResourceRegistry.h"
-
+#include "..\utils.h"
 // ------------------------------------------------------
 // constructor
 // ------------------------------------------------------
@@ -41,16 +41,14 @@ bool PriceRegistry::load_entry(const RegistryReader& reader,int index,RegistryEn
 	entry->level = reader.get_int(index,"level");
 	entry->price_type = -1;
 	char pt = reader.get_char(index,"work");
-	for (int j = 0; j < 6; ++j) {
-		if (pt == PRICE_TYPES[j]) {
-			entry->price_type = j;
-		}
-	}
+	entry->price_type = reg::translate_work(pt);	
 	if ( entry->price_type == -1 ) {
 		printf("ERROR: invalid work %c at line %d\n",pt,reader.get_line_nr(index));
 		valid = false;
 	}
 	char flag = reader.get_char(index,"stage");
+	entry->stage = reg::translate_stage(flag);
+	/*
 	if ( flag == 'S' ) {
 		entry->stage = 0;
 	}
@@ -60,6 +58,7 @@ bool PriceRegistry::load_entry(const RegistryReader& reader,int index,RegistryEn
 	else {
 		entry->stage = 2;
 	}
+	*/
 	entry->duration = reader.get_int(index,"duration");
 	Sign res = reader.get_sign(index,"resource");
 	entry->resource_id = _resource_registry->getIndex(res);
@@ -75,7 +74,7 @@ bool PriceRegistry::load_entry(const RegistryReader& reader,int index,RegistryEn
 // get index
 // ------------------------------------------------------
 int PriceRegistry::getIndex(int price_type, int stage, int building_type, int level) {
-	//printf("get index %d %d %d\n",price_type,stage,building_type,level);
+	//printf("get index %s %d %d\n",reg::translate_work(price_type),stage,building_type,level);
 	for ( size_t i = 0; i < _items.size(); ++i ) {
 		RegistryEntry& entry = _items[i];
 		if (entry.price_type == price_type && entry.level == level && entry.building_type == building_type && entry.stage == stage) {
@@ -90,6 +89,7 @@ int PriceRegistry::getIndex(int price_type, int stage, int building_type, int le
 // ------------------------------------------------------
 bool PriceRegistry::get(int price_type,int stage,int building_type,int level,Resources* resources) {
 	bool found = false;
+	//printf("get index %s %s %d %d\n",reg::translate_work(price_type),reg::translate_stage(stage),building_type,level);
 	for ( size_t i = 0; i < _items.size(); ++i ) {
 		RegistryEntry& entry = _items[i];
 		if (entry.price_type == price_type && entry.level == level && entry.building_type == building_type && entry.stage == stage) {

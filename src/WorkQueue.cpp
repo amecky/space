@@ -1,6 +1,7 @@
 #include "WorkQueue.h"
 #include "Resources.h"
 #include "registries\PriceRegistry.h"
+#include "utils.h"
 
 WorkQueue::WorkQueue(void) {
 }
@@ -71,6 +72,7 @@ void WorkQueue::createWork(int price_type,int x,int y, int building_id, int leve
 	else {
 		item.reschedule = false;
 	}
+	item.price_index = price_type;
 	item.duration = duration;
 	item.timer = 0;
 	item.type = price_type;
@@ -87,7 +89,7 @@ void WorkQueue::show() const {
 		if (remaining < 0) {
 			remaining = 0;
 		}
-		printf(" %d %d remaining time %d\n",_queue[i].tile_x,_queue[i].tile_y,remaining);
+		printf(" %s at %d %d remaining time %d\n",reg::translate_work(_queue[i].price_index),_queue[i].tile_x,_queue[i].tile_y,remaining);		
 	}
 }
 

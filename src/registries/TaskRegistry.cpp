@@ -1,5 +1,5 @@
 #include "TaskRegistry.h"
-
+#include "..\utils.h"
 // ------------------------------------------------------
 // Task registry
 // ------------------------------------------------------
@@ -23,6 +23,7 @@ bool TaskRegistry::load_entry(const RegistryReader& reader,int index,Task* t) {
 	t->island = reader.get_int(index,"island");
 	t->id = reader.get_int(index,"id");
 	char type = reader.get_char(index,"type");
+	t->price_type = reg::translate_work(type);
 	Sign bs = reader.get_sign(index,"building");
 	t->building_id = _building_registry->getIndex(bs);
 	//if (t->building_id == -1) {

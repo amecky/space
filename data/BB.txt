@@ -2,5 +2,5 @@
 # Berry brush
 # -----------------------------
 # remove
-building : BB , level : 1 , work : R, stage : S , duration: 120 , resource : MO , amount : 0
-building : BB , level : 1 , work : R, stage : C , duration:   0 , resource : FO , amount : 10
+building : BB , level : 1 , work : D , stage : S , duration: 120 , resource : MO , amount : 0
+building : BB , level : 1 , work : D , stage : C , duration:   0 , resource : FO , amount : 10
