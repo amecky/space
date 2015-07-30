@@ -10,6 +10,8 @@ const int TS_ACTIVE      = 2;
 const int TS_EMPTY       = 3;
 // tile is part of an unlocked area
 const int TS_LOCKED      = 4;
+// there is something to collect
+const int TS_COLLECTABLE = 5;
 // ------------------------------------------------------
 // Tile
 // ------------------------------------------------------
@@ -144,7 +146,7 @@ struct Tiles {
 		return false;
 	}
 
-	bool has_space(int x,int y,int size_x,int size_y) {
+	const bool has_space(int x,int y,int size_x,int size_y) const {
 		if ( !is_valid(x,y))  {
 			return false;
 		}
@@ -171,12 +173,14 @@ struct Tiles {
 	}
 
 	void set_state(int x,int y,int state) {
-		//printf("%d %d = %d\n",x,y,_tiles[x + y * width].state);
 		bits::set(&_tiles[x + y * width].state,state);
-		//printf("%d %d = %d (%d)\n",x,y,_tiles[x + y * width].state,state);
 	}
 
-	bool has_state(int x,int y,int state) {
+	void clear_state(int x,int y,int state) {
+		bits::clear(&_tiles[x + y * width].state,state);
+	}
+
+	const bool has_state(int x,int y,int state) const {
 		return bits::is_set(_tiles[x + y * width].state,state);
 	}
 };

@@ -76,7 +76,6 @@ public:
 	void addResource(const Sign& sign,int value);
 	void addResource(const char* sign,int value);
 	void status() const;
-	void showMap(int centerX,int centerY) const;	
 	bool start(int x,int y,int level);
 	bool upgrade(int x,int y);
 	bool build(int x, int y, int building_id);
@@ -88,6 +87,9 @@ public:
 	bool remove(int x, int y);
 	bool describe(int x, int y);
 	void createArea(const AreaDefinition& definition);
+	const Tiles* getTiles() const {
+		return _tiles;
+	}
 private:
 	void addResource(int resource_id,int amount);
 	bool createWork(int price_type,int x,int y,int building_id, int level);
@@ -95,8 +97,6 @@ private:
 	void calculateMaxResources();
 	bool is_available(const Resources& costs);
 	bool isUsed(int x, int y);
-	bool isCollectable(int x,int y) const;
-	//void showResources(const Resources& res,bool complete = true);
 	void addResources(const Resources& r);
 	void subResources(const Resources& r);
 	CollectMode _collect_mode;

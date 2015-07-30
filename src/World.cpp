@@ -178,11 +178,14 @@ void Island::tick(int timeUnits) {
 			// process type = finish immediately
 			if (_context->price_registry.get(e.work_type, 1, e.building_id, e.level, &saved)) {
 				//_resources.add(saved);
+				_tiles->clear_state(e.tile_x,e.tile_y,TS_ACTIVE);
 				addResources(saved);
 			}
 			// check if we have a collectable 
 			if (_context->price_registry.get(e.work_type, 2, e.building_id, e.level, &saved)) {
 				// simply build collectable
+				_tiles->set_state(e.tile_x,e.tile_y,TS_COLLECTABLE);
+				_tiles->clear_state(e.tile_x,e.tile_y,TS_ACTIVE);
 				Collectable c;
 				c.building_id = e.building_id;
 				c.level = e.level;
@@ -192,6 +195,7 @@ void Island::tick(int timeUnits) {
 				_collectables.push_back(c);
 			}
 			else if (e.work_type == PT_UPGRADE) {
+				_tiles->clear_state(e.tile_x,e.tile_y,TS_ACTIVE);
 				Tile& t = _tiles->get(e.tile_x, e.tile_y);
 				++t.level;
 				// remove old regular work
@@ -216,6 +220,7 @@ void Island::tick(int timeUnits) {
 				}
 			}		
 			else if ( e.work_type == PT_DELETE) {
+				_tiles->clear_state(e.tile_x,e.tile_y,TS_ACTIVE);
 				Tile& t = _tiles->get(e.tile_x,e.tile_y);
 				// FIXME: remove all tiles
 				t.building_id = -1;
@@ -232,8 +237,10 @@ void Island::tick(int timeUnits) {
 					if ( _context->reward_registry.contains(ids[c])) {
 						int cnt = _context->reward_registry.get(ids[c],rewards,16);
 						LOG << "rewards: " << cnt;
+						printf("Your rewards:\n");
 						for ( int r = 0; r < cnt; ++r ) {
 							Reward rew = rewards[r];
+							printf(" %d %s\n",rew.amount,_context->resource_registry.getName(rew.resource_id));
 							addResource(rew.resource_id,rew.amount);
 						}
 					}
@@ -251,6 +258,7 @@ void Island::tick(int timeUnits) {
 	if ( _collect_mode == CM_IMMEDIATE ) {
 		for ( size_t i = 0; i < _collectables.size(); ++i ) {
 			const Collectable& c = _collectables[i];
+			_tiles->clear_state(c.tile_x,c.tile_y,TS_COLLECTABLE);
 			Resources saved;
 			if (_context->price_registry.get(c.price_type, 2, c.building_id, c.level, &saved)) {
 				//_resources.add(saved);
@@ -303,79 +311,6 @@ void Island::status() const {
 }
 
 // ------------------------------------------------------
-// show map
-// ------------------------------------------------------
-void Island::showMap(int centerX, int centerY) const {
-
-	int xmin = centerX - 8;
-	int xmax = centerX + 8;
-	int ymin = centerY - 8;
-	int ymax = centerY + 8;
-	if (xmin < 0) {
-		int d = 8 - centerX;
-		xmin += d;
-		xmax += d;
-	}
-	if (xmax >= _tiles->width) {
-		int d = _tiles->width - 8;
-		xmin -= d;
-		xmax -= d;
-	}
-	if (ymin < 0) {
-		int d = 8 - centerY;
-		ymin += d;
-		ymax += d;
-	}
-	if (ymax >= _tiles->height) {
-		int d = _tiles->height - 8;
-		ymin -= d;
-		ymax -= d;
-	}
-	for ( int y = ymax - 1; y >= ymin; --y ) {
-		printf("%2d ", y);
-		for ( int x = xmin; x < xmax; ++x ) {
-			int idx = x + y * _tiles->width;
-			if ( _tiles->has_state(x,y,TS_LOCKED)) {
-				printf("??  ");
-			}
-			else if ( _tiles->has_state(x,y,TS_UNDEFINED)) {
-				printf("    ");
-			}
-			else {
-				if ( _tiles->getBuildingID(idx) != -1 ) {
-					//printf("%s%1d", _building_definitions.getSign(_tiles->getBuildingID(idx)), _tiles->getLevel(idx));
-					printf("%s", _context->building_definitions.getSign(_tiles->getBuildingID(idx)));
-					if ( _tiles->isActive(idx)) {			
-						printf("#");
-					}
-					else {
-						printf(" ");
-					}
-					if ( isCollectable(x,y)) {
-						printf("*");
-					}
-					else {
-						printf(" ");
-					}
-				}
-				else if ( _tiles->_tiles[idx].ref_id != -1 ) {
-					printf("xx  ");
-				}
-				else {
-					printf("-   ");
-				}
-			}
-		}
-		printf("\n");
-	}
-	printf("  ");
-	for (int i = xmin; i < xmax; ++i) {
-		printf("%2d  ", i);
-	}
-	printf("\n");
-}
-
-// ------------------------------------------------------
 // collect resources
 // ------------------------------------------------------
 bool Island::collect(int x, int y) {
@@ -384,7 +319,7 @@ bool Island::collect(int x, int y) {
 		printf("Error: There is no building at %d %d\n", x, y);
 		return false;
 	}
-	if ( !isCollectable(x,y)) {
+	if ( !_tiles->has_state(x,y,TS_COLLECTABLE)) {
 		printf("Error: There is nothing to collect at %d %d\n", x, y);
 		return false;
 	}
@@ -401,6 +336,7 @@ bool Island::collect(int x, int y) {
 			if (_context->price_registry.get(PT_REGULAR, 0, it->building_id, it->level, &saved)) {
 				_queue.createWork(PT_REGULAR,x,y,it->building_id,it->level,_context->price_registry.getDuration(PT_REGULAR,it->building_id,it->level));
 			}
+			_tiles->clear_state(x,y,TS_COLLECTABLE);
 			it = _collectables.erase(it);
 			found = true;
 		}
@@ -462,7 +398,7 @@ bool Island::start(int x,int y,int level) {
 		printf("Error: The selected level %d is not supported yet - You need to upgrade\n",level);
 		return false;
 	}
-	if ( _collect_mode == CM_MANUAL && isCollectable(x,y)) {
+	if ( _collect_mode == CM_MANUAL && _tiles->has_state(x,y,TS_COLLECTABLE)) {
 		printf("ERROR: You need to collect the resources before you can start work again\n");
 		return false;
 	}
@@ -471,6 +407,7 @@ bool Island::start(int x,int y,int level) {
 		printf("Error: The selected level %d is not supported yet - You need to upgrade\n",level);
 		return false;
 	}
+	_tiles->set_state(x,y,TS_ACTIVE);
 	createWork(PT_WORK,x,y,_tiles->getBuildingID(idx),level);
 	return true;
 }
@@ -490,6 +427,7 @@ bool Island::upgrade(int x,int y) {
 		return false;
 	}
 	if (checkRequirements(_tiles->getBuildingID(idx), _tiles->getLevel(idx) + 1)) {
+		_tiles->set_state(x,y,TS_ACTIVE);
 		createWork(PT_UPGRADE,x,y,_tiles->getBuildingID(idx),_tiles->getLevel(idx)+1);
 		return true;
 	}
@@ -572,6 +510,7 @@ bool Island::remove(int x,int y) {
 		printf("Error: You cannot remove this building\n");
 		return false;
 	}
+	_tiles->set_state(x,y,TS_ACTIVE);
 	createWork(PT_DELETE,x,y,t.building_id,t.level);	
 	return true;
 }
@@ -735,18 +674,6 @@ bool Island::isUsed(int x, int y) {
 		}
 	}
 	*/
-	return false;
-}
-
-// ------------------------------------------------------
-// is collectable - check if building at position has pending collections
-// ------------------------------------------------------
-bool Island::isCollectable(int x,int y) const {
-	for ( size_t i = 0; i < _collectables.size(); ++i ) {
-		if ( _collectables[i].tile_x == x && _collectables[i].tile_y == y ) {
-			return true;
-		}
-	}
 	return false;
 }
 

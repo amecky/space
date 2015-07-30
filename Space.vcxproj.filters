@@ -135,6 +135,9 @@
     <ClInclude Include="src\utils\Log.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\ui\vis.h">
+      <Filter>ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Resources.cpp" />
@@ -191,6 +194,9 @@
     </ClCompile>
     <ClCompile Include="src\utils\Log.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\vis.cpp">
+      <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

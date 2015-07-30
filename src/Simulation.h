@@ -3,6 +3,7 @@
 #include <iostream>
 #include "World.h"
 #include "ui\Parser.h"
+#include "ui\vis.h"
 #include <map>
 
 // ------------------------------------------------------
@@ -48,7 +49,8 @@ public:
 	void execute(const TextLine& line) {
 		int x = line.get_int(1);
 		int y = line.get_int(2);
-		_world->getSelectedIsland()->showMap(x, y);
+		vis::print_map(_world->getSelectedIsland()->getTiles(),x,y,8,_world->getContext());
+		//_world->getSelectedIsland()->showMap(x, y);
 	}
 	void write_syntax() {
 		printf("map [x] [y] - prints a part of the map centered at x,y and 16x16 size\n");

@@ -6,9 +6,10 @@ TODO
 - [ ] load - load current time and adjust all queues (tick with timeUnits)
 - [ ] serialize state of the registries (basically only task registry)
 - [ ] remove building after collected when in manual mode
-- [ ] write out rewards when a task has finished
+- [ ] include error handler which is gathering error message and codes
 
 30.07.2015
+- [x] write out rewards when a task has finished
 - [x] task system (?)
 - [x] Include logging
 - [x] add world level system based on experience
