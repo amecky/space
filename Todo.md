@@ -2,12 +2,17 @@ TODO
 ------------------------------------------
 - [ ] add tile type (regular,stone,rocks,water,sand)
 - [ ] fill registry with prices
-- [ ] task system (?)
-- [ ] add world level system based on experience
-- [ ] tasks are based on world level
 - [ ] save current time
 - [ ] load - load current time and adjust all queues (tick with timeUnits)
 - [ ] serialize state of the registries (basically only task registry)
+- [ ] remove building after collected when in manual mode
+- [ ] write out rewards when a task has finished
+
+30.07.2015
+- [x] task system (?)
+- [x] Include logging
+- [x] add world level system based on experience
+- [x] tasks are based on world level
 
 27.07.2015
 - [x] start -> if CM_MANUAL check if it is not done (pending)

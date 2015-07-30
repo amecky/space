@@ -1,5 +1,4 @@
 #include "RewardsRegistry.h"
-
 // ------------------------------------------------------
 // Reward registry
 // ------------------------------------------------------
@@ -23,6 +22,7 @@ bool RewardRegistry::load_entry(const RegistryReader& reader, int index, Reward*
 	t->amount = reader.get_int(index, "amount");
 	t->resource_id = _resource_registry->getIndex(bs);
 	if (t->resource_id == -1) {
+		LOGE << "ERROR: invalid resource type at " << reader.get_line_nr(index);
 		printf("ERROR: invalid resource type at %d\n", reader.get_line_nr(index));
 		valid = false;
 	}
@@ -33,6 +33,7 @@ bool RewardRegistry::load_entry(const RegistryReader& reader, int index, Reward*
 // contains
 // ------------------------------------------------------
 const bool RewardRegistry::contains(int task_id) const {
+	LOG << "RewardRegistry contains - task_id: " << task_id;
 	for (size_t i = 0; i < _items.size(); ++i) {
 		if (_items[i].task_id == task_id) {
 			return true;
@@ -51,5 +52,6 @@ int RewardRegistry::get(int task_id, Reward* rewards, int max) {
 			rewards[cnt++] = _items[i];
 		}
 	}
+	LOG << "RewardRegistry get - task_id: " << task_id << " found: " << cnt;
 	return cnt;
 }

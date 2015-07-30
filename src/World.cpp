@@ -1,8 +1,8 @@
 #include "World.h"
 #include <stdio.h>
-#include "files.h"
+#include "utils\files.h"
 #include <assert.h>
-#include "CSVFile.h"
+#include "utils\CSVFile.h"
 #include <vector>
 #include <string>
 
@@ -141,6 +141,18 @@ void Island::addResources(const Resources& r) {
 }
 
 // ------------------------------------------------------
+// add resources
+// ------------------------------------------------------
+void Island::addResource(int resource_id,int amount) {
+	if (_context->resource_registry.isGlobal(resource_id)) {
+		_context->global_resources.add(resource_id,amount);
+	}
+	else {
+		_resources.add(resource_id,amount);
+	}
+}
+
+// ------------------------------------------------------
 // subtract resources
 // ------------------------------------------------------
 void Island::subResources(const Resources& r) {
@@ -209,7 +221,27 @@ void Island::tick(int timeUnits) {
 				t.building_id = -1;
 			}
 
-			_context->task_queue.handle_event(_id, e);
+			int ids[16];
+			Reward rewards[16];
+			int count = _context->task_queue.handle_event(_id, e,ids,16);
+			if ( count > 0 ) {				
+				LOG << "finished tasks: " << count;
+				for ( int c = 0; c < count; ++c ) {
+					LOG << c << " : " << ids[c];
+					printf("Congratulations - You haved successfully finished a task\n");
+					if ( _context->reward_registry.contains(ids[c])) {
+						int cnt = _context->reward_registry.get(ids[c],rewards,16);
+						LOG << "rewards: " << cnt;
+						for ( int r = 0; r < cnt; ++r ) {
+							Reward rew = rewards[r];
+							addResource(rew.resource_id,rew.amount);
+						}
+					}
+					else {
+						LOG << "No reward defined";
+					}
+				}
+			}
 
 		}
 		

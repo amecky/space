@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "Common.h"
+#include "..\Common.h"
 
 // ------------------------------------------------------
 // TextLine

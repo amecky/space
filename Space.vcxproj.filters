@@ -1,15 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="data">
       <UniqueIdentifier>{78adfb6a-35e3-4d8e-bdfd-7d307d520783}</UniqueIdentifier>
     </Filter>
     <Filter Include="registries">
       <UniqueIdentifier>{ad8ee99a-879a-4774-a1f9-92647fcdb40c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="queues">
+      <UniqueIdentifier>{69357a1a-40d7-4b26-9415-eca06f8fe2cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{e57077e5-5766-496b-8a79-f8bac264c848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{e109c961-64b0-43b3-aec5-2269fcfcea3a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -71,17 +76,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
-    <ClInclude Include="src\CSVFile.h" />
-    <ClInclude Include="src\files.h" />
-    <ClInclude Include="src\GlobalTimer.h" />
-    <ClInclude Include="src\Parser.h" />
     <ClInclude Include="src\Resources.h" />
     <ClInclude Include="src\targetver.h" />
     <ClInclude Include="src\Tiles.h" />
-    <ClInclude Include="src\WorkQueue.h" />
     <ClInclude Include="src\World.h" />
     <ClInclude Include="src\Simulation.h" />
-    <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\registries\PriceRegistry.h">
       <Filter>registries</Filter>
     </ClInclude>
@@ -112,19 +111,36 @@
     <ClInclude Include="src\registries\RewardsRegistry.h">
       <Filter>registries</Filter>
     </ClInclude>
-    <ClInclude Include="src\TaskQueue.h" />
+    <ClInclude Include="src\utils\CSVFile.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\files.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\GlobalTimer.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\utils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\Parser.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\queues\TaskQueue.h">
+      <Filter>queues</Filter>
+    </ClInclude>
+    <ClInclude Include="src\queues\WorkQueue.h">
+      <Filter>queues</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\Log.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\CSVFile.cpp" />
-    <ClCompile Include="src\files.cpp" />
-    <ClCompile Include="src\GlobalTimer.cpp" />
-    <ClCompile Include="src\Parser.cpp" />
     <ClCompile Include="src\Resources.cpp" />
     <ClCompile Include="src\Space.cpp" />
-    <ClCompile Include="src\WorkQueue.cpp" />
     <ClCompile Include="src\World.cpp" />
     <ClCompile Include="src\Simulation.cpp" />
-    <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\registries\PriceRegistry.cpp">
       <Filter>registries</Filter>
     </ClCompile>
@@ -152,6 +168,29 @@
     <ClCompile Include="src\registries\RewardsRegistry.cpp">
       <Filter>registries</Filter>
     </ClCompile>
-    <ClCompile Include="src\TaskQueue.cpp" />
+    <ClCompile Include="src\utils\CSVFile.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\files.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\GlobalTimer.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\utils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Parser.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\queues\TaskQueue.cpp">
+      <Filter>queues</Filter>
+    </ClCompile>
+    <ClCompile Include="src\queues\WorkQueue.cpp">
+      <Filter>queues</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\Log.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

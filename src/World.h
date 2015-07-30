@@ -8,8 +8,8 @@
 #include "registries\RewardsRegistry.h"
 #include "Tiles.h"
 #include <vector>
-#include "WorkQueue.h"
-#include "TaskQueue.h"
+#include "queues\WorkQueue.h"
+#include "queues\TaskQueue.h"
 
 // ------------------------------------------------------
 // collect mode
@@ -89,6 +89,7 @@ public:
 	bool describe(int x, int y);
 	void createArea(const AreaDefinition& definition);
 private:
+	void addResource(int resource_id,int amount);
 	bool createWork(int price_type,int x,int y,int building_id, int level);
 	bool checkRequirements(int building_id, int level);
 	void calculateMaxResources();

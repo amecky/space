@@ -1,8 +1,7 @@
 #pragma once
-#include "registries\TaskRegistry.h"
+#include "..\registries\TaskRegistry.h"
 
 struct Event;
-struct Task;
 
 struct ActiveTask {
 
@@ -18,13 +17,13 @@ class TaskQueue {
 public:
 	TaskQueue(TaskRegistry* tsk_reg);
 	~TaskQueue();
-	int handle_event(int island,const Event& event);
+	int handle_event(int island,const Event& event,int* ids,int max);
 	void get_active_tasks(int island,ActiveTasks& tasks);
 	void init(int numIslands);
 	void load();
 	void save();
 private:
-	int find_match_task(const Event& e);
+	bool matches(Task* task,const Event& event);
 	TaskRegistry* _task_registry;
 	ActiveTasks _tasks;
 };

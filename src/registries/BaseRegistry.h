@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "RegistryReader.h"
+#include "..\utils\Log.h"
 // ------------------------------------------------------
 // base registry
 // ------------------------------------------------------
@@ -25,18 +26,19 @@ public:
 	void load(const char* fileName) {
 		RegistryReader r(get_field_names(),get_field_num());
 		if ( r.load(fileName,"data") ) {
-			printf("loading data/%s\n",fileName);
+			LOG << "loading data/" << fileName;
 			for ( int i = 0; i < r.size(); ++i ) {
 				T t;
 				if ( load_entry(r,i,&t) ) {
 					_items.push_back(t);
 				}
 			}
+			LOG << "items: " << _items.size();
 			validate_data();
 		}
-		//else {
-			//printf("ERROR: File data/%s not found\n",fileName);
-		//}
+		else {
+			LOGE << "File data/" << fileName << " not found";
+		}
 
 	}
 	virtual bool load_entry(const RegistryReader& reader,int index,T* t) = 0;

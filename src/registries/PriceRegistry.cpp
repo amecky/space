@@ -3,10 +3,10 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "..\files.h"
+#include "..\utils\files.h"
 #include "RegistryReader.h"
 #include "ResourceRegistry.h"
-#include "..\utils.h"
+#include "..\utils\utils.h"
 // ------------------------------------------------------
 // constructor
 // ------------------------------------------------------

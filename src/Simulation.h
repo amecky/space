@@ -1,8 +1,8 @@
 #pragma once
-#include "GlobalTimer.h"
+#include "utils\GlobalTimer.h"
 #include <iostream>
 #include "World.h"
-#include "Parser.h"
+#include "ui\Parser.h"
 #include <map>
 
 // ------------------------------------------------------

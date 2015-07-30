@@ -1,7 +1,7 @@
 #include "WorkQueue.h"
-#include "Resources.h"
-#include "registries\PriceRegistry.h"
-#include "utils.h"
+#include "..\Resources.h"
+#include "..\registries\PriceRegistry.h"
+#include "..\utils\utils.h"
 
 WorkQueue::WorkQueue(void) {
 }

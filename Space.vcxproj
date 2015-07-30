@@ -103,10 +103,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
-    <ClInclude Include="src\CSVFile.h" />
-    <ClInclude Include="src\files.h" />
-    <ClInclude Include="src\GlobalTimer.h" />
-    <ClInclude Include="src\Parser.h" />
+    <ClInclude Include="src\queues\TaskQueue.h" />
+    <ClInclude Include="src\queues\WorkQueue.h" />
     <ClInclude Include="src\registries\BaseRegistry.h" />
     <ClInclude Include="src\registries\BuildingRegistry.h" />
     <ClInclude Include="src\registries\IslandRegistry.h" />
@@ -120,17 +118,18 @@
     <ClInclude Include="src\Resources.h" />
     <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="src\targetver.h" />
-    <ClInclude Include="src\TaskQueue.h" />
     <ClInclude Include="src\Tiles.h" />
-    <ClInclude Include="src\utils.h" />
-    <ClInclude Include="src\WorkQueue.h" />
+    <ClInclude Include="src\ui\Parser.h" />
+    <ClInclude Include="src\utils\CSVFile.h" />
+    <ClInclude Include="src\utils\files.h" />
+    <ClInclude Include="src\utils\GlobalTimer.h" />
+    <ClInclude Include="src\utils\Log.h" />
+    <ClInclude Include="src\utils\utils.h" />
     <ClInclude Include="src\World.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\CSVFile.cpp" />
-    <ClCompile Include="src\files.cpp" />
-    <ClCompile Include="src\GlobalTimer.cpp" />
-    <ClCompile Include="src\Parser.cpp" />
+    <ClCompile Include="src\queues\TaskQueue.cpp" />
+    <ClCompile Include="src\queues\WorkQueue.cpp" />
     <ClCompile Include="src\registries\BuildingRegistry.cpp" />
     <ClCompile Include="src\registries\IslandRegistry.cpp" />
     <ClCompile Include="src\registries\MaxResourcesRegistry.cpp" />
@@ -143,9 +142,12 @@
     <ClCompile Include="src\Resources.cpp" />
     <ClCompile Include="src\Simulation.cpp" />
     <ClCompile Include="src\Space.cpp" />
-    <ClCompile Include="src\TaskQueue.cpp" />
-    <ClCompile Include="src\utils.cpp" />
-    <ClCompile Include="src\WorkQueue.cpp" />
+    <ClCompile Include="src\ui\Parser.cpp" />
+    <ClCompile Include="src\utils\CSVFile.cpp" />
+    <ClCompile Include="src\utils\files.cpp" />
+    <ClCompile Include="src\utils\GlobalTimer.cpp" />
+    <ClCompile Include="src\utils\Log.cpp" />
+    <ClCompile Include="src\utils\utils.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

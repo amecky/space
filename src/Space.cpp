@@ -1,6 +1,6 @@
-#include "Parser.h"
+#include "ui\Parser.h"
 #include "Simulation.h"
-#include "utils.h"
+#include "utils\utils.h"
 
 int main(int argc,char* argv[]) {
 	Simulation sim;

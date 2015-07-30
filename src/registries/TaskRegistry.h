@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseRegistry.h"
 #include "BuildingRegistry.h"
-#include "..\WorkQueue.h"
+#include "..\queues\WorkQueue.h"
 // ------------------------------------------------------
 // Task registry
 // ------------------------------------------------------
