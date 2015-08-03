@@ -85,7 +85,7 @@ void Simulation::intialize() {
 // tick
 // ------------------------------------------------------
 void Simulation::tick() {
-	int timeUnits = _timer.getElapsed() * _world.getContext()->time_multiplier;
+	int timeUnits = _timer.tick() * _world.getContext()->time_multiplier;
 	_world.tick(timeUnits);
 }
 
@@ -114,5 +114,5 @@ void Simulation::execute_command(Token::TokenType type,const TextLine& line) {
 // quit
 // ------------------------------------------------------
 void Simulation::quit() {
-	_world.save();
+	_world.save(_timer.getRecentTime());
 }

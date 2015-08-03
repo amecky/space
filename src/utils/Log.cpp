@@ -93,9 +93,9 @@ std::ostringstream& Log::error() {
 }
 
 std::ostringstream& Log::error(const std::string& category) {
-	os << NowTime();
-	os << " [ERROR] : ";
+	os << NowTime();	
 	os << " [" << category << "] : ";
+	os << "[ERROR] ";
 	return os;
 }
 

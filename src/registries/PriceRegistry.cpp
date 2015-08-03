@@ -7,6 +7,8 @@
 #include "RegistryReader.h"
 #include "ResourceRegistry.h"
 #include "..\utils\utils.h"
+#include "..\utils\Log.h"
+#include "..\Tiles.h"
 // ------------------------------------------------------
 // constructor
 // ------------------------------------------------------
@@ -35,7 +37,7 @@ bool PriceRegistry::load_entry(const RegistryReader& reader,int index,RegistryEn
 	Sign s = reader.get_sign(index,"building");
 	entry->building_type = _building_registry->getIndex(s);
 	if (entry->building_type == -1) {
-		printf("ERROR: invalid building type at line %d\n", reader.get_line_nr(index));
+		LOGEC("PriceRegistry") << "ERROR: invalid building type at line " << reader.get_line_nr(index);
 		valid = false;
 	}
 	entry->level = reader.get_int(index,"level");
@@ -43,27 +45,16 @@ bool PriceRegistry::load_entry(const RegistryReader& reader,int index,RegistryEn
 	char pt = reader.get_char(index,"work");
 	entry->price_type = reg::translate_work(pt);	
 	if ( entry->price_type == -1 ) {
-		printf("ERROR: invalid work %c at line %d\n",pt,reader.get_line_nr(index));
+		LOGEC("PriceRegistry") << "ERROR: invalid work " << pt << " at line " << reader.get_line_nr(index);
 		valid = false;
 	}
 	char flag = reader.get_char(index,"stage");
-	entry->stage = reg::translate_stage(flag);
-	/*
-	if ( flag == 'S' ) {
-		entry->stage = 0;
-	}
-	else if (flag == 'F') {
-		entry->stage = 1;
-	}
-	else {
-		entry->stage = 2;
-	}
-	*/
+	entry->stage = reg::translate_stage(flag);	
 	entry->duration = reader.get_int(index,"duration");
 	Sign res = reader.get_sign(index,"resource");
 	entry->resource_id = _resource_registry->getIndex(res);
 	if (entry->resource_id == -1) {
-		printf("ERROR: invalid resource type at line %d\n", reader.get_line_nr(index));
+		LOGEC("PriceRegistry") << "ERROR: invalid resource type at line " << reader.get_line_nr(index);
 		valid = false;
 	}
 	entry->amount = reader.get_int(index,"amount");
@@ -101,6 +92,10 @@ bool PriceRegistry::get(int price_type,int stage,int building_type,int level,Res
 	return found;
 }
 
+bool PriceRegistry::get(int price_type,int stage,const Tile& tile,Resources* resources) {
+	return get(price_type,stage,tile.building_id,tile.level,resources);
+}
+
 // ------------------------------------------------------
 // get duration
 // ------------------------------------------------------
@@ -110,7 +105,7 @@ int PriceRegistry::getDuration(int price_type, int building_type, int level) {
 		return _items[idx].duration;
 	}
 	else {
-		printf("Error: Unable to determine duration\n");
+		LOGEC("PriceRegistry") << "Error: Unable to determine duration";
 	}
 	return -1;
 }

@@ -1,5 +1,7 @@
 #include "utils.h"
 #include <assert.h>
+#include <stdio.h>
+#include <string>
 
 namespace bits {
 
@@ -57,4 +59,39 @@ namespace reg {
 		
 	}
 
+}
+
+namespace string {
+
+	int append_int(int value,int offset,char* buffer,int max) {
+		int start = offset;
+		if ( value < 10 ) {
+			sprintf_s(buffer+offset,max - offset,"0%d",value);			
+		}
+		else {
+			sprintf_s(buffer+offset,max - offset,"%d",value);			
+		}
+		return offset + 2;
+	}
+
+	int append_string(const char* str,int offset,char* buffer,int max) {
+		int len = strlen(str);
+		sprintf_s(buffer+offset,max - offset,"%s",str);					
+		return offset + len;
+	}
+
+	void format_duration(int seconds,char* buffer,int max) {
+		int hours = seconds / 3600;
+		int x = seconds - hours * 3600;
+		int minutes = x / 60;
+		x -= minutes * 60;
+		int next = 0;
+		if ( hours > 0 ) {
+			next = append_int(hours,0,buffer,max);
+			next = append_string(":",next,buffer,max);
+		}
+		next = append_int(minutes,next,buffer,max);
+		next = append_string(":",next,buffer,max);
+		next = append_int(x,next,buffer,max);
+	}
 }

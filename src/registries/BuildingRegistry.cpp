@@ -14,13 +14,13 @@ bool BuildingRegistry::validate_data() {
 			if ( i != j ) {
 				if ( s.compare(_items[j].sign)) {
 					++doublet;
-					printf("Found doublet at %d and %d : %s\n",j,i,s.c_str());
+					LOGEC("BuildingRegistry") << "Found doublet at " << j << " and " << i << " : "  << s.c_str();
 				}
 			}		
 		}
 	}
 	if ( doublet > 0 ) {
-		printf("ERROR: found %d doublets in building definitions\n",doublet);
+		LOGEC("BuildingRegistry") << "ERROR: found " << doublet << " doublets in building definitions";
 	}
 	return doublet == 0;
 }

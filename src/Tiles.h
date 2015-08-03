@@ -90,6 +90,18 @@ struct Tiles {
 		return -1;
 	}
 
+	const int get_level(int x,int y) const {
+		assert(x >= 0 && x < width);
+		assert(y >= 0 && y < height);
+		return _tiles[x + y * width].level;
+	}
+
+	const int get_building(int x,int y) const {
+		assert(x >= 0 && x < width);
+		assert(y >= 0 && y < height);
+		return _tiles[x + y * width].building_id;
+	}
+
 	const bool isActive(int index) const {
 		return bits::is_set(_tiles[index].state,TS_ACTIVE);
 	}

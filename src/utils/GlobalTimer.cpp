@@ -1,5 +1,5 @@
 #include "GlobalTimer.h"
-#include <stdio.h>
+#include "Log.h"
 
 
 GlobalTimer::GlobalTimer() {
@@ -11,7 +11,15 @@ GlobalTimer::GlobalTimer() {
 GlobalTimer::~GlobalTimer() {
 }
 
-int GlobalTimer::getElapsed() {
+DWORD GlobalTimer::getRecentTime() {
+	return _now;
+}
+
+int GlobalTimer::tick(DWORD last_time) {
+	if ( last_time != 0 ) {
+		_now = last_time;
+		_accu = 0;
+	}
 	DWORD current = GetTickCount();
 	int diff = current - _now;
 	// milliseconds

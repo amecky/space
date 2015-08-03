@@ -20,8 +20,8 @@ public:
 	int handle_event(int island,const Event& event,int* ids,int max);
 	void get_active_tasks(int island,ActiveTasks& tasks);
 	void init(int numIslands);
-	void load();
-	void save();
+	void load(FILE* file);
+	void save(FILE* file);
 private:
 	bool matches(Task* task,const Event& event);
 	TaskRegistry* _task_registry;

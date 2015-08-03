@@ -138,6 +138,7 @@
     <ClInclude Include="src\ui\vis.h">
       <Filter>ui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Island.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Resources.cpp" />
@@ -198,5 +199,6 @@
     <ClCompile Include="src\ui\vis.cpp">
       <Filter>ui</Filter>
     </ClCompile>
+    <ClCompile Include="src\Island.cpp" />
   </ItemGroup>
 </Project>

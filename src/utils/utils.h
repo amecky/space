@@ -20,3 +20,7 @@ namespace reg {
 	const char* translate_stage(int id);
 }
 
+namespace string {
+
+	void format_duration(int seconds,char* buffer,int max);
+}

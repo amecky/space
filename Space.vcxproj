@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\Island.h" />
     <ClInclude Include="src\queues\TaskQueue.h" />
     <ClInclude Include="src\queues\WorkQueue.h" />
     <ClInclude Include="src\registries\BaseRegistry.h" />
@@ -129,6 +130,7 @@
     <ClInclude Include="src\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Island.cpp" />
     <ClCompile Include="src\queues\TaskQueue.cpp" />
     <ClCompile Include="src\queues\WorkQueue.cpp" />
     <ClCompile Include="src\registries\BuildingRegistry.cpp" />

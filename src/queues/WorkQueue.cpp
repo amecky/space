@@ -48,6 +48,7 @@ void WorkQueue::processQueueCommon(int timeUnits) {
 // remove work at location for specific price_type
 // ------------------------------------------------------
 void WorkQueue::remove(int price_type, int x, int y) {
+	LOGC("WorkQueue") << "removing " << reg::translate_work(price_type) << " at " << x << " " << y;
 	Queue::iterator it = _queue.begin();
 	while (it != _queue.end()) {
 		if ( it->tile_x == x && it->tile_y == y && it->price_index == price_type) {
@@ -63,6 +64,7 @@ void WorkQueue::remove(int price_type, int x, int y) {
 // create work item
 // ------------------------------------------------------
 void WorkQueue::createWork(int price_type,int x,int y, int building_id, int level,int duration) {
+	LOGC("WorkQueue") << "create work " << reg::translate_work(price_type) << " at " << x << " " << y << " for building " << building_id << "/" << level << " duration: " << duration;
 	WorkItem item;
 	item.tile_x = x;
 	item.tile_y = y;
@@ -84,19 +86,21 @@ void WorkQueue::createWork(int price_type,int x,int y, int building_id, int leve
 
 void WorkQueue::show() const {
 	printf("Queue:\n");
+	char time[20];
 	for ( size_t i = 0; i < _queue.size(); ++i ) {
 		int remaining = _queue[i].duration - _queue[i].timer;
 		if (remaining < 0) {
 			remaining = 0;
 		}
-		printf(" %s at %d %d remaining time %d\n",reg::translate_work(_queue[i].price_index),_queue[i].tile_x,_queue[i].tile_y,remaining);		
+		string::format_duration(remaining,time,20);
+		printf(" %s at %d %d remaining time %s\n",reg::translate_work(_queue[i].price_index),_queue[i].tile_x,_queue[i].tile_y,time);		
 	}
 }
 
 void WorkQueue::save(FILE* f) {
 	int nr = _queue.size();
 	fwrite(&nr,sizeof(int),1,f);
-	printf("## size %d\n",nr);
+	LOGC("WorkQueue") << "saving " << nr << " work items";
     for ( int i = 0; i < nr; ++i ) {
 		WorkItem& b = _queue[i];		
 		fwrite(&b,sizeof(WorkItem),1,f);
@@ -107,6 +111,7 @@ void WorkQueue::load(FILE* f) {
 	_queue.clear();
 	int nr = 0;
 	fread(&nr,sizeof(int),1,f);
+	LOGC("WorkQueue") << "loading " << nr << " work items";
     for ( int i = 0; i < nr; ++i ) {
 		WorkItem b;
 		fread(&b,sizeof(WorkItem),1,f);

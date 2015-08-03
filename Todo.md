@@ -7,6 +7,10 @@ TODO
 - [ ] serialize state of the registries (basically only task registry)
 - [ ] remove building after collected when in manual mode
 - [ ] include error handler which is gathering error message and codes
+- [ ] buy locked area
+- [ ] handle area states for every island -> which ones are still locked
+- [ ] path finding- but where would be the starting point?
+- [ ] do workers jsut walk around idle?
 
 30.07.2015
 - [x] write out rewards when a task has finished

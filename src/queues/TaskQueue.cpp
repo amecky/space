@@ -107,3 +107,36 @@ void TaskQueue::get_active_tasks(int island, ActiveTasks& tasks) {
 		}
 	}
 }
+
+// ------------------------------------------------------
+// save state of active tasks
+// ------------------------------------------------------
+void TaskQueue::save(FILE* file) {
+	int sz = _tasks.size();
+	fwrite(&sz,sizeof(int),1,file);
+	LOGC("TaskQueue") << "saving " << sz << " active tasks";
+    for ( int i = 0; i < sz; ++i ) {		
+		fwrite(&_tasks[i].count,sizeof(int),1,file);
+		fwrite(&_tasks[i].task->id,sizeof(int),1,file);
+    }
+}
+
+// ------------------------------------------------------
+// load state of active tasks
+// ------------------------------------------------------
+void TaskQueue::load(FILE* f) {
+	int num = 0;
+	_tasks.clear();
+	fread(&num,sizeof(int),1,f);
+	LOGC("TaskQueue") << "loading " << num << " active tasks";
+	for ( int i = 0; i < num; ++i ) {
+		int count = 0;
+		fread(&count,sizeof(int),1,f);
+		int id = 0;
+		fread(&id,sizeof(int),1,f);
+		ActiveTask at;
+		at.count = count;
+		at.task = &_task_registry->get(id);
+		_tasks.push_back(at);
+	}
+}

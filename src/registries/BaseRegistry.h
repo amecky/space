@@ -26,18 +26,18 @@ public:
 	void load(const char* fileName) {
 		RegistryReader r(get_field_names(),get_field_num());
 		if ( r.load(fileName,"data") ) {
-			LOG << "loading data/" << fileName;
+			LOGC("Registry") << "loading data/" << fileName;
 			for ( int i = 0; i < r.size(); ++i ) {
 				T t;
 				if ( load_entry(r,i,&t) ) {
 					_items.push_back(t);
 				}
 			}
-			LOG << "items: " << _items.size();
+			LOGC("Registry") << "items: " << _items.size();
 			validate_data();
 		}
 		else {
-			LOGE << "File data/" << fileName << " not found";
+			LOGEC("Registry") << "File data/" << fileName << " not found";
 		}
 
 	}

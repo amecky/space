@@ -32,6 +32,7 @@ struct RegistryEntry {
 	
 };
 
+struct Tile;
 // ------------------------------------------------------
 // Price registry
 // ------------------------------------------------------
@@ -40,7 +41,7 @@ class PriceRegistry : public BaseRegistry<RegistryEntry> {
 public:
 	PriceRegistry(ResourceRegistry* res_reg,BuildingRegistry* bld_reg);
 	~PriceRegistry(void);
-
+	bool get(int price_type, int stage, const Tile& tile, Resources* resources);
 	bool get(int price_type, int stage, int building_type, int level, Resources* resources);
 	int getIndex(int price_type, int stage, int building_type, int level);
 	const RegistryEntry& getEntry(int idx) const {

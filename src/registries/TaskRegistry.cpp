@@ -61,4 +61,5 @@ Task& TaskRegistry::get(int id) {
 			return _items[i];
 		}
 	}
+	LOGEC("TaskRegistry") << "Cannot find task: " << id;
 }
