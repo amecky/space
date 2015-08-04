@@ -2,6 +2,7 @@
 #include "..\Resources.h"
 #include "..\registries\PriceRegistry.h"
 #include "..\utils\utils.h"
+#include "..\utils\BinaryWriter.h"
 
 WorkQueue::WorkQueue(void) {
 }
@@ -90,24 +91,24 @@ void WorkQueue::show() const {
 	}
 }
 
-void WorkQueue::save(FILE* f) {
+void WorkQueue::save(BinaryWriter& writer) {
 	int nr = _queue.size();
-	fwrite(&nr,sizeof(int),1,f);
+	writer.write(nr);
 	LOGC("WorkQueue") << "saving " << nr << " work items";
     for ( int i = 0; i < nr; ++i ) {
 		WorkItem& b = _queue[i];		
-		fwrite(&b,sizeof(WorkItem),1,f);
+		writer.write(&b,sizeof(WorkItem));
     }
 }
 
-void WorkQueue::load(FILE* f) {
+void WorkQueue::load(BinaryWriter& reader) {
 	_queue.clear();
 	int nr = 0;
-	fread(&nr,sizeof(int),1,f);
+	reader.read(&nr);
 	LOGC("WorkQueue") << "loading " << nr << " work items";
     for ( int i = 0; i < nr; ++i ) {
 		WorkItem b;
-		fread(&b,sizeof(WorkItem),1,f);
+		reader.read(&b,sizeof(WorkItem));
 		_queue.push_back(b);
     }
 }

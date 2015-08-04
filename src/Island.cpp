@@ -2,6 +2,7 @@
 #include "registries\IslandRegistry.h"
 #include "utils\files.h"
 #include "World.h"
+#include "utils\BinaryWriter.h"
 
 Island::Island(WorldContext* context,int id,int size_x,int size_y) 
 	: _context(context) , _id(id) {
@@ -554,29 +555,25 @@ bool Island::createWork(int price_type, int x, int y, int building_id, int level
 // ------------------------------------------------------
 void Island::save() {
 	char buffer[256];
-	sprintf(buffer,"i_%d.bin",_id);
-	FILE *f = fopen(buffer,"wb");
-	if (f) {
-		fwrite(&_tiles->width,sizeof(int),1,f);
-		fwrite(&_tiles->height,sizeof(int),1,f);
+	sprintf(buffer, "i_%d.bin", _id);
+	BinaryWriter writer;
+	if (writer.open(buffer, "data",BM_WRITE)) {
 		// save resources
 		int sz = _context->resource_registry.size();
-		fwrite(&sz,sizeof(int),1,f);
+		writer.write(sz);
 		LOGC("Island") << "saving resources: " << sz;
-        for ( int i = 0; i < sz; ++i ) {
-			fwrite(&_resources._values[i],sizeof(int),1,f);
-        }
-		res::log_resources(_context->resource_registry,_resources,false);
+		for (int i = 0; i < sz; ++i) {
+			writer.write(_resources._values[i]);
+		}
+		res::log_resources(_context->resource_registry, _resources, false);
 		LOGC("Island") << "saving tiles: " << _tiles->width << " " << _tiles->height;
 		// save tiles
 		for (int y = 0; y < _tiles->height; ++y) {
 			for (int x = 0; x < _tiles->width; ++x) {
-				const Tile& t = _tiles->get(x,y);
-				fwrite(&t, sizeof(Tile), 1, f);
+				writer.write(&_tiles->get(x, y), sizeof(Tile));
 			}
-		} 
-		_queue.save(f);		
-        fclose(f);
+		}
+		_queue.save(writer);			
 	}
 }
 
@@ -586,18 +583,18 @@ void Island::save() {
 void Island::load(int index) {
 	char buffer[256];
 	sprintf(buffer,"i_%d.bin",index);
-	LOGC("Island") << "reading island - file: " << buffer;
-	FILE *f = fopen(buffer,"rb");
+	BinaryWriter reader;
+	LOGC("Island") << "reading island - file: " << buffer;	
 	//_queue.clear();
 	int max = _tiles->total;
 	_tiles->clear();
-	if (f) {
+	if (reader.open(buffer, "data", BM_READ)) {
         int num = 0;
 		// load resources
-		fread(&num,sizeof(int),1,f);
+		reader.read(&num);
 		LOGC("Island") << "resources: " << num;
 		for ( int i = 0; i < num; ++i ) {
-			fread(&_resources._values[i],sizeof(int),1,f);
+			reader.read(&_resources._values[i]);
 		}
 		res::log_resources(_context->resource_registry,_resources,false);
 		LOGC("Island") << "loading tiles: " << _tiles->width << " " << _tiles->height;
@@ -605,13 +602,12 @@ void Island::load(int index) {
 		for (int y = 0; y < _tiles->height; ++y) {
 			for (int x = 0; x < _tiles->width; ++x) {	
 				Tile t;
-				fread(&t, sizeof(Tile), 1, f);
+				reader.read(&t, sizeof(Tile));
 				_tiles->set(x,y,t);
 			}
 		}
-		_queue.load(f);
+		_queue.load(reader);
 		calculateMaxResources();
-        fclose(f);
     }
 	else {
 		printf("ERROR: No file %s found\n",buffer);

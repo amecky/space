@@ -1,6 +1,7 @@
 #include "TaskQueue.h"
 #include "..\World.h"
 #include "..\utils\Log.h"
+#include "..\utils\BinaryWriter.h"
 
 TaskQueue::TaskQueue(TaskRegistry* tsk_reg) : _task_registry(tsk_reg) {
 }
@@ -111,29 +112,29 @@ void TaskQueue::get_active_tasks(int island, ActiveTasks& tasks) {
 // ------------------------------------------------------
 // save state of active tasks
 // ------------------------------------------------------
-void TaskQueue::save(FILE* file) {
+void TaskQueue::save(BinaryWriter& writer) {
 	int sz = _tasks.size();
-	fwrite(&sz,sizeof(int),1,file);
+	writer.write(sz);
 	LOGC("TaskQueue") << "saving " << sz << " active tasks";
     for ( int i = 0; i < sz; ++i ) {		
-		fwrite(&_tasks[i].count,sizeof(int),1,file);
-		fwrite(&_tasks[i].task->id,sizeof(int),1,file);
+		writer.write(_tasks[i].count);
+		writer.write(_tasks[i].task->id);
     }
 }
 
 // ------------------------------------------------------
 // load state of active tasks
 // ------------------------------------------------------
-void TaskQueue::load(FILE* f) {
+void TaskQueue::load(BinaryWriter& reader) {
 	int num = 0;
 	_tasks.clear();
-	fread(&num,sizeof(int),1,f);
+	reader.read(&num);
 	LOGC("TaskQueue") << "loading " << num << " active tasks";
 	for ( int i = 0; i < num; ++i ) {
 		int count = 0;
-		fread(&count,sizeof(int),1,f);
+		reader.read(&count);
 		int id = 0;
-		fread(&id,sizeof(int),1,f);
+		reader.read(&id);
 		ActiveTask at;
 		at.count = count;
 		at.task = &_task_registry->get(id);

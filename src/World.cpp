@@ -5,7 +5,7 @@
 #include "utils\CSVFile.h"
 #include <vector>
 #include <string>
-
+#include "utils\BinaryWriter.h"
 
 World::World() : _selected(-1) {
 	_context.building_definitions.load("buildings.txt");
@@ -43,75 +43,90 @@ void World::selectIsland(int index) {
 	_selected = index;
 }
 
+// ------------------------------------------------------
+// tick
+// ------------------------------------------------------
 void World::tick(int timeUnits) {
 	for (size_t i = 0; i < _islands.size(); ++i) {
 		_islands[i]->tick(timeUnits);
 	}
 }
 
+// ------------------------------------------------------
+// add global resource
+// ------------------------------------------------------
 void World::addResource(const Sign& sign, int value) {
 	int id = _context.resource_registry.getIndex(sign);
 	_context.global_resources.add(id, value);
 }
 
+// ------------------------------------------------------
+// save
+// ------------------------------------------------------
 void World::save(DWORD recent_time) {
-	FILE *f = fopen("world.bin","wb");
-	if (f) {
-		fwrite(&recent_time,sizeof(DWORD),1,f);
-		// save global resources
+	BinaryWriter writer;
+	if (writer.open("world.bin", "data",BM_WRITE)) {
+		writer.write(recent_time);
 		int sz = _context.global_resources.total;
-		fwrite(&sz,sizeof(int),1,f);
-        for ( int i = 0; i < sz; ++i ) {
-			fwrite(&_context.global_resources._values[i],sizeof(int),1,f);
-        }
+		LOGC("World") << "saving global resources: " << sz;
+		writer.write(sz);
+		for (int i = 0; i < sz; ++i) {
+			writer.write(_context.global_resources._values[i]);
+		}
 		int num = _islands.size();
-		fwrite(&num,sizeof(int),1,f);
+		writer.write(num);
 		// save every island
-		for ( size_t i = 0; i < _islands.size(); ++i ) {
+		for (size_t i = 0; i < _islands.size(); ++i) {
+			const Tiles* tiles = _islands[i]->getTiles();
+			writer.write(tiles->width);
+			writer.write(tiles->height);
 			_islands[i]->save();
 		}
 		LOGC("World") << "saving active tasks";
-		_context.task_queue.save(f);
-		fclose(f);
-	}
+		_context.task_queue.save(writer);
+	}	
 }
 
+// ------------------------------------------------------
+// load 
+// ------------------------------------------------------
 void World::load() {
 	LOGC("World") << "loading world";
-	FILE *f = fopen("world.bin","rb");
 	for ( size_t i = 0; i < _islands.size(); ++i ) {
 		delete _islands[i];
 	}
 	_islands.clear();
-	//_queue.clear();
-	if (f) {
+	BinaryWriter reader;
+	if (reader.open("world.bin", "data", BM_READ)) {
 		DWORD time = 0;
-		fread(&time,sizeof(DWORD),1,f);
+		reader.read(&time);
         int num = 0;
 		// load global resources
-		fread(&num,sizeof(int),1,f);
+		reader.read(&num);
 		for ( int i = 0; i < num; ++i ) {
-			fread(&_context.global_resources._values[i],sizeof(int),1,f);
+			reader.read(&_context.global_resources._values[i]);
 		}
 		LOGC("World") << "number of resources loaded: " << num;
 		// load islands
-		fread(&num,sizeof(int),1,f);
+		reader.read(&num);
 		LOGC("World") << "number of islands: " << num;
 		for ( int i = 0; i < num; ++i ) {
 			int sx = 0;
 			int sy = 0;
-			fread(&sx,sizeof(int),1,f);
-			fread(&sy,sizeof(int),1,f);
+			reader.read(&sx);
+			reader.read(&sy);
 			Island* is = new Island(&_context,i,sx,sy);
 			is->load(i);
 			_islands.push_back(is);
 		}
 		LOGC("World") << "loading active tasks";
-		_context.task_queue.load(f);
-        fclose(f);
+		_context.task_queue.load(reader);
     }
 }
 
+// ------------------------------------------------------
+// show tasks
+// ------------------------------------------------------
 void World::show_tasks() {
 	ActiveTasks tasks;
 	Reward rewards[16];

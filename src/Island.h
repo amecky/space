@@ -13,7 +13,7 @@ struct Collectable {
 	int level;
 	int tile_x;
 	int tile_y;
-	
+	bool remove;
 };
 
 struct WorldContext;

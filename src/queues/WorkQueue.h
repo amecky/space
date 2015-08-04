@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+class BinaryWriter;
 // ------------------------------------------------------
 // Work type
 // ------------------------------------------------------
@@ -85,8 +86,8 @@ public:
 	}
 	void remove(int price_type, int x,int y);
 	void show() const;
-	void save(FILE* f);
-	void load(FILE* f);
+	void save(BinaryWriter& writer);
+	void load(BinaryWriter& reader);
 private:
 	Queue _queue;
 	EventBuffer _buffer;

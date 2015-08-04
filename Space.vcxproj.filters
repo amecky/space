@@ -139,6 +139,9 @@
       <Filter>ui</Filter>
     </ClInclude>
     <ClInclude Include="src\Island.h" />
+    <ClInclude Include="src\utils\BinaryWriter.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Resources.cpp" />
@@ -197,5 +200,8 @@
       <Filter>ui</Filter>
     </ClCompile>
     <ClCompile Include="src\Island.cpp" />
+    <ClCompile Include="src\utils\BinaryWriter.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
