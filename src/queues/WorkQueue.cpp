@@ -15,13 +15,6 @@ WorkQueue::~WorkQueue(void) {
 // ------------------------------------------------------
 void WorkQueue::tick(int timeUnits) {
 	_buffer.clear();
-	processQueueCommon(timeUnits);
-}
-
-// ------------------------------------------------------
-// process work queue common
-// ------------------------------------------------------
-void WorkQueue::processQueueCommon(int timeUnits) {
 	Queue::iterator it = _queue.begin();
 	while (it != _queue.end()) {
 		if (!it->done) {
@@ -85,7 +78,7 @@ void WorkQueue::createWork(int price_type,int x,int y, int building_id, int leve
 }
 
 void WorkQueue::show() const {
-	printf("Queue:\n");
+	printf("Queue: (%d)\n",_queue.size());
 	char time[20];
 	for ( size_t i = 0; i < _queue.size(); ++i ) {
 		int remaining = _queue[i].duration - _queue[i].timer;

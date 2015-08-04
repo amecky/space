@@ -60,4 +60,6 @@ namespace res {
 
 	void show_resources(const ResourceRegistry& reg,const Resources& res,bool complete);
 
+	void log_resources(const ResourceRegistry& reg,const Resources& res,bool complete);
+
 }

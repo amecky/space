@@ -184,9 +184,6 @@
     <ClCompile Include="src\utils\utils.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\Parser.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
     <ClCompile Include="src\queues\TaskQueue.cpp">
       <Filter>queues</Filter>
     </ClCompile>

@@ -145,7 +145,6 @@
     <ClCompile Include="src\Resources.cpp" />
     <ClCompile Include="src\Simulation.cpp" />
     <ClCompile Include="src\Space.cpp" />
-    <ClCompile Include="src\ui\Parser.cpp" />
     <ClCompile Include="src\ui\vis.cpp" />
     <ClCompile Include="src\utils\CSVFile.cpp" />
     <ClCompile Include="src\utils\files.cpp" />

@@ -6,21 +6,26 @@
 // constructor
 // ------------------------------------------------------
 Simulation::Simulation() {
-	_commands[Token::TOK_STATUS] = new SimStatus(&_world);
-	_commands[Token::TOK_MAP] = new SimMap(&_world);
-	_commands[Token::TOK_STEP] = new SimStep(&_world);
-	_commands[Token::TOK_START] = new SimStart(&_world);
-	_commands[Token::TOK_BUILDINGS] = new SimBuildings(&_world);
-	_commands[Token::TOK_DESCRIBE] = new SimDescribe(&_world);
-	_commands[Token::TOK_BUILD] = new SimBuild(&_world);
-	_commands[Token::TOK_COLLECT] = new SimCollect(&_world);
-	_commands[Token::TOK_UPGRADE] = new SimUpgrade(&_world);
-	_commands[Token::TOK_REMOVE] = new SimRemove(&_world);
-	_commands[Token::TOK_LOAD] = new SimLoad(&_world);
-	_commands[Token::TOK_MOVE] = new SimMove(&_world);
-	_commands[Token::TOK_TASKS] = new SimTasks(&_world);
+	add<SimStatus>();
+	add<SimMap>();
+	add<SimStep>();
+	add<SimStart>();
+	add<SimBuildings>();
+	add<SimDescribe>();
+	add<SimBuild>();
+	add<SimCollect>();
+	add<SimUpgrade>();
+	add<SimRemove>();
+	add<SimLoad>();
+	add<SimMove>();
+	add<SimTasks>();
+	add<SimQuit>();
 	_world.addResource(Sign('M','O'),1000);
 	_world.selectIsland(0);
+}
+
+void Simulation::add_command(SimCommand* cmd) {
+	_commands[cmd->get_token_type()] = cmd;
 }
 
 // ------------------------------------------------------
@@ -57,7 +62,7 @@ void Simulation::intialize() {
 				sy = defs[i].start_y + defs[i].size_y;
 			}
 		}		
-		printf("island %d size %d %d\n",id,sx,sy);
+		LOGC("Simulation") << "island " << id << " size " << sx << " " << sy;
 		Island* il = _world.createIsland(sx,sy);
 		for ( size_t i = 0; i < defs.size(); ++i ) {
 			const AreaDefinition& ad = defs[i];
@@ -65,7 +70,7 @@ void Simulation::intialize() {
 		}	
 		++it;
 	}
-	printf("islands %d\n",islands.size());
+	LOGC("Simulation") << "islands: " << islands.size();
 	_world.selectIsland(0);
 	const char* names[] = {"island","resource","amount"};
 	RegistryReader reader(names,3);
@@ -92,7 +97,7 @@ void Simulation::tick() {
 // ------------------------------------------------------
 // execute_command
 // ------------------------------------------------------
-void Simulation::execute_command(Token::TokenType type,const TextLine& line) {
+void Simulation::execute_command(CommandType type,const TextLine& line) {
 	if ( _commands.find(type) == _commands.end()) {
 		printf("Unknown command!\n");
 	}
@@ -116,3 +121,27 @@ void Simulation::execute_command(Token::TokenType type,const TextLine& line) {
 void Simulation::quit() {
 	_world.save(_timer.getRecentTime());
 }
+
+// ------------------------------------------------------
+// build command line from text input
+// ------------------------------------------------------
+bool Simulation::extract(const char* p,CommandLine * command_line) {	
+		command_line->line.set(p,' ');
+		command_line->type = TOK_UNKNOWN;
+		if ( command_line->line.num_tokens() > 0 ) {
+			char buffer[256];
+			int idx = -1;
+			int len = command_line->line.get_string(0,buffer);
+			Commands::iterator it = _commands.begin();
+			int cnt = 0;
+			while ( it != _commands.end() ) {
+				if (strncmp(it->second->get_command(), buffer, len) == 0 && strlen(it->second->get_command()) == len ) {
+					command_line->type = it->second->get_token_type();
+					return true;
+				}
+				++cnt;
+				++it;
+			}			
+		}		
+		return false;
+	}

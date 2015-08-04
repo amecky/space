@@ -20,4 +20,24 @@ namespace res {
 		}	
 	}
 
+	// ------------------------------------------------------
+	// show resources
+	// ------------------------------------------------------
+	void log_resources(const ResourceRegistry& reg,const Resources& res,bool complete) {
+		LOG << "Resources:";
+		char buffer[128];
+		for ( int i = 0; i <reg.size(); ++i ) {
+			if ( complete) {
+				sprintf(buffer,"%10s : %d",reg.getName(i),res.get(i));
+				LOG << buffer;
+			}
+			else {
+				if ( res.get(i) > 0 ) {
+					sprintf(buffer,"%10s : %d",reg.getName(i),res.get(i));
+					LOG << buffer;
+				}
+			}
+		}	
+	}
+
 }

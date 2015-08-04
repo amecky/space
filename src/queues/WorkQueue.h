@@ -88,7 +88,6 @@ public:
 	void save(FILE* f);
 	void load(FILE* f);
 private:
-	void processQueueCommon(int timeUnits);
 	Queue _queue;
 	EventBuffer _buffer;
 };

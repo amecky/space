@@ -557,19 +557,24 @@ void Island::save() {
 	sprintf(buffer,"i_%d.bin",_id);
 	FILE *f = fopen(buffer,"wb");
 	if (f) {
+		fwrite(&_tiles->width,sizeof(int),1,f);
+		fwrite(&_tiles->height,sizeof(int),1,f);
 		// save resources
 		int sz = _context->resource_registry.size();
 		fwrite(&sz,sizeof(int),1,f);
+		LOGC("Island") << "saving resources: " << sz;
         for ( int i = 0; i < sz; ++i ) {
 			fwrite(&_resources._values[i],sizeof(int),1,f);
         }
+		res::log_resources(_context->resource_registry,_resources,false);
+		LOGC("Island") << "saving tiles: " << _tiles->width << " " << _tiles->height;
 		// save tiles
 		for (int y = 0; y < _tiles->height; ++y) {
 			for (int x = 0; x < _tiles->width; ++x) {
 				const Tile& t = _tiles->get(x,y);
 				fwrite(&t, sizeof(Tile), 1, f);
 			}
-		}   
+		} 
 		_queue.save(f);		
         fclose(f);
 	}
@@ -590,10 +595,12 @@ void Island::load(int index) {
         int num = 0;
 		// load resources
 		fread(&num,sizeof(int),1,f);
+		LOGC("Island") << "resources: " << num;
 		for ( int i = 0; i < num; ++i ) {
 			fread(&_resources._values[i],sizeof(int),1,f);
 		}
-		//res::show_resources(_context->resource_registry,_resources,false);
+		res::log_resources(_context->resource_registry,_resources,false);
+		LOGC("Island") << "loading tiles: " << _tiles->width << " " << _tiles->height;
 		// load buildings
 		for (int y = 0; y < _tiles->height; ++y) {
 			for (int x = 0; x < _tiles->width; ++x) {	

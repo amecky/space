@@ -98,7 +98,11 @@ void World::load() {
 		fread(&num,sizeof(int),1,f);
 		LOGC("World") << "number of islands: " << num;
 		for ( int i = 0; i < num; ++i ) {
-			Island* is = new Island(&_context,i,32,32);
+			int sx = 0;
+			int sy = 0;
+			fread(&sx,sizeof(int),1,f);
+			fread(&sy,sizeof(int),1,f);
+			Island* is = new Island(&_context,i,sx,sy);
 			is->load(i);
 			_islands.push_back(is);
 		}
