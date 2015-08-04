@@ -2,15 +2,18 @@ TODO
 ------------------------------------------
 - [ ] add tile type (regular,stone,rocks,water,sand)
 - [ ] fill registry with prices
-- [ ] save current time
 - [ ] load - load current time and adjust all queues (tick with timeUnits)
-- [ ] serialize state of the registries (basically only task registry)
 - [ ] remove building after collected when in manual mode
 - [ ] include error handler which is gathering error message and codes
 - [ ] buy locked area
 - [ ] handle area states for every island -> which ones are still locked
 - [ ] path finding- but where would be the starting point?
 - [ ] do workers jsut walk around idle?
+- [ ] BUG - after loading - regular tasks disappear when finished
+
+04.08.2015
+- [x] save current time
+- [x] serialize state of the registries (basically only task registry)
 
 30.07.2015
 - [x] write out rewards when a task has finished
