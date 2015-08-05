@@ -2,7 +2,7 @@
 #include "registries\IslandRegistry.h"
 #include "utils\files.h"
 #include "World.h"
-#include "utils\BinaryWriter.h"
+#include "utils\Serializer.h"
 
 Island::Island(WorldContext* context,int id,int size_x,int size_y) 
 	: _context(context) , _id(id) {
@@ -158,6 +158,18 @@ void Island::subResources(const Resources& r) {
 		}
 	}
 }
+
+// ------------------------------------------------------
+// tick Island
+// ------------------------------------------------------
+void Island::removeBuilding(int building_id,int x,int y) {
+	LOGC("Island") << "removing build at " << x << " " << y;
+	Tile& t = _tiles->get(x,y);
+	BuildingDefinition def;
+	_context->building_definitions.getDefinition(building_id,&def);
+	_tiles->remove(x,y,def.size_x,def.size_y);
+}
+
 // ------------------------------------------------------
 // tick Island
 // ------------------------------------------------------
@@ -167,10 +179,12 @@ void Island::tick(int timeUnits) {
 		Resources saved;
 		for ( int i = 0; i < _queue.event_size();++i) {
 			const Event& e = _queue.getEvent(i);
-			printf("event %d type %d at %d %d\n",i,e.work_type,e.tile_x,e.tile_y);
+			LOGC("Simulation") << "event: " << i << " type: " << e.work_type << " at: " << e.tile_x << " " << e.tile_y;
 			// process type = finish immediately
 			if (_context->price_registry.get(e.work_type, 1, e.building_id, e.level, &saved)) {
 				//_resources.add(saved);
+				LOGC("Simulation") << "There are resources to get immediately";
+				res::log_resources(_context->resource_registry,saved,false);
 				_tiles->clear_state(e.tile_x,e.tile_y,TS_ACTIVE);
 				addResources(saved);
 			}
@@ -179,12 +193,20 @@ void Island::tick(int timeUnits) {
 				// simply build collectable
 				_tiles->set_state(e.tile_x,e.tile_y,TS_COLLECTABLE);
 				_tiles->clear_state(e.tile_x,e.tile_y,TS_ACTIVE);
+				LOGC("Simulation") << "There are resources to collect";
+				res::log_resources(_context->resource_registry,saved,false);
 				Collectable c;
 				c.building_id = e.building_id;
 				c.level = e.level;
 				c.price_type = e.work_type;
 				c.tile_x = e.tile_x;
 				c.tile_y = e.tile_y;
+				if ( e.work_type == PT_DELETE) {
+					c.remove = true;
+				}
+				else {
+					c.remove = false;
+				}
 				_collectables.push_back(c);
 			}
 			else if (e.work_type == PT_UPGRADE) {
@@ -214,9 +236,10 @@ void Island::tick(int timeUnits) {
 			}		
 			else if ( e.work_type == PT_DELETE) {
 				_tiles->clear_state(e.tile_x,e.tile_y,TS_ACTIVE);
-				Tile& t = _tiles->get(e.tile_x,e.tile_y);
-				// FIXME: remove all tiles
-				t.building_id = -1;
+				if (!_context->price_registry.get(e.work_type, 2, e.building_id, e.level, &saved)) {
+					LOGC("Island") << "Delete - no resources to collect defined - removing right away";
+					removeBuilding(e.building_id,e.tile_x,e.tile_y);
+				}
 			}
 
 			int ids[16];
@@ -249,6 +272,9 @@ void Island::tick(int timeUnits) {
 
 	// immediate mode -> process all collectables directly
 	if ( _context->collect_mode == CM_IMMEDIATE ) {
+		if ( _collectables.size() > 0 ) {
+			LOGC("Island") << "immediately collecting: " << _collectables.size();
+		}
 		for ( size_t i = 0; i < _collectables.size(); ++i ) {
 			const Collectable& c = _collectables[i];
 			_tiles->clear_state(c.tile_x,c.tile_y,TS_COLLECTABLE);
@@ -256,6 +282,9 @@ void Island::tick(int timeUnits) {
 			if (_context->price_registry.get(c.price_type, 2, _tiles->get(c.tile_x,c.tile_y), &saved)) {
 				//_resources.add(saved);
 				addResources(saved);
+			}
+			if ( c.remove ) {
+				removeBuilding(c.building_id,c.tile_x,c.tile_y);
 			}
 		}
 		_collectables.clear();
@@ -330,6 +359,11 @@ bool Island::collect(int x, int y) {
 				_queue.createWork(PT_REGULAR,x,y,it->building_id,it->level,_context->price_registry.getDuration(PT_REGULAR,it->building_id,it->level));
 			}
 			_tiles->clear_state(x,y,TS_COLLECTABLE);
+			if ( it->remove ) {
+				BuildingDefinition def;
+				_context->building_definitions.getDefinition(it->building_id,&def);
+				_tiles->remove(it->tile_x,it->tile_y,def.size_x,def.size_y);
+			}
 			it = _collectables.erase(it);
 			found = true;
 		}
@@ -556,7 +590,7 @@ bool Island::createWork(int price_type, int x, int y, int building_id, int level
 void Island::save() {
 	char buffer[256];
 	sprintf(buffer, "i_%d.bin", _id);
-	BinaryWriter writer;
+	Serializer writer;
 	if (writer.open(buffer, "data",BM_WRITE)) {
 		// save resources
 		int sz = _context->resource_registry.size();
@@ -583,7 +617,7 @@ void Island::save() {
 void Island::load(int index) {
 	char buffer[256];
 	sprintf(buffer,"i_%d.bin",index);
-	BinaryWriter reader;
+	Serializer reader;
 	LOGC("Island") << "reading island - file: " << buffer;	
 	//_queue.clear();
 	int max = _tiles->total;

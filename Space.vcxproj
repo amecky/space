@@ -122,7 +122,7 @@
     <ClInclude Include="src\Tiles.h" />
     <ClInclude Include="src\ui\Parser.h" />
     <ClInclude Include="src\ui\vis.h" />
-    <ClInclude Include="src\utils\BinaryWriter.h" />
+    <ClInclude Include="src\utils\Serializer.h" />
     <ClInclude Include="src\utils\CSVFile.h" />
     <ClInclude Include="src\utils\files.h" />
     <ClInclude Include="src\utils\GlobalTimer.h" />
@@ -147,7 +147,7 @@
     <ClCompile Include="src\Simulation.cpp" />
     <ClCompile Include="src\Space.cpp" />
     <ClCompile Include="src\ui\vis.cpp" />
-    <ClCompile Include="src\utils\BinaryWriter.cpp" />
+    <ClCompile Include="src\utils\Serializer.cpp" />
     <ClCompile Include="src\utils\CSVFile.cpp" />
     <ClCompile Include="src\utils\files.cpp" />
     <ClCompile Include="src\utils\GlobalTimer.cpp" />

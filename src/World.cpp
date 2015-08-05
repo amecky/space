@@ -5,7 +5,7 @@
 #include "utils\CSVFile.h"
 #include <vector>
 #include <string>
-#include "utils\BinaryWriter.h"
+#include "utils\Serializer.h"
 
 World::World() : _selected(-1) {
 	_context.building_definitions.load("buildings.txt");
@@ -64,7 +64,7 @@ void World::addResource(const Sign& sign, int value) {
 // save
 // ------------------------------------------------------
 void World::save(DWORD recent_time) {
-	BinaryWriter writer;
+	Serializer writer;
 	if (writer.open("world.bin", "data",BM_WRITE)) {
 		writer.write(recent_time);
 		int sz = _context.global_resources.total;
@@ -96,7 +96,7 @@ void World::load() {
 		delete _islands[i];
 	}
 	_islands.clear();
-	BinaryWriter reader;
+	Serializer reader;
 	if (reader.open("world.bin", "data", BM_READ)) {
 		DWORD time = 0;
 		reader.read(&time);

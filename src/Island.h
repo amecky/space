@@ -50,6 +50,7 @@ public:
 		return _tiles;
 	}
 private:
+	void removeBuilding(int building_id,int x,int y);
 	void addResource(int resource_id,int amount);
 	bool createWork(int price_type,int x,int y,int building_id, int level);
 	bool checkRequirements(int building_id, int level);

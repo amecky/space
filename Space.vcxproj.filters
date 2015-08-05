@@ -139,7 +139,7 @@
       <Filter>ui</Filter>
     </ClInclude>
     <ClInclude Include="src\Island.h" />
-    <ClInclude Include="src\utils\BinaryWriter.h">
+    <ClInclude Include="src\utils\Serializer.h">
       <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
@@ -200,7 +200,7 @@
       <Filter>ui</Filter>
     </ClCompile>
     <ClCompile Include="src\Island.cpp" />
-    <ClCompile Include="src\utils\BinaryWriter.cpp">
+    <ClCompile Include="src\utils\Serializer.cpp">
       <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>

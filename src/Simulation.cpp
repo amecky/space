@@ -126,22 +126,26 @@ void Simulation::quit() {
 // build command line from text input
 // ------------------------------------------------------
 bool Simulation::extract(const char* p,CommandLine * command_line) {	
-		command_line->line.set(p,' ');
-		command_line->type = TOK_UNKNOWN;
-		if ( command_line->line.num_tokens() > 0 ) {
-			char buffer[256];
-			int idx = -1;
-			int len = command_line->line.get_string(0,buffer);
-			Commands::iterator it = _commands.begin();
-			int cnt = 0;
-			while ( it != _commands.end() ) {
-				if (strncmp(it->second->get_command(), buffer, len) == 0 && strlen(it->second->get_command()) == len ) {
-					command_line->type = it->second->get_token_type();
-					return true;
-				}
-				++cnt;
-				++it;
-			}			
-		}		
-		return false;
-	}
+	command_line->line.set(p,' ');
+	command_line->type = TOK_UNKNOWN;
+	if ( command_line->line.num_tokens() > 0 ) {
+		char buffer[256];
+		int idx = -1;
+		int len = command_line->line.get_string(0,buffer);
+		Commands::iterator it = _commands.begin();
+		int cnt = 0;
+		while ( it != _commands.end() ) {
+			if (strncmp(it->second->get_command(), buffer, len) == 0 && strlen(it->second->get_command()) == len ) {
+				command_line->type = it->second->get_token_type();
+				return true;
+			}
+			++cnt;
+			++it;
+		}			
+	}		
+	return false;
+}
+
+void Simulation::setCollectMode(CollectMode cm) {
+	_world.setCollectMode(cm);
+}

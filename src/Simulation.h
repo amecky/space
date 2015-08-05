@@ -407,6 +407,7 @@ public:
 	}
 	void add_command(SimCommand* cmd);
 	bool extract(const char* p,CommandLine * command_line);
+	void setCollectMode(CollectMode cm);
 private:
 	World _world;
 	Commands _commands;

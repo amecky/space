@@ -7,11 +7,11 @@ enum BinaryMode {
 	BM_WRITE
 };
 
-class BinaryWriter {
+class Serializer {
 
 public:
-	BinaryWriter();
-	~BinaryWriter();
+	Serializer();
+	~Serializer();
 	bool open(const char* fileName, const char* dir,BinaryMode mode);
 	void write(DWORD d);
 	void write(int v);

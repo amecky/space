@@ -5,6 +5,7 @@
 int main(int argc,char* argv[]) {
 	Simulation sim;
 	sim.intialize();
+	sim.setCollectMode(CM_MANUAL);
 	char buffer[256];
 	bool running = true;	
 	CommandLine line;

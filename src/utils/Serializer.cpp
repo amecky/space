@@ -1,17 +1,17 @@
-#include "BinaryWriter.h"
+#include "Serializer.h"
 
 
-BinaryWriter::BinaryWriter() : _stream(0) {
+Serializer::Serializer() : _stream(0) {
 }
 
 
-BinaryWriter::~BinaryWriter() {
+Serializer::~Serializer() {
 	if (_stream != 0) {
 		fclose(_stream);
 	}
 }
 
-bool BinaryWriter::open(const char* fileName, const char* dir, BinaryMode mode) {
+bool Serializer::open(const char* fileName, const char* dir, BinaryMode mode) {
 	char buffer[256];
 	sprintf(buffer, "%s/%s", dir, fileName);
 	if (mode == BM_WRITE) {
@@ -26,25 +26,25 @@ bool BinaryWriter::open(const char* fileName, const char* dir, BinaryMode mode) 
 	return false;
 }
 
-void BinaryWriter::write(DWORD d) {
+void Serializer::write(DWORD d) {
 	if (_stream != 0) {
 		fwrite(&d, sizeof(DWORD), 1, _stream);
 	}
 }
 
-void BinaryWriter::write(int v) {
+void Serializer::write(int v) {
 	if (_stream != 0) {
 		fwrite(&v, sizeof(int), 1, _stream);
 	}
 }
 
-void BinaryWriter::write(void* buffer,int size) {
+void Serializer::write(void* buffer,int size) {
 	if (_stream != 0) {
 		fwrite(buffer, size, 1, _stream);
 	}
 }
 
-bool BinaryWriter::read(int* v) {
+bool Serializer::read(int* v) {
 	if (_stream != 0) {
 		fread(v, sizeof(int), 1, _stream);
 		return true;
@@ -52,7 +52,7 @@ bool BinaryWriter::read(int* v) {
 	return false;
 }
 
-bool BinaryWriter::read(DWORD* v) {
+bool Serializer::read(DWORD* v) {
 	if (_stream != 0) {
 		fread(v, sizeof(DWORD), 1, _stream);
 		return true;
@@ -60,7 +60,7 @@ bool BinaryWriter::read(DWORD* v) {
 	return false;
 }
 
-bool BinaryWriter::read(void* buffer, int size) {
+bool Serializer::read(void* buffer, int size) {
 	if (_stream != 0) {
 		fread(buffer, size, 1, _stream);
 		return true;

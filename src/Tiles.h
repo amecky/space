@@ -158,6 +158,23 @@ struct Tiles {
 		return false;
 	}
 
+	void remove(int x,int y,int size_x,int size_y) {
+		int idx = get_index(x,y);
+		_tiles[idx].building_id = -1;
+		_tiles[idx].level = 0;
+		_tiles[idx].ref_id = -1;
+		for ( int i = 0 ; i < size_x; ++i ) {
+			for ( int j = 0; j < size_y; ++j ) {
+				int xp = x + i;
+				int yp = y - j;
+				int current = get_index(xp,yp);
+				if ( current != idx ) {
+					_tiles[current].ref_id = -1;
+				}
+			}
+		}	
+	}
+
 	const bool has_space(int x,int y,int size_x,int size_y) const {
 		if ( !is_valid(x,y))  {
 			return false;

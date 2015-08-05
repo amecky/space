@@ -2,7 +2,7 @@
 #include "..\Resources.h"
 #include "..\registries\PriceRegistry.h"
 #include "..\utils\utils.h"
-#include "..\utils\BinaryWriter.h"
+#include "..\utils\Serializer.h"
 
 WorkQueue::WorkQueue(void) {
 }
@@ -91,7 +91,7 @@ void WorkQueue::show() const {
 	}
 }
 
-void WorkQueue::save(BinaryWriter& writer) {
+void WorkQueue::save(Serializer& writer) {
 	int nr = _queue.size();
 	writer.write(nr);
 	LOGC("WorkQueue") << "saving " << nr << " work items";
@@ -101,7 +101,7 @@ void WorkQueue::save(BinaryWriter& writer) {
     }
 }
 
-void WorkQueue::load(BinaryWriter& reader) {
+void WorkQueue::load(Serializer& reader) {
 	_queue.clear();
 	int nr = 0;
 	reader.read(&nr);

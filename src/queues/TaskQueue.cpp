@@ -1,7 +1,7 @@
 #include "TaskQueue.h"
 #include "..\World.h"
 #include "..\utils\Log.h"
-#include "..\utils\BinaryWriter.h"
+#include "..\utils\Serializer.h"
 
 TaskQueue::TaskQueue(TaskRegistry* tsk_reg) : _task_registry(tsk_reg) {
 }
@@ -112,7 +112,7 @@ void TaskQueue::get_active_tasks(int island, ActiveTasks& tasks) {
 // ------------------------------------------------------
 // save state of active tasks
 // ------------------------------------------------------
-void TaskQueue::save(BinaryWriter& writer) {
+void TaskQueue::save(Serializer& writer) {
 	int sz = _tasks.size();
 	writer.write(sz);
 	LOGC("TaskQueue") << "saving " << sz << " active tasks";
@@ -125,7 +125,7 @@ void TaskQueue::save(BinaryWriter& writer) {
 // ------------------------------------------------------
 // load state of active tasks
 // ------------------------------------------------------
-void TaskQueue::load(BinaryWriter& reader) {
+void TaskQueue::load(Serializer& reader) {
 	int num = 0;
 	_tasks.clear();
 	reader.read(&num);
