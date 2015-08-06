@@ -80,7 +80,7 @@ void Island::add(int x,int y,const Sign& s) {
 		}
 	}
 	else {
-		printf("ERROR: Cannot set %s at %d %d\n",def.name,x,y);
+		LOGEC("Island") << "ERROR: Cannot set " << def.name << " at " << x << " " << y;
 	}
 }
 

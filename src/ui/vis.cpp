@@ -44,16 +44,13 @@ namespace vis {
 					if ( tiles->getBuildingID(idx) != -1 ) {
 						printf("%s", context->building_definitions.getSign(tiles->getBuildingID(idx)));
 						if ( tiles->isActive(idx)) {			
-							printf("#");
+							printf("# ");
+						}
+						else if ( tiles->has_state(x,y,TS_COLLECTABLE)) {
+							printf("* ");
 						}
 						else {
-							printf(" ");
-						}
-						if ( tiles->has_state(x,y,TS_COLLECTABLE)) {
-							printf("*");
-						}
-						else {
-							printf(" ");
+							printf("  ");
 						}
 					}
 					else if ( tiles->_tiles[idx].ref_id != -1 ) {

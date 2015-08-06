@@ -26,12 +26,6 @@ bool Serializer::open(const char* fileName, const char* dir, BinaryMode mode) {
 	return false;
 }
 
-void Serializer::write(DWORD d) {
-	if (_stream != 0) {
-		fwrite(&d, sizeof(DWORD), 1, _stream);
-	}
-}
-
 void Serializer::write(int v) {
 	if (_stream != 0) {
 		fwrite(&v, sizeof(int), 1, _stream);
@@ -47,14 +41,6 @@ void Serializer::write(void* buffer,int size) {
 bool Serializer::read(int* v) {
 	if (_stream != 0) {
 		fread(v, sizeof(int), 1, _stream);
-		return true;
-	}
-	return false;
-}
-
-bool Serializer::read(DWORD* v) {
-	if (_stream != 0) {
-		fread(v, sizeof(DWORD), 1, _stream);
 		return true;
 	}
 	return false;

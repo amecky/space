@@ -30,7 +30,16 @@ void WorkQueue::tick(int timeUnits) {
 			e.building_id = it->building_id;
 			e.level = it->level;
 			_buffer.add(e);
-			it = _queue.erase(it);
+			/*
+			if ( it->reschedule ) {
+				it->timer = 0;
+				it->done = false;
+				++it;
+			}
+			else {
+			*/
+				it = _queue.erase(it);
+			//}
 		}
 		else {
 			++it;

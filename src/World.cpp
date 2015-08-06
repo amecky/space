@@ -66,7 +66,6 @@ void World::addResource(const Sign& sign, int value) {
 void World::save(DWORD recent_time) {
 	Serializer writer;
 	if (writer.open("world.bin", "data",BM_WRITE)) {
-		writer.write(recent_time);
 		int sz = _context.global_resources.total;
 		LOGC("World") << "saving global resources: " << sz;
 		writer.write(sz);
@@ -98,8 +97,6 @@ void World::load() {
 	_islands.clear();
 	Serializer reader;
 	if (reader.open("world.bin", "data", BM_READ)) {
-		DWORD time = 0;
-		reader.read(&time);
         int num = 0;
 		// load global resources
 		reader.read(&num);
