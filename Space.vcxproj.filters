@@ -16,6 +16,9 @@
     <Filter Include="utils">
       <UniqueIdentifier>{e109c961-64b0-43b3-aec5-2269fcfcea3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="work">
+      <UniqueIdentifier>{32fc9a90-21b5-429b-8843-cb5657565b9a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Todo.md" />
@@ -142,6 +145,15 @@
     <ClInclude Include="src\utils\Serializer.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\work\Work.h">
+      <Filter>work</Filter>
+    </ClInclude>
+    <ClInclude Include="src\work\DeleteWork.h">
+      <Filter>work</Filter>
+    </ClInclude>
+    <ClInclude Include="src\work\BuildWork.h">
+      <Filter>work</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Resources.cpp" />
@@ -202,6 +214,15 @@
     <ClCompile Include="src\Island.cpp" />
     <ClCompile Include="src\utils\Serializer.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\work\Work.cpp">
+      <Filter>work</Filter>
+    </ClCompile>
+    <ClCompile Include="src\work\DeleteWork.cpp">
+      <Filter>work</Filter>
+    </ClCompile>
+    <ClCompile Include="src\work\BuildWork.cpp">
+      <Filter>work</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -9,6 +9,7 @@
 #include "registries\RewardsRegistry.h"
 #include "Tiles.h"
 #include <vector>
+#include <map>
 #include "queues\WorkQueue.h"
 #include "queues\TaskQueue.h"
 #include "Island.h"
@@ -51,7 +52,8 @@ struct WorldContext {
 
 class World {
 
-typedef std::vector<Island*> Islands;
+typedef std::vector<MyIsland*> Islands;
+typedef std::map<int, SimWork*> WorkMap;
 
 public:
 	World();
@@ -61,9 +63,9 @@ public:
 		}
 	}
 	void setCollectMode(CollectMode cm);
-	Island* createIsland(int width,int height);
-	Island* getIsland(int index) const;
-	Island* getSelectedIsland() const;
+	MyIsland* createIsland(int width,int height);
+	MyIsland* getIsland(int index) const;
+	MyIsland* getSelectedIsland() const;
 	void selectIsland(int index);
 	void tick(int timeUnits);
 	void addResource(const Sign& sign, int value);
@@ -72,8 +74,11 @@ public:
 	void show_tasks();
 	WorldContext* getContext();
 	void showBuildingDefinitions();
+	void execute(int work_type, const TextLine& line);
 private:
+	void tick(MyIsland* island, int timeUnits);
 	int _selected;
 	Islands _islands;
 	WorldContext _context;
+	WorkMap _work_map;
 };

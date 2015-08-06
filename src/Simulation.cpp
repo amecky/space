@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "registries\RegistryReader.h"
 #include <map>
+#include "utils\files.h"
+
 // ------------------------------------------------------
 // constructor
 // ------------------------------------------------------
@@ -63,10 +65,11 @@ void Simulation::intialize() {
 			}
 		}		
 		LOGC("Simulation") << "island " << id << " size " << sx << " " << sy;
-		Island* il = _world.createIsland(sx,sy);
+		MyIsland* il = _world.createIsland(sx,sy);
 		for ( size_t i = 0; i < defs.size(); ++i ) {
 			const AreaDefinition& ad = defs[i];
-			il->createArea(ad);
+			// FIXME:
+			createArea(il,ad);
 		}	
 		++it;
 	}
@@ -75,15 +78,70 @@ void Simulation::intialize() {
 	const char* names[] = {"island","resource","amount"};
 	RegistryReader reader(names,3);
 	if ( reader.load("island_resources.txt","data")) {
-		for ( size_t i = 0; i < reader.size(); ++i ) {
+		for ( int i = 0; i < reader.size(); ++i ) {
 			int is_idx = reader.get_int(i,"island");
 			Sign s = reader.get_sign(i,"resource");
 			int amount = reader.get_int(i,"amount");
-			Island* il = _world.getIsland(is_idx);
-			il->addResource(s,amount);
+			MyIsland* il = _world.getIsland(is_idx);
+			island::add_resource(_world.getContext(), il, s, amount);
 		}
 	}
 	_world.getContext()->task_queue.init(islands.size());
+}
+
+// ------------------------------------------------------
+// add building
+// ------------------------------------------------------
+void Simulation::add(MyIsland* island,int x, int y, const Sign& s) {
+	BuildingDefinition def;
+	_world.getContext()->building_definitions.getDefinition(s, &def);
+	if (island->tiles->set(def.id, 1, x, y, def.size_x, def.size_y)) {
+		island::calculate_max_resources(_world.getContext(), island);
+		Resources tmp;
+		if (_world.getContext()->price_registry.get(PT_REGULAR, 0, def.id, 1, &tmp)) {
+			island->queue.createWork(PT_REGULAR, x, y, def.id, 1, _world.getContext()->price_registry.getDuration(PT_REGULAR, def.id, 1));
+		}
+	}
+	else {
+		LOGEC("Island") << "ERROR: Cannot set " << def.name << " at " << x << " " << y;
+	}
+}
+// ------------------------------------------------------
+// create area
+// ------------------------------------------------------
+void Simulation::createArea(MyIsland* island,const AreaDefinition& definition) {
+	Tiles* tiles = island->tiles;
+	for (int y = 0; y < definition.size_y; ++y) {
+		for (int x = 0; x < definition.size_x; ++x) {
+			int xp = definition.start_x + x;
+			int yp = definition.start_y + y;
+			if (definition.locked) {
+				tiles->set_state(xp, yp, TS_LOCKED);
+			}
+		}
+	}
+	std::vector<std::string> content;
+	if (file::read(definition.file, "data", content)) {
+		size_t len = content.size();
+		for (int i = (len - 1); i >= 0; --i) {
+			std::string line = content[i];
+			for (int j = 0; j < definition.size_x; ++j) {
+				int xp = definition.start_x + j;
+				int yp = (definition.start_y + definition.size_y - 1) - i;
+				char f = line[j * 2];
+				char s = line[j * 2 + 1];
+				Sign sgn(f, s);
+				int bid = _world.getContext()->building_definitions.getIndex(sgn);
+				if (bid != -1) {
+					add(island,xp, yp, sgn);
+				}
+				if (f == 'x' && s == 'x') {
+					tiles->set_state(xp, yp, TS_UNDEFINED);
+				}
+			}
+		}
+	}
+	island::calculate_max_resources(_world.getContext(), island);
 }
 
 // ------------------------------------------------------

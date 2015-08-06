@@ -128,6 +128,9 @@
     <ClInclude Include="src\utils\GlobalTimer.h" />
     <ClInclude Include="src\utils\Log.h" />
     <ClInclude Include="src\utils\utils.h" />
+    <ClInclude Include="src\work\BuildWork.h" />
+    <ClInclude Include="src\work\DeleteWork.h" />
+    <ClInclude Include="src\work\Work.h" />
     <ClInclude Include="src\World.h" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +156,9 @@
     <ClCompile Include="src\utils\GlobalTimer.cpp" />
     <ClCompile Include="src\utils\Log.cpp" />
     <ClCompile Include="src\utils\utils.cpp" />
+    <ClCompile Include="src\work\BuildWork.cpp" />
+    <ClCompile Include="src\work\DeleteWork.cpp" />
+    <ClCompile Include="src\work\Work.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

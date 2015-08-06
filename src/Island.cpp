@@ -3,6 +3,9 @@
 #include "utils\files.h"
 #include "World.h"
 #include "utils\Serializer.h"
+#include "utils\CSVFile.h"
+
+
 
 Island::Island(WorldContext* context,int id,int size_x,int size_y) 
 	: _context(context) , _id(id) {
@@ -14,42 +17,6 @@ Island::Island(WorldContext* context,int id,int size_x,int size_y)
 
 Island::~Island() {
 	delete _tiles;
-}
-// ------------------------------------------------------
-// create area
-// ------------------------------------------------------
-void Island::createArea(const AreaDefinition& definition) {
-	for ( int y = 0; y < definition.size_y; ++y) {
-		for ( int x = 0; x < definition.size_x; ++x ) {
-			int xp = definition.start_x + x;
-			int yp = definition.start_y + y;
-			if ( definition.locked) {
-				_tiles->set_state(xp,yp,TS_LOCKED);
-			}
-		}
-	}
-	std::vector<std::string> content;
-	if ( file::read(definition.file,"data",content)) {
-		size_t len = content.size();
-		for ( int i = (len - 1); i >= 0; --i ) {
-			std::string line = content[i];
-			for ( int j = 0; j < definition.size_x; ++j ) {
-				int xp = definition.start_x + j;
-				int yp = (definition.start_y + definition.size_y - 1) - i;
-				char f = line[j *2];
-				char s = line[j*2 +1];
-				Sign sgn(f,s);
-				int bid = _context->building_definitions.getIndex(sgn);
-				if ( bid != -1 ) {
-					add(xp,yp,sgn);
-				}
-				if ( f == 'x' && s == 'x' ) {
-					_tiles->set_state(xp,yp,TS_UNDEFINED);
-				}
-			}
-		}
-	}
-	calculateMaxResources();
 }
 
 // ------------------------------------------------------
@@ -104,14 +71,6 @@ void Island::add(const char* s,int x,int y) {
 // ------------------------------------------------------
 // add resource
 // ------------------------------------------------------
-void Island::addResource(const Sign& sign,int value) {
-	int id = _context->resource_registry.getIndex(sign);
-	_resources.set(id,value);
-}
-
-// ------------------------------------------------------
-// add resource
-// ------------------------------------------------------
 void Island::addResource(const char* sign,int value) {
 	assert(strlen(sign) == 2);
 	Sign s(sign[0],sign[1]);
@@ -133,17 +92,6 @@ void Island::addResources(const Resources& r) {
 	}
 }
 
-// ------------------------------------------------------
-// add resources
-// ------------------------------------------------------
-void Island::addResource(int resource_id,int amount) {
-	if (_context->resource_registry.isGlobal(resource_id)) {
-		_context->global_resources.add(resource_id,amount);
-	}
-	else {
-		_resources.add(resource_id,amount);
-	}
-}
 
 // ------------------------------------------------------
 // subtract resources
@@ -173,6 +121,7 @@ void Island::removeBuilding(int building_id,int x,int y) {
 // ------------------------------------------------------
 // tick Island
 // ------------------------------------------------------
+/*
 void Island::tick(int timeUnits) {
 	_queue.tick(timeUnits);
 	if ( _queue.hasEvents()) {
@@ -290,48 +239,14 @@ void Island::tick(int timeUnits) {
 		_collectables.clear();
 	}
 
-	/* No permanents at the moment
-	Resources res;
-	for ( int i = 0; i < GRID_SIZE * GRID_SIZE; ++i ) {
-		if ( _context->building_definitions.runs_permanent(_tiles->getBuildingID(i))) {
-			if ( _context->price_registry.get(PT_PERMANENT,true,_tiles->getBuildingID(i),_tiles->getLevel(i),&res) ) {
-				_resources.add(res,timeUnits);
-			}
-		}
-	}
-	*/
+
 	for ( int i = 0; i < _context->resource_registry.size(); ++i ) {
 		if ( _resources.get(i) > _maxResources.get(i) && _maxResources.get(i) != -1 && !_context->resource_registry.isGlobal(i)) {
 			_resources.set(i,_maxResources.get(i));
 		}
 	}
 }
-
-// ------------------------------------------------------
-// show status
-// ------------------------------------------------------
-void Island::status() const {	
-	printf("Global Resources:\n");
-	for (int i = 0; i < _context->resource_registry.size(); ++i) {
-		if (_context->resource_registry.isGlobal(i)) {
-			printf("%10s : %d\n", _context->resource_registry.getName(i), _context->global_resources.get(i));
-		}
-	}
-	printf("Resources:\n");
-	for ( int i = 0; i < _context->resource_registry.size(); ++i ) {
-		if (!_context->resource_registry.isGlobal(i)) {
-			printf("%10s : %d / %d\n", _context->resource_registry.getName(i), _resources.get(i), _maxResources.get(i));		
-		}
-	}	
-	_queue.show();	
-	if ( _context->collect_mode == CM_MANUAL) {
-		printf("Collectable:\n");
-		for ( size_t i = 0; i < _collectables.size(); ++i ) {
-			printf("  %s at %d %d\n",_context->building_definitions.getName(_collectables[i].building_id),_collectables[i].tile_x,_collectables[i].tile_y);
-		}
-	}
-}
-
+*/
 // ------------------------------------------------------
 // collect resources
 // ------------------------------------------------------
@@ -378,68 +293,6 @@ bool Island::collect(int x, int y) {
 }
 
 // ------------------------------------------------------
-// start creating new building
-// ------------------------------------------------------
-bool Island::build(int x,int y,int building_id) {
-	int idx = x + y * _tiles->width;
-	if ( !_tiles->is_empty(x,y)) {
-		printf("Error: There is already a building at %d %d\n",x,y);
-		return false;
-	}
-	BuildingDefinition def;
-	_context->building_definitions.getDefinition(building_id,&def);
-	if ( !_tiles->has_space(x,y,def.size_x,def.size_y)) {
-		printf("Error: There is not enough space to place the building at %d %d\n",x,y);
-		return false;
-	}
-	if (isUsed(x, y)) {
-		printf("Error: There is already a building under construction\n");
-		return false;
-	}
-	if ( _context->price_registry.getDuration(PT_BUILD,building_id,1) == -1 ) {
-		printf("Error: No duration defined in registry\n");
-		return false;
-	}
-	int index = x + y * _tiles->width;
-	if (checkRequirements(building_id, 1)) {
-		createWork(PT_BUILD,x,y,building_id,1);
-		return true;
-	}
-	return false;
-}
-
-// ------------------------------------------------------
-// start work at building
-// ------------------------------------------------------
-bool Island::start(int x,int y,int level) {
-	int idx = x + y * _tiles->width;
-	if ( _tiles->getBuildingID(idx) == -1 ) {
-		printf("Error: There is no building at %d %d\n",x,y);
-		return false;
-	}	
-	if ( _tiles->isActive(idx)) {
-		printf("Error: The building is already active\n");
-		return false;
-	}
-	if ( level > _tiles->getLevel(idx) ) {
-		printf("Error: The selected level %d is not supported yet - You need to upgrade\n",level);
-		return false;
-	}
-	if ( _context->collect_mode == CM_MANUAL && _tiles->has_state(x,y,TS_COLLECTABLE)) {
-		printf("ERROR: You need to collect the resources before you can start work again\n");
-		return false;
-	}
-	Resources tmp;
-	if ( !_context->price_registry.get(PT_WORK,0,_tiles->getBuildingID(idx),level,&tmp)) {
-		printf("Error: The selected level %d is not supported yet - You need to upgrade\n",level);
-		return false;
-	}
-	_tiles->set_state(x,y,TS_ACTIVE);
-	createWork(PT_WORK,x,y,_tiles->getBuildingID(idx),level);
-	return true;
-}
-
-// ------------------------------------------------------
 // upgrade building
 // ------------------------------------------------------
 bool Island::upgrade(int x,int y) {
@@ -453,52 +306,12 @@ bool Island::upgrade(int x,int y) {
 		printf("Error: The building is active - upgrade is not available\n");
 		return false;
 	}
-	if (checkRequirements(_tiles->getBuildingID(idx), _tiles->getLevel(idx) + 1)) {
-		_tiles->set_state(x,y,TS_ACTIVE);
-		createWork(PT_UPGRADE,x,y,_tiles->getBuildingID(idx),_tiles->getLevel(idx)+1);
-		return true;
-	}
+	//if (checkRequirements(_tiles->getBuildingID(idx), _tiles->getLevel(idx) + 1)) {
+		//_tiles->set_state(x,y,TS_ACTIVE);
+		//createWork(PT_UPGRADE,x,y,_tiles->getBuildingID(idx),_tiles->getLevel(idx)+1);
+		//return true;
+	//}
 	return false;
-}
-
-// ------------------------------------------------------
-// describe building
-// ------------------------------------------------------
-bool Island::describe(int x,int y) {
-	int idx = x + y * _tiles->width;
-	if ( _tiles->getBuildingID(idx) == -1 ) {
-		printf("Error: There is no building at %d %d\n",x,y);
-		return false;
-	}
-	const Tile& t = _tiles->get(x,y);
-	printf("Building: %s\n",_context->building_definitions.getName(t.building_id));
-	printf("   Level: %d\n",t.level);
-	Resources tmp;
-	if (_context->price_registry.get(PT_REGULAR, 2, t.building_id, t.level, &tmp)) {
-		printf("Regular income:\n");
-		printf("Duration: %d\n", _context->price_registry.getDuration(PT_REGULAR, t.building_id, t.level));
-		res::show_resources(_context->resource_registry, tmp, false);
-	}
-	printf("Available work:\n");	
-	for ( int i = 1; i <= t.level; ++i ) {				
-		if ( _context->price_registry.get(PT_WORK,0,t.building_id,i,&tmp)) {
-			printf(" Level %d\n", i);
-			printf("Duration: %d\n", _context->price_registry.getDuration(PT_WORK, t.building_id, i));
-			printf("Costs:\n");
-			res::show_resources(_context->resource_registry,tmp,false);
-		}		
-		if (_context->price_registry.get(PT_WORK, 1, t.building_id, i, &tmp)) {
-			printf("Income:\n");
-			Resources collect;
-			if (_context->price_registry.get(PT_WORK, 2, t.building_id, i, &collect)) {
-				tmp.add(collect);
-
-			}
-			res::show_resources(_context->resource_registry, tmp, false);
-		}
-	}
-	// FIXME: list start options
-	return true;
 }
 
 // ------------------------------------------------------
@@ -526,6 +339,7 @@ bool Island::move(int oldX,int oldY,int x,int y) {
 // ------------------------------------------------------
 // remove building
 // ------------------------------------------------------
+/*
 bool Island::remove(int x,int y) {
 	int idx = x + y * _tiles->width;
 	if ( _tiles->is_empty(x,y)) {
@@ -541,32 +355,13 @@ bool Island::remove(int x,int y) {
 	createWork(PT_DELETE,x,y,t.building_id,t.level);	
 	return true;
 }
-
-// ------------------------------------------------------
-// check requirements
-// ------------------------------------------------------
-bool Island::checkRequirements(int building_id, int level) {
-	BuildRequirement requirement;
-	if (_context->requirements_registry.getRequirement(building_id, level, &requirement)) {
-		int cnt = 0;
-		for (int i = 0; i < _tiles->total; ++i) {
-			if ( _tiles->match(i,requirement) ) {
-				++cnt;
-			}
-		}
-		if (cnt != requirement.required_count) {
-			printf("Error: You cannot build because of missing requirements\n");
-			printf("You need %d of %s with level %d\n", requirement.required_count, _context->building_definitions.getName(requirement.required_building), requirement.required_level);
-			return false;
-		}
-	}
-	return true;
-}
+*/
 
 // ------------------------------------------------------
 // create work item
 // ------------------------------------------------------
 bool Island::createWork(int price_type, int x, int y, int building_id, int level) {
+	/*
 	Resources costs;
 	if (_context->price_registry.get(price_type, 0, building_id, level, &costs)) {
 		res::show_resources(_context->resource_registry,costs,false);
@@ -581,91 +376,8 @@ bool Island::createWork(int price_type, int x, int y, int building_id, int level
 	else {
 		printf("Error: Unable to determine price - no registry entry\n");
 	}
+	*/
 	return false;
-}
-
-// ------------------------------------------------------
-// save Island
-// ------------------------------------------------------
-void Island::save() {
-	char buffer[256];
-	sprintf(buffer, "i_%d.bin", _id);
-	Serializer writer;
-	if (writer.open(buffer, "data",BM_WRITE)) {
-		// save resources
-		int sz = _context->resource_registry.size();
-		writer.write(sz);
-		LOGC("Island") << "saving resources: " << sz;
-		for (int i = 0; i < sz; ++i) {
-			writer.write(_resources._values[i]);
-		}
-		res::log_resources(_context->resource_registry, _resources, false);
-		LOGC("Island") << "saving tiles: " << _tiles->width << " " << _tiles->height;
-		// save tiles
-		for (int y = 0; y < _tiles->height; ++y) {
-			for (int x = 0; x < _tiles->width; ++x) {
-				writer.write(&_tiles->get(x, y), sizeof(Tile));
-			}
-		}
-		_queue.save(writer);			
-	}
-}
-
-// ------------------------------------------------------
-// load Island
-// ------------------------------------------------------
-void Island::load(int index) {
-	char buffer[256];
-	sprintf(buffer,"i_%d.bin",index);
-	Serializer reader;
-	LOGC("Island") << "reading island - file: " << buffer;	
-	//_queue.clear();
-	int max = _tiles->total;
-	_tiles->clear();
-	if (reader.open(buffer, "data", BM_READ)) {
-        int num = 0;
-		// load resources
-		reader.read(&num);
-		LOGC("Island") << "resources: " << num;
-		for ( int i = 0; i < num; ++i ) {
-			reader.read(&_resources._values[i]);
-		}
-		res::log_resources(_context->resource_registry,_resources,false);
-		LOGC("Island") << "loading tiles: " << _tiles->width << " " << _tiles->height;
-		// load buildings
-		for (int y = 0; y < _tiles->height; ++y) {
-			for (int x = 0; x < _tiles->width; ++x) {	
-				Tile t;
-				reader.read(&t, sizeof(Tile));
-				_tiles->set(x,y,t);
-			}
-		}
-		_queue.load(reader);
-		calculateMaxResources();
-    }
-	else {
-		printf("ERROR: No file %s found\n",buffer);
-	}
-
-}
-
-// ------------------------------------------------------
-// is_available - check if the required resources are available
-// ------------------------------------------------------
-bool Island::is_available(const Resources& costs) {
-	bool ret = true;
-	for ( int i = 0; i < _resources.total; ++i ) {
-		int current = costs._values[i];
-		int available = _resources._values[i];
-		int global_available = _context->global_resources.get(i);
-		if ( current > 0 ) {
-			if ( available < current && global_available < current ) {
-				printf("Not enough resources %s - required: %d available: %d\n",_context->resource_registry.getName(i),current,available);
-				ret = false;
-			}
-		}
-	}
-	return ret;
 }
 
 // ------------------------------------------------------
@@ -684,4 +396,147 @@ bool Island::isUsed(int x, int y) {
 	}
 	*/
 	return false;
+}
+
+namespace island {
+
+	// ------------------------------------------------------
+	// save Island
+	// ------------------------------------------------------
+	void save(WorldContext* context, MyIsland* island) {
+		char buffer[256];
+		sprintf(buffer, "i_%d.bin", island->id);
+		Serializer writer;
+		if (writer.open(buffer, "data", BM_WRITE)) {
+			// save resources
+			int sz = context->resource_registry.size();
+			writer.write(sz);
+			LOGC("Island") << "saving resources: " << sz;
+			for (int i = 0; i < sz; ++i) {
+				writer.write(island->resources._values[i]);
+			}
+			res::log_resources(context->resource_registry, island->resources, false);
+			LOGC("Island") << "saving tiles: " << island->tiles->width << " " << island->tiles->height;
+			// save tiles
+			for (int y = 0; y < island->tiles->height; ++y) {
+				for (int x = 0; x < island->tiles->width; ++x) {
+					writer.write(&island->tiles->get(x, y), sizeof(Tile));
+				}
+			}
+			island->queue.save(writer);
+		}
+	}
+
+	// ------------------------------------------------------
+	// load Island
+	// ------------------------------------------------------
+	void load(WorldContext* context,MyIsland* island) {
+		char buffer[256];
+		sprintf(buffer, "i_%d.bin", island->id);
+		Serializer reader;
+		LOGC("Island") << "reading island - file: " << buffer;
+		//_queue.clear();
+		int max = island->tiles->total;
+		island->tiles->clear();
+		if (reader.open(buffer, "data", BM_READ)) {
+			int num = 0;
+			// load resources
+			reader.read(&num);
+			LOGC("Island") << "resources: " << num;
+			for (int i = 0; i < num; ++i) {
+				reader.read(&island->resources._values[i]);
+			}
+			res::log_resources(context->resource_registry, island->resources, false);
+			LOGC("Island") << "loading tiles: " << island->tiles->width << " " << island->tiles->height;
+			// load buildings
+			for (int y = 0; y < island->tiles->height; ++y) {
+				for (int x = 0; x < island->tiles->width; ++x) {
+					Tile t;
+					reader.read(&t, sizeof(Tile));
+					island->tiles->set(x, y, t);
+				}
+			}
+			island->queue.load(reader);
+			// FIXME:
+			//calculateMaxResources();
+		}
+		else {
+			printf("ERROR: No file %s found\n", buffer);
+		}
+
+	}
+
+	// ------------------------------------------------------
+	// is_available - check if the required resources are available
+	// ------------------------------------------------------
+	bool is_available(WorldContext* context,MyIsland* island,const Resources& costs) {
+		bool ret = true;
+		for (int i = 0; i < island->resources.total; ++i) {
+			int current = costs._values[i];
+			int available = island->resources._values[i];
+			int global_available = context->global_resources.get(i);
+			if (current > 0) {
+				if (available < current && global_available < current) {
+					printf("Not enough resources %s - required: %d available: %d\n", context->resource_registry.getName(i), current, available);
+					ret = false;
+				}
+			}
+		}
+		return ret;
+	}
+
+	// ------------------------------------------------------
+	// check requirements
+	// ------------------------------------------------------
+	bool check_requirements(WorldContext* context, MyIsland* island, int building_id, int level) {
+		BuildRequirement requirement;
+		if (context->requirements_registry.getRequirement(building_id, level, &requirement)) {
+			int cnt = 0;
+			for (int i = 0; i < island->tiles->total; ++i) {
+				if (island->tiles->match(i, requirement)) {
+					++cnt;
+				}
+			}
+			if (cnt != requirement.required_count) {
+				printf("Error: You cannot build because of missing requirements\n");
+				printf("You need %d of %s with level %d\n", requirement.required_count, context->building_definitions.getName(requirement.required_building), requirement.required_level);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	// ------------------------------------------------------
+	// add resources
+	// ------------------------------------------------------
+	void add_resource(WorldContext* context,MyIsland* island,int resource_id, int amount) {
+		if (context->resource_registry.isGlobal(resource_id)) {
+			context->global_resources.add(resource_id, amount);
+		}
+		else {
+			island->resources.add(resource_id, amount);
+		}
+	}
+
+	// ------------------------------------------------------
+	// add resource
+	// ------------------------------------------------------
+	void add_resource(WorldContext* context, MyIsland* island, const Sign& sign, int value) {
+		int id = context->resource_registry.getIndex(sign);
+		add_resource(context, island, id, value);
+	}
+
+	// ------------------------------------------------------
+	// calculate max resources
+	// ------------------------------------------------------
+	void calculate_max_resources(WorldContext* context, MyIsland* island) {
+		for (int i = 0; i < island->maxResources.total; ++i) {
+			island->maxResources.set(i, 0);
+		}
+		for (int i = 0; i < island->tiles->total; ++i) {
+			if (island->tiles->getBuildingID(i) != -1) {
+				context->max_resources_registry.add(island->tiles->getBuildingID(i), island->tiles->getLevel(i), &island->maxResources);
+			}
+		}
+	}
 }
