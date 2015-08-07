@@ -22,8 +22,7 @@ bool RewardRegistry::load_entry(const RegistryReader& reader, int index, Reward*
 	t->amount = reader.get_int(index, "amount");
 	t->resource_id = _resource_registry->getIndex(bs);
 	if (t->resource_id == -1) {
-		LOGE << "ERROR: invalid resource type at " << reader.get_line_nr(index);
-		printf("ERROR: invalid resource type at %d\n", reader.get_line_nr(index));
+		LOGEC("RewardRegistry") << "Invalid resource type at " << reader.get_line_nr(index);
 		valid = false;
 	}
 	return valid;

@@ -1,5 +1,6 @@
 #pragma once
 #include <windows.h>
+#include "Common.h"
 #include "Resources.h"
 #include "registries\PriceRegistry.h"
 #include "registries\MaxResourcesRegistry.h"
@@ -8,11 +9,13 @@
 #include "registries\TaskRegistry.h"
 #include "registries\RewardsRegistry.h"
 #include "Tiles.h"
+#include "utils\Messages.h"
 #include <vector>
 #include <map>
 #include "queues\WorkQueue.h"
 #include "queues\TaskQueue.h"
 #include "Island.h"
+
 // ------------------------------------------------------
 // collect mode
 // ------------------------------------------------------
@@ -37,7 +40,7 @@ struct WorldContext {
 	CollectMode collect_mode;
 	int time_multiplier;
 	TaskQueue task_queue;
-
+	Messages messages;
 	WorldContext() 
 		: price_registry(&resource_registry,&building_definitions) 
 		, task_registry(&building_definitions)
@@ -48,7 +51,7 @@ struct WorldContext {
 	}
 };
 
-
+extern WorldContext* gContext;
 
 class World {
 
@@ -59,8 +62,10 @@ public:
 	World();
 	~World() {
 		for ( size_t i = 0; i < _islands.size(); ++i ) {
+			delete[] _islands[i]->tiles;
 			delete _islands[i];
 		}
+		delete gContext;
 	}
 	void setCollectMode(CollectMode cm);
 	MyIsland* createIsland(int width,int height);
@@ -72,13 +77,11 @@ public:
 	void save(DWORD recent_time);
 	void load();
 	void show_tasks();
-	WorldContext* getContext();
 	void showBuildingDefinitions();
 	void execute(int work_type, const TextLine& line);
 private:
 	void tick(MyIsland* island, int timeUnits);
 	int _selected;
 	Islands _islands;
-	WorldContext _context;
 	WorkMap _work_map;
 };

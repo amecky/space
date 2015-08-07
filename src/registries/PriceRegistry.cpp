@@ -37,7 +37,7 @@ bool PriceRegistry::load_entry(const RegistryReader& reader,int index,RegistryEn
 	Sign s = reader.get_sign(index,"building");
 	entry->building_type = _building_registry->getIndex(s);
 	if (entry->building_type == -1) {
-		LOGEC("PriceRegistry") << "ERROR: invalid building type at line " << reader.get_line_nr(index);
+		LOGEC("PriceRegistry") << "Invalid building type at line " << reader.get_line_nr(index);
 		valid = false;
 	}
 	entry->level = reader.get_int(index,"level");
@@ -45,7 +45,7 @@ bool PriceRegistry::load_entry(const RegistryReader& reader,int index,RegistryEn
 	char pt = reader.get_char(index,"work");
 	entry->price_type = reg::translate_work(pt);	
 	if ( entry->price_type == -1 ) {
-		LOGEC("PriceRegistry") << "ERROR: invalid work " << pt << " at line " << reader.get_line_nr(index);
+		LOGEC("PriceRegistry") << "Invalid work " << pt << " at line " << reader.get_line_nr(index);
 		valid = false;
 	}
 	char flag = reader.get_char(index,"stage");
@@ -54,7 +54,7 @@ bool PriceRegistry::load_entry(const RegistryReader& reader,int index,RegistryEn
 	Sign res = reader.get_sign(index,"resource");
 	entry->resource_id = _resource_registry->getIndex(res);
 	if (entry->resource_id == -1) {
-		LOGEC("PriceRegistry") << "ERROR: invalid resource type at line " << reader.get_line_nr(index);
+		LOGEC("PriceRegistry") << "Invalid resource type at line " << reader.get_line_nr(index);
 		valid = false;
 	}
 	entry->amount = reader.get_int(index,"amount");
@@ -105,7 +105,7 @@ int PriceRegistry::getDuration(int price_type, int building_type, int level) {
 		return _items[idx].duration;
 	}
 	else {
-		LOGEC("PriceRegistry") << "Error: Unable to determine duration";
+		LOGEC("PriceRegistry") << "Unable to determine duration";
 	}
 	return -1;
 }

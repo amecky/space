@@ -6,10 +6,10 @@ struct MyIsland;
 
 namespace vis {
 
-	void print_map(WorldContext* context,MyIsland* island, int x, int y, int size);
+	void print_map(MyIsland* island, int x, int y, int size);
 
-	void print_status(WorldContext* context, MyIsland* island);
+	void print_status(MyIsland* island);
 
-	bool describe_building(WorldContext* context, MyIsland* island, int x, int y);
+	bool describe_building(MyIsland* island, int x, int y);
 }
 

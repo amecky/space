@@ -24,11 +24,11 @@ bool RequirementsRegistry::load_entry(const RegistryReader& reader,int index,Bui
 			def->required_count = reader.get_int(index,"required_amount");
 		}
 		else {
-			printf("ERROR: invalid required building %s at line %d\n",s.c_str(),reader.get_line_nr(index));
+			LOGEC("RequirementsRegistry") << "Invalid required building " << s.c_str() << " at line " << reader.get_line_nr(index);
 		}
 	}
 	else {
-		printf("ERROR: invalid building %s at line %d\n",s.c_str(),reader.get_line_nr(index));
+		LOGEC("RequirementsRegistry") << "Invalid building " << s.c_str() << " at line " << reader.get_line_nr(index);
 	}
 	return true;
 }

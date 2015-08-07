@@ -2,16 +2,15 @@
 #include "Work.h"
 
 // ------------------------------------------------------
-// BuildWork
+// StartWork
 // ------------------------------------------------------
-class BuildWork : public SimWork {
+class StartWork : public SimWork {
 
 public:
-	BuildWork() : SimWork() {}
-	virtual ~BuildWork() {}
+	StartWork() : SimWork() {}
+	virtual ~StartWork() {}
 	bool start(MyIsland* island, const TextLine& line);
 	void finish(MyIsland* island, const Event& e);
 	const int getWorkType() const;
 };
-
 

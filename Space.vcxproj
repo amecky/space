@@ -122,6 +122,7 @@
     <ClInclude Include="src\Tiles.h" />
     <ClInclude Include="src\ui\Parser.h" />
     <ClInclude Include="src\ui\vis.h" />
+    <ClInclude Include="src\utils\Messages.h" />
     <ClInclude Include="src\utils\Serializer.h" />
     <ClInclude Include="src\utils\CSVFile.h" />
     <ClInclude Include="src\utils\files.h" />
@@ -130,6 +131,8 @@
     <ClInclude Include="src\utils\utils.h" />
     <ClInclude Include="src\work\BuildWork.h" />
     <ClInclude Include="src\work\DeleteWork.h" />
+    <ClInclude Include="src\work\StartWork.h" />
+    <ClInclude Include="src\work\UpgradeWork.h" />
     <ClInclude Include="src\work\Work.h" />
     <ClInclude Include="src\World.h" />
   </ItemGroup>
@@ -150,6 +153,7 @@
     <ClCompile Include="src\Simulation.cpp" />
     <ClCompile Include="src\Space.cpp" />
     <ClCompile Include="src\ui\vis.cpp" />
+    <ClCompile Include="src\utils\Messages.cpp" />
     <ClCompile Include="src\utils\Serializer.cpp" />
     <ClCompile Include="src\utils\CSVFile.cpp" />
     <ClCompile Include="src\utils\files.cpp" />
@@ -158,6 +162,8 @@
     <ClCompile Include="src\utils\utils.cpp" />
     <ClCompile Include="src\work\BuildWork.cpp" />
     <ClCompile Include="src\work\DeleteWork.cpp" />
+    <ClCompile Include="src\work\StartWork.cpp" />
+    <ClCompile Include="src\work\UpgradeWork.cpp" />
     <ClCompile Include="src\work\Work.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>

@@ -68,7 +68,6 @@ void Simulation::intialize() {
 		MyIsland* il = _world.createIsland(sx,sy);
 		for ( size_t i = 0; i < defs.size(); ++i ) {
 			const AreaDefinition& ad = defs[i];
-			// FIXME:
 			createArea(il,ad);
 		}	
 		++it;
@@ -83,10 +82,10 @@ void Simulation::intialize() {
 			Sign s = reader.get_sign(i,"resource");
 			int amount = reader.get_int(i,"amount");
 			MyIsland* il = _world.getIsland(is_idx);
-			island::add_resource(_world.getContext(), il, s, amount);
+			island::add_resource(il, s, amount);
 		}
 	}
-	_world.getContext()->task_queue.init(islands.size());
+	gContext->task_queue.init(islands.size());
 }
 
 // ------------------------------------------------------
@@ -94,16 +93,16 @@ void Simulation::intialize() {
 // ------------------------------------------------------
 void Simulation::add(MyIsland* island,int x, int y, const Sign& s) {
 	BuildingDefinition def;
-	_world.getContext()->building_definitions.getDefinition(s, &def);
+	gContext->building_definitions.getDefinition(s, &def);
 	if (island->tiles->set(def.id, 1, x, y, def.size_x, def.size_y)) {
-		island::calculate_max_resources(_world.getContext(), island);
+		island::calculate_max_resources(island);
 		Resources tmp;
-		if (_world.getContext()->price_registry.get(PT_REGULAR, 0, def.id, 1, &tmp)) {
-			island->queue.createWork(PT_REGULAR, x, y, def.id, 1, _world.getContext()->price_registry.getDuration(PT_REGULAR, def.id, 1));
+		if (gContext->price_registry.get(PT_REGULAR, 0, def.id, 1, &tmp)) {
+			island->queue.createWork(PT_REGULAR, x, y, def.id, 1, gContext->price_registry.getDuration(PT_REGULAR, def.id, 1));
 		}
 	}
 	else {
-		LOGEC("Island") << "ERROR: Cannot set " << def.name << " at " << x << " " << y;
+		LOGEC("Island") << "Cannot set " << def.name << " at " << x << " " << y;
 	}
 }
 // ------------------------------------------------------
@@ -131,7 +130,7 @@ void Simulation::createArea(MyIsland* island,const AreaDefinition& definition) {
 				char f = line[j * 2];
 				char s = line[j * 2 + 1];
 				Sign sgn(f, s);
-				int bid = _world.getContext()->building_definitions.getIndex(sgn);
+				int bid = gContext->building_definitions.getIndex(sgn);
 				if (bid != -1) {
 					add(island,xp, yp, sgn);
 				}
@@ -141,15 +140,17 @@ void Simulation::createArea(MyIsland* island,const AreaDefinition& definition) {
 			}
 		}
 	}
-	island::calculate_max_resources(_world.getContext(), island);
+	island::calculate_max_resources(island);
 }
 
 // ------------------------------------------------------
 // tick
 // ------------------------------------------------------
 void Simulation::tick() {
-	int timeUnits = _timer.tick() * _world.getContext()->time_multiplier;
+	gContext->messages.clear();
+	int timeUnits = _timer.tick() * gContext->time_multiplier;
 	_world.tick(timeUnits);
+	
 }
 
 // ------------------------------------------------------

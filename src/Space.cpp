@@ -23,6 +23,12 @@ int main(int argc,char* argv[]) {
 				sim.execute_command(line.type,line.line);
 			}
 		}
+		if ( gContext->messages.contains_errors()) {
+			printf("Errors:\n");
+			for ( size_t i = 0; i < gContext->messages.num_errors(); ++i ) {
+				printf("  %s\n",gContext->messages.get_error(i).c_str());
+			}
+		}
 	}
 	return 0;
 }

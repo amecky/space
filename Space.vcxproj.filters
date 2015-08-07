@@ -154,6 +154,15 @@
     <ClInclude Include="src\work\BuildWork.h">
       <Filter>work</Filter>
     </ClInclude>
+    <ClInclude Include="src\work\StartWork.h">
+      <Filter>work</Filter>
+    </ClInclude>
+    <ClInclude Include="src\work\UpgradeWork.h">
+      <Filter>work</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\Messages.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Resources.cpp" />
@@ -223,6 +232,15 @@
     </ClCompile>
     <ClCompile Include="src\work\BuildWork.cpp">
       <Filter>work</Filter>
+    </ClCompile>
+    <ClCompile Include="src\work\StartWork.cpp">
+      <Filter>work</Filter>
+    </ClCompile>
+    <ClCompile Include="src\work\UpgradeWork.cpp">
+      <Filter>work</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\Messages.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -5,10 +5,6 @@
 #include "queues\WorkQueue.h"
 #include "work\Work.h"
 
-struct WorldContext;
-struct AreaDefinition;
-class TextLine;
-
 struct MyIsland {
 
 	int id;
@@ -20,53 +16,35 @@ struct MyIsland {
 
 };
 
-
-// ------------------------------------------------------
-// Island
-// ------------------------------------------------------
-class Island {
-
-public:
-	Island(WorldContext* context,int id,int size_x,int size_y);
-	~Island();
-	
-	void add(const char* s,int x,int y);
-	void add(int x,int y,const Sign& s);
-	void addResource(const Sign& sign,int value);
-	void addResource(const char* sign,int value);
-	bool upgrade(int x,int y);
-	bool move(int oldX,int oldY,int x,int y);
-	bool collect(int x, int y);
-private:
-	void removeBuilding(int building_id,int x,int y);
-	bool createWork(int price_type,int x,int y,int building_id, int level);
-	void calculateMaxResources();
-	bool isUsed(int x, int y);
-	void addResources(const Resources& r);
-	void subResources(const Resources& r);
-	Resources _resources;
-	Resources _maxResources;
-	Tiles* _tiles;
-	WorkQueue _queue;
-	
-	Collectables _collectables;
-	WorldContext* _context;
-	int _id;
-};
-
 namespace island {
 
-	void load(WorldContext* context, MyIsland* island);
+	void load(MyIsland* island);
 
-	void save(WorldContext* context, MyIsland* island);
+	void save(MyIsland* island);
 
-	bool is_available(WorldContext* context, MyIsland* island, const Resources& costs);
+	bool is_available(MyIsland* island, const Resources& costs);
 
-	bool check_requirements(WorldContext* context, MyIsland* island, int building_id, int level);
+	bool check_requirements(MyIsland* island, int building_id, int level);
 
-	void add_resource(WorldContext* context, MyIsland* island, int resource_id, int amount);
+	void add_resource(MyIsland* island, int resource_id, int amount);
 
-	void add_resource(WorldContext* context, MyIsland* island, const Sign& sign, int value);
+	void add_resource(MyIsland* island, const Sign& sign, int value);
 
-	void calculate_max_resources(WorldContext* context, MyIsland* island);
+	void add_resource(MyIsland* island,const char* sign,int value);
+
+	void add_resources(MyIsland* island,const Resources& r);
+
+	void sub_resources(MyIsland* island,const Resources& r);
+
+	void calculate_max_resources(MyIsland* island);
+
+	void add_building(MyIsland* island,int x,int y,const Sign& s);
+
+	void add_building(MyIsland* island,int x,int y,const char* s);
+
+	bool collect(MyIsland* island,int x, int y);
+
+	bool move(MyIsland* island,int oldX,int oldY,int x,int y);
+
+	void remove_building(MyIsland* island,int building_id,int x,int y);
 }

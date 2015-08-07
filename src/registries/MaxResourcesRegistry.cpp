@@ -17,7 +17,7 @@ bool MaxResourcesRegistry::load_entry(const RegistryReader& reader,int index,Max
 	Sign s = reader.get_sign(index,"building");
 	def->building_id = _building_registry->getIndex(s);
 	if ( def->building_id == -1 ) {
-		printf("ERROR: Invalid building %s at line %d\n",s.c_str(),reader.get_line_nr(index));
+		LOGEC("MaxResourceRegistry") << "Invalid building " << s.c_str() << " at line " << reader.get_line_nr(index);
 		return false;
 	}
 	else {
@@ -29,7 +29,7 @@ bool MaxResourcesRegistry::load_entry(const RegistryReader& reader,int index,Max
 			return true;
 		}
 		else {
-			printf("ERROR: Invalid resource definition %s at line%d\n",res.c_str(),reader.get_line_nr(index));
+			LOGEC("MaxResourceRegistry") << "Invalid resource definition " << res.c_str() << " at line" << reader.get_line_nr(index);
 			return false;
 		}
 	}

@@ -26,10 +26,6 @@ bool TaskRegistry::load_entry(const RegistryReader& reader,int index,Task* t) {
 	t->price_type = reg::translate_work(type);
 	Sign bs = reader.get_sign(index,"building");
 	t->building_id = _building_registry->getIndex(bs);
-	//if (t->building_id == -1) {
-		//printf("ERROR: invalid building type at %d\n", reader.get_line_nr(index));
-		//valid = false;
-	//}
 	Sign rs = reader.get_sign(index, "resource");
 	t->level = reader.get_int(index,"level");
 	t->amount = reader.get_int(index,"amount");	

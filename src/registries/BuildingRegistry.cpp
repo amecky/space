@@ -20,7 +20,7 @@ bool BuildingRegistry::validate_data() {
 		}
 	}
 	if ( doublet > 0 ) {
-		LOGEC("BuildingRegistry") << "ERROR: found " << doublet << " doublets in building definitions";
+		LOGEC("BuildingRegistry") << "Found " << doublet << " doublets in building definitions";
 	}
 	return doublet == 0;
 }

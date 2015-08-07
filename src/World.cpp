@@ -9,27 +9,37 @@
 #include "work\Work.h"
 #include "work\DeleteWork.h"
 #include "work\BuildWork.h"
+#include "work\StartWork.h"
+#include "work\UpgradeWork.h"
+
+WorldContext* gContext;
+
+void initialize_context() {
+	gContext = new WorldContext;
+	// first build context
+	gContext->building_definitions.load("buildings.txt");
+	gContext->resource_registry.load("resource_definitions.txt");		
+	char buffer[256];
+	for ( size_t i = 0; i < gContext->building_definitions.size(); ++i ) {
+		const BuildingDefinition& def = gContext->building_definitions.get(i);
+		sprintf(buffer,"%s.txt",def.sign.c_str());
+		gContext->price_registry.load(buffer);
+	}
+	gContext->requirements_registry.load("requirements.txt");
+	gContext->max_resources_registry.load("max_resources.txt");
+	gContext->task_registry.load("tasks.txt");
+	gContext->reward_registry.load("rewards.txt");
+	gContext->collect_mode = CM_IMMEDIATE;
+	gContext->time_multiplier = 1;
+}
 
 World::World() : _selected(-1) {
-	// first build context
-	_context.building_definitions.load("buildings.txt");
-	_context.resource_registry.load("resource_definitions.txt");		
-	char buffer[256];
-	for ( size_t i = 0; i < _context.building_definitions.size(); ++i ) {
-		const BuildingDefinition& def = _context.building_definitions.get(i);
-		sprintf(buffer,"%s.txt",def.sign.c_str());
-		_context.price_registry.load(buffer);
-	}
-	_context.requirements_registry.load("requirements.txt");
-	_context.max_resources_registry.load("max_resources.txt");
-	_context.task_registry.load("tasks.txt");
-	_context.reward_registry.load("rewards.txt");
-	_context.collect_mode = CM_IMMEDIATE;
-	_context.time_multiplier = 1;
+	initialize_context();
 	// build work map
-	_work_map[PT_WORK] = new StartWork(&_context);
-	_work_map[PT_DELETE] = new DeleteWork(&_context);
-	_work_map[PT_BUILD] = new BuildWork(&_context);
+	_work_map[PT_WORK] = new StartWork;
+	_work_map[PT_DELETE] = new DeleteWork;
+	_work_map[PT_BUILD] = new BuildWork;
+	_work_map[PT_UPGRADE] = new UpgradeWork;
 }
 
 MyIsland* World::createIsland(int width,int height) {
@@ -57,7 +67,7 @@ void World::selectIsland(int index) {
 // ------------------------------------------------------
 // tick
 // ------------------------------------------------------
-void World::tick(int timeUnits) {
+void World::tick(int timeUnits) {	
 	for (size_t i = 0; i < _islands.size(); ++i) {
 		tick(_islands[i],timeUnits);
 	}
@@ -67,8 +77,8 @@ void World::tick(int timeUnits) {
 // add global resource
 // ------------------------------------------------------
 void World::addResource(const Sign& sign, int value) {
-	int id = _context.resource_registry.getIndex(sign);
-	_context.global_resources.add(id, value);
+	int id = gContext->resource_registry.getIndex(sign);
+	gContext->global_resources.add(id, value);
 }
 
 // ------------------------------------------------------
@@ -77,11 +87,11 @@ void World::addResource(const Sign& sign, int value) {
 void World::save(DWORD recent_time) {
 	Serializer writer;
 	if (writer.open("world.bin", "data",BM_WRITE)) {
-		int sz = _context.global_resources.total;
+		int sz = gContext->global_resources.total;
 		LOGC("World") << "saving global resources: " << sz;
 		writer.write(sz);
 		for (int i = 0; i < sz; ++i) {
-			writer.write(_context.global_resources._values[i]);
+			writer.write(gContext->global_resources._values[i]);
 		}
 		int num = _islands.size();
 		writer.write(num);
@@ -90,10 +100,10 @@ void World::save(DWORD recent_time) {
 			const Tiles* tiles = _islands[i]->tiles;
 			writer.write(tiles->width);
 			writer.write(tiles->height);
-			island::save(&_context, _islands[i]);
+			island::save(_islands[i]);
 		}
 		LOGC("World") << "saving active tasks";
-		_context.task_queue.save(writer);
+		gContext->task_queue.save(writer);
 	}	
 }
 
@@ -112,7 +122,7 @@ void World::load() {
 		// load global resources
 		reader.read(&num);
 		for ( int i = 0; i < num; ++i ) {
-			reader.read(&_context.global_resources._values[i]);
+			reader.read(&gContext->global_resources._values[i]);
 		}
 		LOGC("World") << "number of resources loaded: " << num;
 		// load islands
@@ -124,11 +134,11 @@ void World::load() {
 			reader.read(&sx);
 			reader.read(&sy);
 			MyIsland* is = createIsland(sx, sy);
-			island::load(&_context, is);
+			island::load(is);
 			_islands.push_back(is);
 		}
 		LOGC("World") << "loading active tasks";
-		_context.task_queue.load(reader);
+		gContext->task_queue.load(reader);
     }
 }
 
@@ -138,16 +148,16 @@ void World::load() {
 void World::show_tasks() {
 	ActiveTasks tasks;
 	Reward rewards[16];
-	_context.task_queue.get_active_tasks(_selected,tasks);
+	gContext->task_queue.get_active_tasks(_selected,tasks);
 	for (size_t i = 0; i < tasks.size(); ++i) {
 		printf("Task: ");
 		printf("%s  ", tasks[i].task->text);
-		if (_context.reward_registry.contains(tasks[i].task->id)) {
-			int cnt = _context.reward_registry.get(tasks[i].task->id, rewards, 16);
+		if (gContext->reward_registry.contains(tasks[i].task->id)) {
+			int cnt = gContext->reward_registry.get(tasks[i].task->id, rewards, 16);
 			if (cnt > 0) {
 				printf("Rewards: ");
 				for (int j = 0; j < cnt; ++j) {
-					printf("%d %s ", rewards[j].amount,_context.resource_registry.getName(rewards[j].resource_id));
+					printf("%d %s ", rewards[j].amount,gContext->resource_registry.getName(rewards[j].resource_id));
 				}				
 			}
 		}
@@ -160,15 +170,11 @@ void World::show_tasks() {
 // show building definitions
 // ------------------------------------------------------
 void World::showBuildingDefinitions() {
-	_context.building_definitions.show();
-}
-
-WorldContext* World::getContext() {
-	return &_context;
+	gContext->building_definitions.show();
 }
 
 void World::setCollectMode(CollectMode cm) {
-	_context.collect_mode = cm;
+	gContext->collect_mode = cm;
 }
 
 void World::execute(int work_type, const TextLine& line) {
@@ -186,21 +192,20 @@ void World::tick(MyIsland* island,int timeUnits) {
 			const Event& e = island->queue.getEvent(i);
 			LOGC("Simulation") << "event: " << i << " type: " << e.work_type << " at: " << e.tile_x << " " << e.tile_y;
 			// process type = finish immediately
-			if (_context.price_registry.get(e.work_type, 1, e.building_id, e.level, &saved)) {
-				//_resources.add(saved);
+			if (gContext->price_registry.get(e.work_type, 1, e.building_id, e.level, &saved)) {
+				//island::add_resources(island,saved);//_resources.add(saved);
 				LOGC("Simulation") << "There are resources to get immediately";
-				res::log_resources(_context.resource_registry, saved, false);
+				res::log_resources(gContext->resource_registry, saved, false);
 				island->tiles->clear_state(e.tile_x, e.tile_y, TS_ACTIVE);
-				// FIXME:
-				//addResources(saved);
+				island::add_resources(island,saved);
 			}
 			// check if we have a collectable 
-			if (_context.price_registry.get(e.work_type, 2, e.building_id, e.level, &saved)) {
+			if (gContext->price_registry.get(e.work_type, 2, e.building_id, e.level, &saved)) {
 				// simply build collectable
 				island->tiles->set_state(e.tile_x, e.tile_y, TS_COLLECTABLE);
 				island->tiles->clear_state(e.tile_x, e.tile_y, TS_ACTIVE);
 				LOGC("Simulation") << "There are resources to collect";
-				res::log_resources(_context.resource_registry, saved, false);
+				res::log_resources(gContext->resource_registry, saved, false);
 				Collectable c;
 				c.building_id = e.building_id;
 				c.level = e.level;
@@ -255,21 +260,20 @@ void World::tick(MyIsland* island,int timeUnits) {
 			*/
 			int ids[16];
 			Reward rewards[16];
-			int count = _context.task_queue.handle_event(island->id, e, ids, 16);
+			int count = gContext->task_queue.handle_event(island->id, e, ids, 16);
 			if (count > 0) {
 				LOG << "finished tasks: " << count;
 				for (int c = 0; c < count; ++c) {
 					LOG << c << " : " << ids[c];
 					printf("Congratulations - You haved successfully finished a task\n");
-					if (_context.reward_registry.contains(ids[c])) {
-						int cnt = _context.reward_registry.get(ids[c], rewards, 16);
+					if (gContext->reward_registry.contains(ids[c])) {
+						int cnt = gContext->reward_registry.get(ids[c], rewards, 16);
 						LOG << "rewards: " << cnt;
 						printf("Your rewards:\n");
 						for (int r = 0; r < cnt; ++r) {
 							Reward rew = rewards[r];
-							printf(" %d %s\n", rew.amount, _context.resource_registry.getName(rew.resource_id));
-							// FIXME:
-							//addResource(rew.resource_id, rew.amount);
+							printf(" %d %s\n", rew.amount, gContext->resource_registry.getName(rew.resource_id));
+							island::add_resource(island,rew.resource_id, rew.amount);
 						}
 					}
 					else {
@@ -283,7 +287,7 @@ void World::tick(MyIsland* island,int timeUnits) {
 	}
 
 	// immediate mode -> process all collectables directly
-	if (_context.collect_mode == CM_IMMEDIATE) {
+	if (gContext->collect_mode == CM_IMMEDIATE) {
 		if (island->collectables.size() > 0) {
 			LOGC("Island") << "immediately collecting: " << island->collectables.size();
 		}
@@ -291,14 +295,12 @@ void World::tick(MyIsland* island,int timeUnits) {
 			const Collectable& c = island->collectables[i];
 			island->tiles->clear_state(c.tile_x, c.tile_y, TS_COLLECTABLE);
 			Resources saved;
-			if (_context.price_registry.get(c.price_type, 2, island->tiles->get(c.tile_x, c.tile_y), &saved)) {
+			if (gContext->price_registry.get(c.price_type, 2, island->tiles->get(c.tile_x, c.tile_y), &saved)) {
 				//_resources.add(saved);
-				// FIXME:
-				//addResources(saved);
+				island::add_resources(island,saved);
 			}
 			if (c.remove) {
-				// FIXME:
-				//removeBuilding(c.building_id, c.tile_x, c.tile_y);
+				island::remove_building(island,c.building_id, c.tile_x, c.tile_y);
 			}
 		}
 		island->collectables.clear();
@@ -314,8 +316,8 @@ void World::tick(MyIsland* island,int timeUnits) {
 	}
 	}
 	*/
-	for (int i = 0; i < _context.resource_registry.size(); ++i) {
-		if (island->resources.get(i) > island->maxResources.get(i) && island->maxResources.get(i) != -1 && !_context.resource_registry.isGlobal(i)) {
+	for (int i = 0; i < gContext->resource_registry.size(); ++i) {
+		if (island->resources.get(i) > island->maxResources.get(i) && island->maxResources.get(i) != -1 && !gContext->resource_registry.isGlobal(i)) {
 			island->resources.set(i, island->maxResources.get(i));
 		}
 	}

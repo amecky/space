@@ -15,12 +15,12 @@ bool DeleteWork::start(MyIsland* island, const TextLine& line) {
 	Tiles* _tiles = island->tiles;
 	int idx = x + y * _tiles->width;
 	if (_tiles->is_empty(x, y)) {
-		printf("Error: There is no building at %d %d\n", x, y);
+		gContext->messages.report_error("There is no building at %d %d", x, y);
 		return false;
 	}
 	Tile& t = _tiles->get(x, y);
-	if (!_context->building_definitions.isDestructable(t.building_id)) {
-		printf("Error: You cannot remove this building\n");
+	if (!gContext->building_definitions.isDestructable(t.building_id)) {
+		gContext->messages.report_error("You cannot remove this building");
 		return false;
 	}
 	_tiles->set_state(x, y, TS_ACTIVE);
@@ -32,7 +32,7 @@ void DeleteWork::finish(MyIsland* island, const Event& e) {
 	LOGC("DeleteWork") << "finish";
 	Resources saved;
 	island->tiles->clear_state(e.tile_x, e.tile_y, TS_ACTIVE);
-	if (!_context->price_registry.get(e.work_type, 2, e.building_id, e.level, &saved)) {
+	if (!gContext->price_registry.get(e.work_type, 2, e.building_id, e.level, &saved)) {
 		LOGC("DeleteWork") << "Delete - no resources to collect defined - removing right away";
 		removeBuilding(island,e.building_id, e.tile_x, e.tile_y);
 	}

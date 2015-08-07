@@ -31,7 +31,7 @@ class SimStatus : public SimCommand {
 public:
 	SimStatus(World* w) : SimCommand(w) {}
 	void execute(const TextLine& line) {
-		vis::print_status(_world->getContext(),_world->getSelectedIsland());
+		vis::print_status(_world->getSelectedIsland());
 	}
 	void write_syntax() {
 		printf("status - prints the current status\n");
@@ -57,8 +57,7 @@ public:
 	void execute(const TextLine& line) {
 		int x = line.get_int(1);
 		int y = line.get_int(2);
-		vis::print_map(_world->getContext(),_world->getSelectedIsland(), x, y, 8);
-		//_world->getSelectedIsland()->showMap(x, y);
+		vis::print_map(_world->getSelectedIsland(), x, y, 8);
 	}
 	void write_syntax() {
 		printf("map [x] [y] - prints a part of the map centered at x,y and 16x16 size\n");
@@ -107,7 +106,7 @@ public:
 	SimStep(World* w) : SimCommand(w) {}
 	void execute(const TextLine& line) {
 		int x = line.get_int(1);
-		_world->getContext()->time_multiplier = x;
+		gContext->time_multiplier = x;
 	}
 	void write_syntax() {
 		printf("step [mul] - sets the time multiplier to mul\n");
@@ -157,8 +156,7 @@ public:
 	void execute(const TextLine& line) {
 		int x = line.get_int(1);
 		int y = line.get_int(2);
-		vis::describe_building(_world->getContext(), _world->getSelectedIsland(), x, y);
-		//_world->getSelectedIsland()->describe(x, y);
+		vis::describe_building(_world->getSelectedIsland(), x, y);
 	}
 	void write_syntax() {
 		printf("describe [x] [y] - shows a detailed description about the building at x,y\n");
@@ -208,7 +206,7 @@ public:
 	void execute(const TextLine& line) {
 		int x = line.get_int(1);
 		int y = line.get_int(2);
-		//_world->getSelectedIsland()->collect(x, y);
+		island::collect(_world->getSelectedIsland(),x,y);
 	}
 	void write_syntax() {
 		printf("collect [x] [y] - collects the resources at x,y\n");
@@ -232,9 +230,7 @@ class SimUpgrade : public SimCommand {
 public:
 	SimUpgrade(World* w) : SimCommand(w) {}
 	void execute(const TextLine& line) {
-		int x = line.get_int(1);
-		int y = line.get_int(2);
-		//_world->getSelectedIsland()->upgrade(x, y);
+		_world->execute(PT_UPGRADE,line);
 	}
 	void write_syntax() {
 		printf("upgrade [x] [y] - upgrades the building at x,y to the next level\n");
@@ -259,9 +255,6 @@ public:
 	SimRemove(World* w) : SimCommand(w) {}
 	void execute(const TextLine& line) {
 		_world->execute(PT_DELETE, line);
-		//int x = line.get_int(1);
-		//int y = line.get_int(2);
-		//_world->getSelectedIsland()->remove(x, y);
 	}
 	void write_syntax() {
 		printf("remove [x] [y] - removes the building at x,y\n");
@@ -309,7 +302,7 @@ class SimMove : public SimCommand {
 public:
 	SimMove(World* w) : SimCommand(w) {}
 	void execute(const TextLine& line) {
-		//_world->getSelectedIsland()->move(line.get_int(1), line.get_int(2), line.get_int(3), line.get_int(4));
+		island::move(_world->getSelectedIsland(),line.get_int(1), line.get_int(2), line.get_int(3), line.get_int(4));
 	}
 	void write_syntax() {
 		printf("move [old_x] [old_y] [new_x] [new_y] - moves a building to the new location\n");
