@@ -13,27 +13,23 @@ namespace vis {
 		int ymin = centerY - size;
 		int ymax = centerY + size;
 		if (xmin < 0) {
-			int d = 8 - centerX;
-			xmin += d;
-			xmax += d;
+			xmin = 0;
+			xmax = 2 * size;
 		}
 		if (xmax >= tiles->width) {
-			int d = tiles->width - size;
-			xmin -= d;
-			xmax -= d;
+			xmin = tiles->width - 2 * size;
+			xmax = tiles->width;
 		}
 		if (ymin < 0) {
-			int d = size - centerY;
-			ymin += d;
-			ymax += d;
+			ymin = 0;
+			ymax = 2 * size;
 		}
 		if (ymax >= tiles->height) {
-			int d = tiles->height - size;
-			ymin -= d;
-			ymax -= d;
+			ymin = tiles->height - 2 * size;
+			ymax = tiles->height;
 		}
 		for ( int y = ymax - 1; y >= ymin; --y ) {
-			printf("%2d ", y);
+			printf("%2d | ", y);
 			for ( int x = xmin; x < xmax; ++x ) {
 				int idx = x + y * tiles->width;
 				if ( tiles->has_state(x,y,TS_LOCKED)) {
@@ -65,7 +61,8 @@ namespace vis {
 			}
 			printf("\n");
 		}
-		printf("  ");
+		printf("   -----------------------------------------------------------------\n");
+		printf("     ");
 		for (int i = xmin; i < xmax; ++i) {
 			printf("%2d  ", i);
 		}
@@ -136,5 +133,37 @@ namespace vis {
 		}
 		// FIXME: list start options
 		return true;
+	}
+
+	// ------------------------------------------------------
+	// show tasks
+	// ------------------------------------------------------
+	void print_tasks(MyIsland* island) {
+		ActiveTasks tasks;
+		Reward rewards[16];
+		gContext->task_queue.get_active_tasks(island->id,tasks);
+		for (size_t i = 0; i < tasks.size(); ++i) {
+			printf("Task: ");
+			printf("%s  ", tasks[i].task->text);
+			if (gContext->reward_registry.contains(tasks[i].task->id)) {
+				int cnt = gContext->reward_registry.get(tasks[i].task->id, rewards, 16);
+				if (cnt > 0) {
+					printf("Rewards: ");
+					for (int j = 0; j < cnt; ++j) {
+						printf("%d %s ", rewards[j].amount,gContext->resource_registry.getName(rewards[j].resource_id));
+					}				
+				}
+			}
+			printf("\n");
+			printf(" => %d / %d\n",tasks[i].count,tasks[i].task->amount);		
+		}
+	}
+
+	void print_building_definitions() {
+		BuildingDefinition def;		
+		for (size_t i = 0; i < gContext->building_definitions.size(); ++i) {
+			gContext->building_definitions.getDefinition(i,&def);
+			printf("%d %s %s\n",def.id,def.sign.c_str(),def.name);
+		}
 	}
 }

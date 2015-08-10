@@ -81,6 +81,7 @@
     <None Include="data\BB.txt" />
     <None Include="data\HT.txt" />
     <None Include="data\in_0_ar_0.txt" />
+    <None Include="data\in_0_ar_1.txt" />
     <None Include="data\islands.txt" />
     <None Include="data\island_resources.txt" />
     <None Include="data\new_buildings.txt" />

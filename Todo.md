@@ -2,12 +2,14 @@ TODO
 ------------------------------------------
 - [ ] add tile type (regular,stone,rocks,water,sand)
 - [ ] fill registry with prices
-- [ ] include error handler which is gathering error message and codes
 - [ ] buy locked area
 - [ ] handle area states for every island -> which ones are still locked
 - [ ] path finding- but where would be the starting point?
-- [ ] do workers jsut walk around idle?
+- [ ] do workers just walk around idle?
 - [ ] BUG - after loading - regular tasks disappear when finished
+
+10.08.2015
+- [x] include error handler which is gathering error message and codes
 
 06.08.2015
 - [x] load - load current time and adjust all queues (tick with timeUnits) - WON'T FIX

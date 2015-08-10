@@ -186,7 +186,7 @@ struct Tiles {
 		if ( (x + size_x) >= width ) {
 			return false;
 		}
-		if ( (y - size_y) < 0 ) {
+		if ( (y - size_y + 1) < 0 ) {
 			return false;
 		}
 		for ( int i = 0 ; i < size_x; ++i ) {

@@ -126,12 +126,6 @@ bool BuildingRegistry::getDefinition(int id, BuildingDefinition* definition) {
 	return false;
 }
 
-void BuildingRegistry::show() {
-	for (size_t i = 0; i < _items.size(); ++i) {
-		printf("%d %s %s\n",_items[i].id,_items[i].sign.c_str(),_items[i].name);
-	}
-}
-
 const bool BuildingRegistry::isDestructable(int id) const {
 	return _items[id].destructable;
 }

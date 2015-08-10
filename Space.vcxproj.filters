@@ -56,6 +56,9 @@
     <None Include="data\rewards.txt">
       <Filter>data</Filter>
     </None>
+    <None Include="data\in_0_ar_1.txt">
+      <Filter>data</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\12.txt">

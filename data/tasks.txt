@@ -3,9 +3,30 @@
 #
 id : 1 , island :  0 , type : D , resource : FO , building : BB , level : 1 , amount :   1 , previous : -1 , text : "Pick Berries by removing one berry brush"
 id : 2 , island :  0 , type : D , resource : WD , building : TR , level : 1 , amount :   2 , previous :  1 , text : "Chop down 2 trees"
+
 id : 3 , island :  0 , type : B , resource : -- , building : HT , level : 1 , amount :   2 , previous :  2 , text : "Build 2 Huts"
 id : 4 , island :  0 , type : C , resource : MO , building : HT , level : 1 , amount :   2 , previous :  3 , text : "Collect tax from 2 Huts"
 id : 5 , island : -1 , type : C , resource : MO , building : -- , level : 1 , amount : 300 , previous : -1 , text : "Collect 300 money"
+
+# pick berries
+# chop down 2 trees
+# build hut
+# collect tax from hut
+# build patch
+# start work level 1 patch
+# build 2 huts
+# chop down 4 trees
+# build patch
+# upgrade 2 patches to level 2
+# start work 2 times on level 2 on patch
+# chop down 2 apple trees
+# build ancient bar
+# start work level 1 in bar
+# collect money from bar
+# remove 5 bushes
+# gather food from berry brush
+# build foresters hut
+# start work level 1 on forester hut
 
 
 

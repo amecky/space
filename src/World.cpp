@@ -142,37 +142,6 @@ void World::load() {
     }
 }
 
-// ------------------------------------------------------
-// show tasks
-// ------------------------------------------------------
-void World::show_tasks() {
-	ActiveTasks tasks;
-	Reward rewards[16];
-	gContext->task_queue.get_active_tasks(_selected,tasks);
-	for (size_t i = 0; i < tasks.size(); ++i) {
-		printf("Task: ");
-		printf("%s  ", tasks[i].task->text);
-		if (gContext->reward_registry.contains(tasks[i].task->id)) {
-			int cnt = gContext->reward_registry.get(tasks[i].task->id, rewards, 16);
-			if (cnt > 0) {
-				printf("Rewards: ");
-				for (int j = 0; j < cnt; ++j) {
-					printf("%d %s ", rewards[j].amount,gContext->resource_registry.getName(rewards[j].resource_id));
-				}				
-			}
-		}
-		printf("\n");
-		printf(" => %d / %d\n",tasks[i].count,tasks[i].task->amount);		
-	}
-}
-
-// ------------------------------------------------------
-// show building definitions
-// ------------------------------------------------------
-void World::showBuildingDefinitions() {
-	gContext->building_definitions.show();
-}
-
 void World::setCollectMode(CollectMode cm) {
 	gContext->collect_mode = cm;
 }

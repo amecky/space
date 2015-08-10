@@ -22,7 +22,7 @@ Simulation::Simulation() {
 	add<SimMove>();
 	add<SimTasks>();
 	add<SimQuit>();
-	_world.addResource(Sign('M','O'),1000);
+	_world.addResource(Sign('M','O'),800);
 	_world.selectIsland(0);
 }
 
@@ -122,6 +122,8 @@ void Simulation::createArea(MyIsland* island,const AreaDefinition& definition) {
 	std::vector<std::string> content;
 	if (file::read(definition.file, "data", content)) {
 		size_t len = content.size();
+		LOGC("Simulation") << "loading " << definition.file << " size: " << definition.size_x << "/" << definition.size_y;
+		LOGC("Simulation") << "start position: " << definition.start_x << "/" << definition.start_y;
 		for (int i = (len - 1); i >= 0; --i) {
 			std::string line = content[i];
 			for (int j = 0; j < definition.size_x; ++j) {
@@ -129,10 +131,13 @@ void Simulation::createArea(MyIsland* island,const AreaDefinition& definition) {
 				int yp = (definition.start_y + definition.size_y - 1) - i;
 				char f = line[j * 2];
 				char s = line[j * 2 + 1];
-				Sign sgn(f, s);
-				int bid = gContext->building_definitions.getIndex(sgn);
-				if (bid != -1) {
-					add(island,xp, yp, sgn);
+				if ( f != '-' && s != '-' ) { 
+					Sign sgn(f, s);
+					int bid = gContext->building_definitions.getIndex(sgn);
+					LOGC("Simulation") << "setting building " << bid << " (" << sgn.c_str() << ") at " << xp << " " << yp;
+					if (bid != -1) {
+						add(island,xp, yp, sgn);
+					}
 				}
 				if (f == 'x' && s == 'x') {
 					tiles->set_state(xp, yp, TS_UNDEFINED);

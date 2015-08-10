@@ -130,7 +130,7 @@ class SimBuildings : public SimCommand {
 public:
 	SimBuildings(World* w) : SimCommand(w) {}
 	void execute(const TextLine& line) {
-		_world->showBuildingDefinitions();
+		vis::print_building_definitions();
 	}
 	void write_syntax() {
 		printf("buildings - lists all available buildings\n");
@@ -326,7 +326,7 @@ class SimTasks : public SimCommand {
 public:
 	SimTasks(World* w) : SimCommand(w) {}
 	void execute(const TextLine& line) {
-		_world->show_tasks();
+		vis::print_tasks(_world->getSelectedIsland());
 	}
 	void write_syntax() {
 		printf("tasks - lists all active tasks\n");

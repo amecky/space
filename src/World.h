@@ -76,8 +76,6 @@ public:
 	void addResource(const Sign& sign, int value);
 	void save(DWORD recent_time);
 	void load();
-	void show_tasks();
-	void showBuildingDefinitions();
 	void execute(int work_type, const TextLine& line);
 private:
 	void tick(MyIsland* island, int timeUnits);

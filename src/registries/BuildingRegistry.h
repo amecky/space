@@ -31,14 +31,13 @@ public:
 	const char* getSign(int id) const;
 	const char* getName(int id) const;
 	const bool runs_permanent(int id) const;
-	void show();
 	const bool isDestructable(int id) const;
 	const int getIndex(const char* c) const;
 	const int getIndex(const Sign& s) const;
 	const char** get_field_names() const;
 	int get_field_num() const;
 	bool load_entry(const RegistryReader& reader,int index,BuildingDefinition* t);
-	virtual bool validate_data();
+	virtual bool validate_data();	
 private:
 	const int getIndex(int id) const;
 };
