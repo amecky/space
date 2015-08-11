@@ -31,7 +31,7 @@ class SimStatus : public SimCommand {
 public:
 	SimStatus(World* w) : SimCommand(w) {}
 	void execute(const TextLine& line) {
-		vis::print_status(_world->getSelectedIsland());
+		_world->getSelectedIsland()->printStatus();
 	}
 	void write_syntax() {
 		printf("status - prints the current status\n");
@@ -206,7 +206,7 @@ public:
 	void execute(const TextLine& line) {
 		int x = line.get_int(1);
 		int y = line.get_int(2);
-		island::collect(_world->getSelectedIsland(),x,y);
+		_world->getSelectedIsland()->collect(x,y);
 	}
 	void write_syntax() {
 		printf("collect [x] [y] - collects the resources at x,y\n");
@@ -281,7 +281,7 @@ public:
 		_world->load();
 	}
 	void write_syntax() {
-		printf("load - loads the last saved world\n");
+		printf("load - loads the last saved MyWorld\n");
 	}
 	CommandType get_token_type() const {
 		return TOK_LOAD;
@@ -302,7 +302,7 @@ class SimMove : public SimCommand {
 public:
 	SimMove(World* w) : SimCommand(w) {}
 	void execute(const TextLine& line) {
-		island::move(_world->getSelectedIsland(),line.get_int(1), line.get_int(2), line.get_int(3), line.get_int(4));
+		_world->getSelectedIsland()->move(line.get_int(1), line.get_int(2), line.get_int(3), line.get_int(4));
 	}
 	void write_syntax() {
 		printf("move [old_x] [old_y] [new_x] [new_y] - moves a building to the new location\n");
@@ -370,7 +370,7 @@ else if (line.type == TOK_LOAD_TXT) {
 island->load_txt(line.values[0]);
 }
 else if (line.type == TOK_SWITCH) {
-island = world.getIsland(line.values[0]);
+island = MyWorld.getIsland(line.values[0]);
 }
 */
 
@@ -390,16 +390,16 @@ public:
 	void quit();
 	template<class T>
 	void add() {
-		SimCommand* cmd = new T(&_world);
+		SimCommand* cmd = new T(_world);
 		add_command(cmd);
 	}
 	void add_command(SimCommand* cmd);
 	bool extract(const char* p,CommandLine * command_line);
 	void setCollectMode(CollectMode cm);
 private:
-	void createArea(MyIsland* island, const AreaDefinition& definition);
-	void add(MyIsland* island, int x, int y, const Sign& s);
-	World _world;
+	void createArea(Island* island, const AreaDefinition& definition);
+	void add(Island* island, int x, int y, const Sign& s);
+	World* _world;
 	Commands _commands;
 	GlobalTimer _timer;
 };

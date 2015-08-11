@@ -2,17 +2,15 @@
 
 struct Tiles;
 struct WorldContext;
-struct MyIsland;
+class Island;
 
 namespace vis {
 
-	void print_map(MyIsland* island, int x, int y, int size);
+	void print_map(Island* island, int x, int y, int size);
 
-	void print_status(MyIsland* island);
+	bool describe_building(Island* island, int x, int y);
 
-	bool describe_building(MyIsland* island, int x, int y);
-
-	void print_tasks(MyIsland* island);
+	void print_tasks(Island* island);
 
 	void print_building_definitions();
 }

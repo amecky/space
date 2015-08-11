@@ -5,46 +5,39 @@
 #include "queues\WorkQueue.h"
 #include "work\Work.h"
 
-struct MyIsland {
+class Island {
 
-	int id;
-	Resources resources;
-	Resources maxResources;
-	Tiles* tiles;
-	WorkQueue queue;
-	Collectables collectables;
-
+public:
+	Island(int id,int width,int height);
+	~Island();
+	void load();
+	void save();
+	bool isAvailable(const Resources& costs);
+	bool checkRequirements(int building_id, int level);
+	void addResource(int resource_id, int amount);
+	void addResource(const Sign& sign, int value);
+	void addResource(const char* sign,int value);
+	void addResources(const Resources& r);
+	void subResources(const Resources& r);
+	void calculateMaxResources();
+	void addBuilding(int x,int y,const Sign& s);
+	void addBuilding(int x,int y,const char* s);
+	bool collect(int x, int y);
+	bool move(int oldX,int oldY,int x,int y);
+	void removeBuilding(int building_id,int x,int y);
+	void tick(int timeUnits);
+	bool createWork(int price_type, int x, int y, int building_id, int level);
+	Tiles* getTiles();
+	void removeWork(int price_type, int x,int y);
+	const int getID() const;
+	void printStatus() const;
+private:
+	int _id;
+	int _width;
+	int _height;
+	Resources _resources;
+	Resources _maxResources;
+	Tiles* _tiles;
+	WorkQueue _queue;
+	Collectables _collectables;
 };
-
-namespace island {
-
-	void load(MyIsland* island);
-
-	void save(MyIsland* island);
-
-	bool is_available(MyIsland* island, const Resources& costs);
-
-	bool check_requirements(MyIsland* island, int building_id, int level);
-
-	void add_resource(MyIsland* island, int resource_id, int amount);
-
-	void add_resource(MyIsland* island, const Sign& sign, int value);
-
-	void add_resource(MyIsland* island,const char* sign,int value);
-
-	void add_resources(MyIsland* island,const Resources& r);
-
-	void sub_resources(MyIsland* island,const Resources& r);
-
-	void calculate_max_resources(MyIsland* island);
-
-	void add_building(MyIsland* island,int x,int y,const Sign& s);
-
-	void add_building(MyIsland* island,int x,int y,const char* s);
-
-	bool collect(MyIsland* island,int x, int y);
-
-	bool move(MyIsland* island,int oldX,int oldY,int x,int y);
-
-	void remove_building(MyIsland* island,int building_id,int x,int y);
-}

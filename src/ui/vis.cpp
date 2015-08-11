@@ -6,8 +6,8 @@
 
 namespace vis {
 
-	void print_map(MyIsland* island, int centerX, int centerY, int size) {
-		Tiles* tiles = island->tiles;
+	void print_map(Island* island, int centerX, int centerY, int size) {
+		Tiles* tiles = island->getTiles();
 		int xmin = centerX - size;
 		int xmax = centerX + size;
 		int ymin = centerY - size;
@@ -70,35 +70,10 @@ namespace vis {
 	}
 
 	// ------------------------------------------------------
-	// show status
-	// ------------------------------------------------------
-	void print_status(MyIsland* island) {
-		printf("Global Resources:\n");
-		for (int i = 0; i < gContext->resource_registry.size(); ++i) {
-			if (gContext->resource_registry.isGlobal(i)) {
-				printf("%10s : %d\n", gContext->resource_registry.getName(i), gContext->global_resources.get(i));
-			}
-		}
-		printf("Resources:\n");
-		for (int i = 0; i < gContext->resource_registry.size(); ++i) {
-			if (!gContext->resource_registry.isGlobal(i)) {
-				printf("%10s : %d / %d\n", gContext->resource_registry.getName(i), island->resources.get(i), island->maxResources.get(i));
-			}
-		}
-		island->queue.show();
-		if (gContext->collect_mode == CM_MANUAL) {
-			printf("Collectable:\n");
-			for (size_t i = 0; i < island->collectables.size(); ++i) {
-				printf("  %s at %d %d\n", gContext->building_definitions.getName(island->collectables[i].building_id), island->collectables[i].tile_x, island->collectables[i].tile_y);
-			}
-		}
-	}
-
-	// ------------------------------------------------------
 	// describe building
 	// ------------------------------------------------------
-	bool describe_building(MyIsland* island,int x, int y) {
-		Tiles* tiles = island->tiles;
+	bool describe_building(Island* island,int x, int y) {
+		Tiles* tiles = island->getTiles();
 		int idx = x + y * tiles->width;
 		if (tiles->getBuildingID(idx) == -1) {
 			gContext->messages.report_error("There is no building at %d %d", x, y);
@@ -138,10 +113,10 @@ namespace vis {
 	// ------------------------------------------------------
 	// show tasks
 	// ------------------------------------------------------
-	void print_tasks(MyIsland* island) {
+	void print_tasks(Island* island) {
 		ActiveTasks tasks;
 		Reward rewards[16];
-		gContext->task_queue.get_active_tasks(island->id,tasks);
+		gContext->task_queue.get_active_tasks(island->getID(),tasks);
 		for (size_t i = 0; i < tasks.size(); ++i) {
 			printf("Task: ");
 			printf("%s  ", tasks[i].task->text);

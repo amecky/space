@@ -8,6 +8,7 @@
 // constructor
 // ------------------------------------------------------
 Simulation::Simulation() {
+	_world = new World;
 	add<SimStatus>();
 	add<SimMap>();
 	add<SimStep>();
@@ -21,9 +22,9 @@ Simulation::Simulation() {
 	add<SimLoad>();
 	add<SimMove>();
 	add<SimTasks>();
-	add<SimQuit>();
-	_world.addResource(Sign('M','O'),800);
-	_world.selectIsland(0);
+	add<SimQuit>();	
+	_world->addResource(Sign('M','O'),800);
+	_world->selectIsland(0);
 }
 
 void Simulation::add_command(SimCommand* cmd) {
@@ -39,6 +40,8 @@ Simulation::~Simulation() {
 		delete it->second;
 		it = _commands.erase(it);
 	}
+	_world->clearIslands();
+	delete gContext;
 }
 
 void Simulation::intialize() {
@@ -65,7 +68,7 @@ void Simulation::intialize() {
 			}
 		}		
 		LOGC("Simulation") << "island " << id << " size " << sx << " " << sy;
-		MyIsland* il = _world.createIsland(sx,sy);
+		Island* il = _world->createIsland(sx,sy);
 		for ( size_t i = 0; i < defs.size(); ++i ) {
 			const AreaDefinition& ad = defs[i];
 			createArea(il,ad);
@@ -73,7 +76,7 @@ void Simulation::intialize() {
 		++it;
 	}
 	LOGC("Simulation") << "islands: " << islands.size();
-	_world.selectIsland(0);
+	_world->selectIsland(0);
 	const char* names[] = {"island","resource","amount"};
 	RegistryReader reader(names,3);
 	if ( reader.load("island_resources.txt","data")) {
@@ -81,8 +84,8 @@ void Simulation::intialize() {
 			int is_idx = reader.get_int(i,"island");
 			Sign s = reader.get_sign(i,"resource");
 			int amount = reader.get_int(i,"amount");
-			MyIsland* il = _world.getIsland(is_idx);
-			island::add_resource(il, s, amount);
+			Island* il = _world->getIsland(is_idx);
+			il->addResource(s, amount);
 		}
 	}
 	gContext->task_queue.init(islands.size());
@@ -91,14 +94,15 @@ void Simulation::intialize() {
 // ------------------------------------------------------
 // add building
 // ------------------------------------------------------
-void Simulation::add(MyIsland* island,int x, int y, const Sign& s) {
+void Simulation::add(Island* island,int x, int y, const Sign& s) {
 	BuildingDefinition def;
 	gContext->building_definitions.getDefinition(s, &def);
-	if (island->tiles->set(def.id, 1, x, y, def.size_x, def.size_y)) {
-		island::calculate_max_resources(island);
+	Tiles* tiles = island->getTiles();
+	if (tiles->set(def.id, 1, x, y, def.size_x, def.size_y)) {
+		island->calculateMaxResources();
 		Resources tmp;
 		if (gContext->price_registry.get(PT_REGULAR, 0, def.id, 1, &tmp)) {
-			island->queue.createWork(PT_REGULAR, x, y, def.id, 1, gContext->price_registry.getDuration(PT_REGULAR, def.id, 1));
+			island->createWork(PT_REGULAR, x, y, def.id, 1);//, gContext->price_registry.getDuration(PT_REGULAR, def.id, 1));
 		}
 	}
 	else {
@@ -108,8 +112,8 @@ void Simulation::add(MyIsland* island,int x, int y, const Sign& s) {
 // ------------------------------------------------------
 // create area
 // ------------------------------------------------------
-void Simulation::createArea(MyIsland* island,const AreaDefinition& definition) {
-	Tiles* tiles = island->tiles;
+void Simulation::createArea(Island* island,const AreaDefinition& definition) {
+	Tiles* tiles = island->getTiles();
 	for (int y = 0; y < definition.size_y; ++y) {
 		for (int x = 0; x < definition.size_x; ++x) {
 			int xp = definition.start_x + x;
@@ -145,7 +149,7 @@ void Simulation::createArea(MyIsland* island,const AreaDefinition& definition) {
 			}
 		}
 	}
-	island::calculate_max_resources(island);
+	island->calculateMaxResources();
 }
 
 // ------------------------------------------------------
@@ -154,7 +158,7 @@ void Simulation::createArea(MyIsland* island,const AreaDefinition& definition) {
 void Simulation::tick() {
 	gContext->messages.clear();
 	int timeUnits = _timer.tick() * gContext->time_multiplier;
-	_world.tick(timeUnits);
+	_world->tick(timeUnits);
 	
 }
 
@@ -183,7 +187,7 @@ void Simulation::execute_command(CommandType type,const TextLine& line) {
 // quit
 // ------------------------------------------------------
 void Simulation::quit() {
-	_world.save(_timer.getRecentTime());
+	_world->save(_timer.getRecentTime());
 }
 
 // ------------------------------------------------------
@@ -211,5 +215,5 @@ bool Simulation::extract(const char* p,CommandLine * command_line) {
 }
 
 void Simulation::setCollectMode(CollectMode cm) {
-	_world.setCollectMode(cm);
+	gContext->collect_mode = cm;
 }

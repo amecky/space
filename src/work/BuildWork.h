@@ -9,8 +9,8 @@ class BuildWork : public SimWork {
 public:
 	BuildWork() : SimWork() {}
 	virtual ~BuildWork() {}
-	bool start(MyIsland* island, const TextLine& line);
-	void finish(MyIsland* island, const Event& e);
+	bool start(Island* island, const TextLine& line);
+	void finish(Island* island, const Event& e);
 	const int getWorkType() const;
 };
 

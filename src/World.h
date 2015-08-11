@@ -41,6 +41,7 @@ struct WorldContext {
 	int time_multiplier;
 	TaskQueue task_queue;
 	Messages messages;
+	std::map<int, SimWork*> work_map;
 	WorldContext() 
 		: price_registry(&resource_registry,&building_definitions) 
 		, task_registry(&building_definitions)
@@ -55,22 +56,13 @@ extern WorldContext* gContext;
 
 class World {
 
-typedef std::vector<MyIsland*> Islands;
-typedef std::map<int, SimWork*> WorkMap;
-
 public:
 	World();
-	~World() {
-		for ( size_t i = 0; i < _islands.size(); ++i ) {
-			delete[] _islands[i]->tiles;
-			delete _islands[i];
-		}
-		delete gContext;
-	}
-	void setCollectMode(CollectMode cm);
-	MyIsland* createIsland(int width,int height);
-	MyIsland* getIsland(int index) const;
-	MyIsland* getSelectedIsland() const;
+	~World();
+	void clearIslands();
+	Island* createIsland(int width,int height);
+	Island* getIsland(int index);
+	Island* getSelectedIsland();
 	void selectIsland(int index);
 	void tick(int timeUnits);
 	void addResource(const Sign& sign, int value);
@@ -78,8 +70,6 @@ public:
 	void load();
 	void execute(int work_type, const TextLine& line);
 private:
-	void tick(MyIsland* island, int timeUnits);
+	std::vector<Island*> _islands;
 	int _selected;
-	Islands _islands;
-	WorkMap _work_map;
 };
