@@ -26,9 +26,9 @@ public:
 	bool move(int oldX,int oldY,int x,int y);
 	void removeBuilding(int building_id,int x,int y);
 	void tick(int timeUnits);
-	bool createWork(int price_type, int x, int y, int building_id, int level);
+	bool createWork(WorkType work_type, int x, int y, int building_id, int level);
 	Tiles* getTiles();
-	void removeWork(int price_type, int x,int y);
+	void removeWork(WorkType work_type, int x,int y);
 	const int getID() const;
 	void printStatus() const;
 private:

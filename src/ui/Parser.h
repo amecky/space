@@ -20,7 +20,8 @@ enum CommandType {
 	TOK_LOAD_TXT,
 	TOK_SWITCH,
 	TOK_DESCRIBE,
-	TOK_TASKS
+	TOK_TASKS,
+	TOK_ITEM_COUNT
 };
 
 

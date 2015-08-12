@@ -44,13 +44,13 @@ World::World() {
 }
 
 World::~World() {
+	clearIslands();
 }
 
 void World::clearIslands() {
 	for ( size_t i = 0; i < _islands.size(); ++i ) {			
 		delete _islands[i];
 	}
-	//delete gContext;
 }
 
 Island* World::createIsland(int width,int height) {
@@ -105,12 +105,10 @@ void World::save(DWORD recent_time) {
 		writer.write(num);
 		// save every island
 		for (size_t i = 0; i < _islands.size(); ++i) {
-			// FIXME:
 			const Tiles* tiles = _islands[i]->getTiles();
 			writer.write(tiles->width);
 			writer.write(tiles->height);
-			// FIXME:
-			//island::save(world->islands[i]);
+			_islands[i]->save();
 		}
 		LOGC("World") << "saving active tasks";
 		gContext->task_queue.save(writer);
@@ -122,9 +120,7 @@ void World::save(DWORD recent_time) {
 // ------------------------------------------------------
 void World::load() {
 	LOGC("World") << "loading world";
-	for ( size_t i = 0; i < _islands.size(); ++i ) {
-		delete _islands[i];
-	}
+	clearIslands();
 	_islands.clear();
 	Serializer reader;
 	if (reader.open("world.bin", "data", BM_READ)) {
@@ -144,9 +140,9 @@ void World::load() {
 			reader.read(&sx);
 			reader.read(&sy);
 			// FIXME:
-			//MyIsland* is = world::createIsland(world,sx, sy);
-			//island::load(is);
-			//world->islands.push_back(is);
+			Island* is = createIsland(sx, sy);
+			is->load();
+			_islands.push_back(is);
 		}
 		LOGC("World") << "loading active tasks";
 		gContext->task_queue.load(reader);

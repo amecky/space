@@ -4,11 +4,6 @@
 
 const int MAX_RESOURCES = 16;
 
-const int RT_WORKER = 0;
-const int RT_FUEL   = 1;
-const int RT_ENERGY = 2;
-const int RT_MONEY  = 3;
-
 struct Resources {
 
 	int _values[MAX_RESOURCES];

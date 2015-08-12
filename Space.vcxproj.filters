@@ -227,9 +227,6 @@
     <ClCompile Include="src\utils\Serializer.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\work\Work.cpp">
-      <Filter>work</Filter>
-    </ClCompile>
     <ClCompile Include="src\work\DeleteWork.cpp">
       <Filter>work</Filter>
     </ClCompile>

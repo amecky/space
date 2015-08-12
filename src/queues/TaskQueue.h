@@ -1,5 +1,6 @@
 #pragma once
 #include "..\registries\TaskRegistry.h"
+#include "..\registries\PriceRegistry.h"
 
 struct Event;
 class Serializer;
@@ -16,7 +17,7 @@ typedef std::vector<ActiveTask> ActiveTasks;
 class TaskQueue {
 
 public:
-	TaskQueue(TaskRegistry* tsk_reg);
+	TaskQueue(PriceRegistry* prc_reg,TaskRegistry* tsk_reg);
 	~TaskQueue();
 	int handle_event(int island,const Event& event,int* ids,int max);
 	void get_active_tasks(int island,ActiveTasks& tasks);
@@ -26,6 +27,7 @@ public:
 private:
 	bool matches(Task* task,const Event& event);
 	TaskRegistry* _task_registry;
+	PriceRegistry* _price_registry;
 	ActiveTasks _tasks;
 };
 

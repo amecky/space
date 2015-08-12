@@ -21,7 +21,8 @@
 // ------------------------------------------------------
 enum CollectMode {
 	CM_IMMEDIATE,
-	CM_MANUAL
+	CM_MANUAL,
+	CM_ITEM_COUNT
 };
 
 // ------------------------------------------------------
@@ -44,11 +45,11 @@ struct WorldContext {
 	std::map<int, SimWork*> work_map;
 	WorldContext() 
 		: price_registry(&resource_registry,&building_definitions) 
-		, task_registry(&building_definitions)
+		, task_registry(&price_registry,&building_definitions)
 		, requirements_registry(&building_definitions) 
 		, max_resources_registry(&resource_registry,&building_definitions) 
 		, reward_registry(&resource_registry) 
-		, task_queue(&task_registry) {
+		, task_queue(&price_registry,&task_registry) {
 	}
 };
 

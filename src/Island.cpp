@@ -4,13 +4,15 @@
 #include "World.h"
 #include "utils\Serializer.h"
 
-Island::Island(int id,int width,int height) : _id(id) , _width(width) , _height(height) {
+Island::Island(int id,int width,int height) : _queue(&gContext->price_registry) , _id(id) , _width(width) , _height(height) , _tiles(0) {
 	_tiles = new Tiles(_width, _height);
 	_tiles->clear();
 }
 
 Island::~Island() {
-	delete[] _tiles;
+	if ( _tiles != 0 ) {
+		delete _tiles;
+	}
 }
 
 // ------------------------------------------------------
@@ -152,7 +154,7 @@ void Island::addResource(const char* sign,int value) {
 // add resources
 // ------------------------------------------------------
 void Island::addResources(const Resources& r) {
-	for (int i = 0; i < gContext->resource_registry.size(); ++i) {
+	for (size_t i = 0; i < gContext->resource_registry.size(); ++i) {
 		if (gContext->resource_registry.isGlobal(i)) {
 			gContext->global_resources.add(i, r._values[i]);
 		}
@@ -167,7 +169,7 @@ void Island::addResources(const Resources& r) {
 // subtract resources
 // ------------------------------------------------------
 void Island::subResources(const Resources& r) {
-	for (int i = 0; i < gContext->resource_registry.size(); ++i) {
+	for (size_t i = 0; i < gContext->resource_registry.size(); ++i) {
 		if (gContext->resource_registry.isGlobal(i)) {
 			gContext->global_resources.sub(i, r._values[i]);
 		}
@@ -246,7 +248,7 @@ bool Island::collect(int x, int y) {
 	Resources saved;
 	while ( it != _collectables.end() ) {
 		if ( it->tile_x == x && it->tile_y == y ) {
-			if (gContext->price_registry.get(it->price_type, 2, _tiles->get(it->tile_x,it->tile_y), &saved)) {
+			if (gContext->price_registry.get(it->work_type, 2, _tiles->get(it->tile_x,it->tile_y), &saved)) {
 				//_resources.add(saved);
 				addResources(saved);
 				res::show_resources(gContext->resource_registry,saved,false);
@@ -334,7 +336,7 @@ void Island::tick(int timeUnits) {
 				Collectable c;
 				c.building_id = e.building_id;
 				c.level = e.level;
-				c.price_type = e.work_type;
+				c.work_type = e.work_type;
 				c.tile_x = e.tile_x;
 				c.tile_y = e.tile_y;
 				if (e.work_type == PT_DELETE) {
@@ -386,7 +388,7 @@ void Island::tick(int timeUnits) {
 			const Collectable& c = _collectables[i];
 			_tiles->clear_state(c.tile_x, c.tile_y, TS_COLLECTABLE);
 			Resources saved;
-			if (gContext->price_registry.get(c.price_type, 2, _tiles->get(c.tile_x, c.tile_y), &saved)) {
+			if (gContext->price_registry.get(c.work_type, 2, _tiles->get(c.tile_x, c.tile_y), &saved)) {
 				//_resources.add(saved);
 				addResources(saved);
 			}
@@ -407,7 +409,7 @@ void Island::tick(int timeUnits) {
 	}
 	}
 	*/
-	for (int i = 0; i < gContext->resource_registry.size(); ++i) {
+	for (size_t i = 0; i < gContext->resource_registry.size(); ++i) {
 		if (_resources.get(i) > _maxResources.get(i) && _maxResources.get(i) != -1 && !gContext->resource_registry.isGlobal(i)) {
 			_resources.set(i, _maxResources.get(i));
 		}
@@ -418,20 +420,20 @@ const int Island::getID() const {
 	return _id;
 }
 
-void Island::removeWork(int price_type, int x,int y) {
-	_queue.remove(price_type,x,y);
+void Island::removeWork(WorkType work_type, int x,int y) {
+	_queue.remove(work_type,x,y);
 }
 
-bool Island::createWork(int price_type, int x, int y, int building_id, int level) {
+bool Island::createWork(WorkType work_type, int x, int y, int building_id, int level) {
 	
 	Resources costs;
-	if (gContext->price_registry.get(price_type, 0, building_id, level, &costs)) {
+	if (gContext->price_registry.get(work_type, 0, building_id, level, &costs)) {
 		res::show_resources(gContext->resource_registry, costs, false);
 		if (isAvailable(costs)) {
 			// decrease resoruces
 			subResources(costs);
 			// create work
-			_queue.createWork(price_type, x, y, building_id, level, gContext->price_registry.getDuration(price_type, building_id, level));
+			_queue.createWork(work_type, x, y, building_id, level, gContext->price_registry.getDuration(work_type, building_id, level));
 			return true;
 		}
 	}
@@ -450,13 +452,13 @@ Tiles* Island::getTiles() {
 // ------------------------------------------------------
 void Island::printStatus() const {
 	printf("Global Resources:\n");
-	for (int i = 0; i < gContext->resource_registry.size(); ++i) {
+	for (size_t i = 0; i < gContext->resource_registry.size(); ++i) {
 		if (gContext->resource_registry.isGlobal(i)) {
 			printf("%10s : %d\n", gContext->resource_registry.getName(i), gContext->global_resources.get(i));
 		}
 	}
 	printf("Resources:\n");
-	for (int i = 0; i < gContext->resource_registry.size(); ++i) {
+	for (size_t i = 0; i < gContext->resource_registry.size(); ++i) {
 		if (!gContext->resource_registry.isGlobal(i)) {
 			printf("%10s : %d / %d\n", gContext->resource_registry.getName(i), _resources.get(i), _maxResources.get(i));
 		}

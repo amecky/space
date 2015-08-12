@@ -1,32 +1,26 @@
 #
 # tasks
 #
-id : 1 , island :  0 , type : D , resource : FO , building : BB , level : 1 , amount :   1 , previous : -1 , text : "Pick Berries by removing one berry brush"
-id : 2 , island :  0 , type : D , resource : WD , building : TR , level : 1 , amount :   2 , previous :  1 , text : "Chop down 2 trees"
+id :  1 , island :  0 , type : D , resource : FO , building : BB , level : 1 , amount :   1 , previous : -1 , text : "Pick Berries by removing one berry brush (BB)"
+id :  2 , island :  0 , type : D , resource : WD , building : TR , level : 1 , amount :   2 , previous :  1 , text : "Chop down 2 trees (TR)"
+id :  3 , island :  0 , type : B , resource : -- , building : HT , level : 1 , amount :   1 , previous :  2 , text : "Build one hut (HT)"
+id :  4 , island :  0 , type : C , resource : MO , building : HT , level : 1 , amount :   1 , previous :  3 , text : "Collect tax from hut (HT)"
+id :  5 , island :  0 , type : B , resource : -- , building : PA , level : 1 , amount :   1 , previous :  4 , text : "Build one patch (PA)"
+id :  6 , island :  0 , type : W , resource : -- , building : PA , level : 1 , amount :   2 , previous :  5 , text : "Start work level 1 on patch (PA)"
+id :  7 , island :  0 , type : B , resource : -- , building : HT , level : 1 , amount :   2 , previous :  6 , text : "Build two huts (HT)"
+id :  8 , island :  0 , type : D , resource : WD , building : TR , level : 1 , amount :   4 , previous :  7 , text : "Chop down four trees (TR)"
+id :  9 , island :  0 , type : B , resource : -- , building : PA , level : 1 , amount :   1 , previous :  8 , text : "Build one patch (PA)"
+id : 10 , island :  0 , type : U , resource : -- , building : PA , level : 2 , amount :   2 , previous :  9 , text : "Upgrade two patches to level 2 (PA)"
+id : 11 , island :  0 , type : W , resource : -- , building : PA , level : 2 , amount :   2 , previous : 10 , text : "Start work level 2 two times on patches (PA)"
+id : 12 , island :  0 , type : D , resource : WD , building : AT , level : 1 , amount :   2 , previous : 11 , text : "Chop down two apple trees (AT)"
+id : 13 , island :  0 , type : B , resource : -- , building : AB , level : 1 , amount :   1 , previous : 12 , text : "Build one ancient bar (AB)"
+id : 14 , island :  0 , type : W , resource : -- , building : AB , level : 1 , amount :   1 , previous : 13 , text : "Start work level 1 on ancient bar (AB)"
+id : 15 , island :  0 , type : C , resource : MO , building : AB , level : 1 , amount :   1 , previous : 14 , text : "Collect money from ancient bar (AB)"
+id : 16 , island :  0 , type : D , resource : FO , building : BB , level : 1 , amount :   5 , previous : 15 , text : "Remove five berry brushes (BB)"
+id : 17 , island :  0 , type : C , resource : FO , building : BB , level : 1 , amount :   5 , previous : 16 , text : "Collect food from berry brushes (BB)"
+id : 18 , island :  0 , type : B , resource : -- , building : FH , level : 1 , amount :   1 , previous : 17 , text : "Build one foresters hut (FH)"
+id : 19 , island :  0 , type : W , resource : -- , building : FH , level : 1 , amount :   1 , previous : 18 , text : "Start work level 1 at foresters hut (FH)"
 
-id : 3 , island :  0 , type : B , resource : -- , building : HT , level : 1 , amount :   2 , previous :  2 , text : "Build 2 Huts"
-id : 4 , island :  0 , type : C , resource : MO , building : HT , level : 1 , amount :   2 , previous :  3 , text : "Collect tax from 2 Huts"
-id : 5 , island : -1 , type : C , resource : MO , building : -- , level : 1 , amount : 300 , previous : -1 , text : "Collect 300 money"
-
-# pick berries
-# chop down 2 trees
-# build hut
-# collect tax from hut
-# build patch
-# start work level 1 patch
-# build 2 huts
-# chop down 4 trees
-# build patch
-# upgrade 2 patches to level 2
-# start work 2 times on level 2 on patch
-# chop down 2 apple trees
-# build ancient bar
-# start work level 1 in bar
-# collect money from bar
-# remove 5 bushes
-# gather food from berry brush
-# build foresters hut
-# start work level 1 on forester hut
-
-
+#id : 4 , island :  0 , type : C , resource : MO , building : HT , level : 1 , amount :   2 , previous :  3 , text : "Collect tax from 2 Huts (HT)"
+#id : 5 , island : -1 , type : C , resource : MO , building : -- , level : 1 , amount : 300 , previous : -1 , text : "Collect 300 money"
 

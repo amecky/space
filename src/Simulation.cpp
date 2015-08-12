@@ -40,7 +40,7 @@ Simulation::~Simulation() {
 		delete it->second;
 		it = _commands.erase(it);
 	}
-	_world->clearIslands();
+	delete _world;
 	delete gContext;
 }
 

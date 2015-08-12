@@ -165,7 +165,6 @@
     <ClCompile Include="src\work\DeleteWork.cpp" />
     <ClCompile Include="src\work\StartWork.cpp" />
     <ClCompile Include="src\work\UpgradeWork.cpp" />
-    <ClCompile Include="src\work\Work.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

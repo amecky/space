@@ -4,7 +4,7 @@
 #include "..\utils\utils.h"
 #include "..\utils\Serializer.h"
 
-WorkQueue::WorkQueue(void) {
+WorkQueue::WorkQueue(PriceRegistry* price_registry) : _price_registry(price_registry) {
 }
 
 
@@ -23,23 +23,13 @@ void WorkQueue::tick(int timeUnits) {
 		}
 		if (it->timer >= it->duration) {
 			Event e;
-			e.work_type = it->type;
-			e.modus = 1;
+			e.work_type = it->work_type;
 			e.tile_x = it->tile_x;
 			e.tile_y = it->tile_y;
 			e.building_id = it->building_id;
 			e.level = it->level;
 			_buffer.add(e);
-			/*
-			if ( it->reschedule ) {
-				it->timer = 0;
-				it->done = false;
-				++it;
-			}
-			else {
-			*/
-				it = _queue.erase(it);
-			//}
+			it = _queue.erase(it);
 		}
 		else {
 			++it;
@@ -50,11 +40,11 @@ void WorkQueue::tick(int timeUnits) {
 // ------------------------------------------------------
 // remove work at location for specific price_type
 // ------------------------------------------------------
-void WorkQueue::remove(int price_type, int x, int y) {
-	LOGC("WorkQueue") << "removing " << reg::translate_work(price_type) << " at " << x << " " << y;
+void WorkQueue::remove(WorkType work_type, int x, int y) {
+	LOGC("WorkQueue") << "removing " << _price_registry->translateWorkType(work_type) << " at " << x << " " << y;
 	Queue::iterator it = _queue.begin();
 	while (it != _queue.end()) {
-		if ( it->tile_x == x && it->tile_y == y && it->price_index == price_type) {
+		if ( it->tile_x == x && it->tile_y == y && it->price_index == work_type) {
 			it = _queue.erase(it);
 		}
 		else {
@@ -66,21 +56,21 @@ void WorkQueue::remove(int price_type, int x, int y) {
 // ------------------------------------------------------
 // create work item
 // ------------------------------------------------------
-void WorkQueue::createWork(int price_type,int x,int y, int building_id, int level,int duration) {
-	LOGC("WorkQueue") << "create work " << reg::translate_work(price_type) << " at " << x << " " << y << " for building " << building_id << "/" << level << " duration: " << duration;
+void WorkQueue::createWork(WorkType work_type,int x,int y, int building_id, int level,int duration) {
+	LOGC("WorkQueue") << "create work " << _price_registry->translateWorkType(work_type) << " at " << x << " " << y << " for building " << building_id << "/" << level << " duration: " << duration;
 	WorkItem item;
 	item.tile_x = x;
 	item.tile_y = y;
-	if ( price_type == PT_REGULAR) {
+	if ( work_type == PT_REGULAR) {
 		item.reschedule = true;
 	}
 	else {
 		item.reschedule = false;
 	}
-	item.price_index = price_type;
+	item.price_index = work_type;
 	item.duration = duration;
 	item.timer = 0;
-	item.type = price_type;
+	item.work_type = work_type;
 	item.building_id = building_id;
 	item.level = level;
 	item.done = false;
@@ -96,7 +86,7 @@ void WorkQueue::show() const {
 			remaining = 0;
 		}
 		string::format_duration(remaining,time,20);
-		printf(" %s at %d %d remaining time %s\n",reg::translate_work(_queue[i].price_index),_queue[i].tile_x,_queue[i].tile_y,time);		
+		printf(" %s at %d %d remaining time %s\n",_price_registry->translateWorkType(_queue[i].work_type),_queue[i].tile_x,_queue[i].tile_y,time);		
 	}
 }
 

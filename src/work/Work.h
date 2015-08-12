@@ -8,7 +8,7 @@
 // ------------------------------------------------------
 struct Collectable {
 
-	int price_type;
+	WorkType work_type;
 	int building_id;
 	int level;
 	int tile_x;
@@ -28,13 +28,11 @@ class Island;
 class SimWork {
 
 public:
-	SimWork();
+	SimWork() {}
 	virtual ~SimWork() {}
 	virtual bool start(Island* island, const TextLine& line) = 0;
 	virtual void finish(Island* island, const Event& e) = 0;
 	virtual const int getWorkType() const = 0;
-protected:	
-	void removeBuilding(Island* island, int building_id, int x, int y);
 
 };
 

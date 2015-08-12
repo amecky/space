@@ -1,15 +1,9 @@
 #pragma once
 #include <vector>
+#include "..\Common.h"
+#include "..\registries\PriceRegistry.h"
+
 class Serializer;
-// ------------------------------------------------------
-// Work type
-// ------------------------------------------------------
-enum WorkType {
-	WT_BUILD,
-	WT_RUN,
-	WT_UPGRADE,
-	WT_DELETE
-};
 
 // ------------------------------------------------------
 // Work item
@@ -18,7 +12,7 @@ struct WorkItem {
 
 	int tile_x;
 	int tile_y;
-	int type; //WorkType
+	WorkType work_type; 
 	int timer;
 	int duration;
 	int price_index;
@@ -33,10 +27,9 @@ struct WorkItem {
 // ------------------------------------------------------
 struct Event {
 
-	int work_type;
+	WorkType work_type;
 	int tile_x;
 	int tile_y;
-	int modus;
 	int building_id;
 	int level;
 
@@ -71,10 +64,10 @@ class WorkQueue {
 typedef std::vector<WorkItem> Queue;
 
 public:
-	WorkQueue(void);
+	WorkQueue(PriceRegistry* price_registry);
 	~WorkQueue(void);	
 	void tick(int timeUnits);
-	void createWork(int price_type,int x,int y,int building_id, int level,int duration);
+	void createWork(WorkType work_type,int x,int y,int building_id, int level,int duration);
 	bool hasEvents() {
 		return _buffer.size > 0;
 	}
@@ -84,11 +77,12 @@ public:
 	const int event_size() const {
 		return _buffer.size;
 	}
-	void remove(int price_type, int x,int y);
+	void remove(WorkType work_type, int x,int y);
 	void show() const;
 	void save(Serializer& writer);
 	void load(Serializer& reader);
 private:
+	PriceRegistry* _price_registry;
 	Queue _queue;
 	EventBuffer _buffer;
 };

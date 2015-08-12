@@ -18,12 +18,13 @@ namespace bits {
 	}
 }
 
-const char PRICE_TYPES[] = { 'W', 'U', 'D', 'B', 'P', 'R' };
-const char* PRICE_NAMES[] = { "Work", "Update", "Delete", "Build", "Permanent", "Regular" };
+//const char PRICE_TYPES[] = { 'W', 'U', 'D', 'B', 'P', 'R' };
+//const char* PRICE_NAMES[] = { "Work", "Update", "Delete", "Build", "Permanent", "Regular" };
 const char* STAGE_NAMES[] = { "Start", "Finish", "Collect", "Unknown"};
 
 namespace reg {
 
+	/*
 	int translate_work(char c) {
 		for (int j = 0; j < 6; ++j) {
 			if (c == PRICE_TYPES[j]) {
@@ -37,7 +38,7 @@ namespace reg {
 		assert(idx >= 0 && idx < 6);
 		return PRICE_NAMES[idx];
 	}
-
+	*/
 	int translate_stage(char c) {
 		if ( c == 'S' ) {
 			return 0;

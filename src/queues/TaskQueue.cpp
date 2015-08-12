@@ -3,7 +3,7 @@
 #include "..\utils\Log.h"
 #include "..\utils\Serializer.h"
 
-TaskQueue::TaskQueue(TaskRegistry* tsk_reg) : _task_registry(tsk_reg) {
+TaskQueue::TaskQueue(PriceRegistry* prc_reg,TaskRegistry* tsk_reg) : _price_registry(prc_reg) , _task_registry(tsk_reg) {
 }
 
 TaskQueue::~TaskQueue() {
@@ -13,7 +13,7 @@ TaskQueue::~TaskQueue() {
 // matches
 // ------------------------------------------------------
 bool TaskQueue::matches(Task* task,const Event& event) {
-	if ( task->price_type == event.work_type ) {
+	if ( task->work_type == event.work_type ) {
 		LOGC("TaskQueue")  << "matching worktype";
 		if ( event.work_type == PT_WORK ) {
 		}
@@ -35,7 +35,7 @@ bool TaskQueue::matches(Task* task,const Event& event) {
 // ------------------------------------------------------
 int TaskQueue::handle_event(int island,const Event& event,int* ids,int max) {
 	int cnt = 0;
-	LOGC("TaskQueue") << "=> incoming event - island: " << island << " and " << reg::translate_work(event.work_type);
+	LOGC("TaskQueue") << "=> incoming event - island: " << island << " and " << _price_registry->translateWorkType(event.work_type);
 	ActiveTasks::iterator it = _tasks.begin();
 	while ( it != _tasks.end()) {
 		if ( matches(it->task,event) ) {

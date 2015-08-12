@@ -9,11 +9,20 @@
 #include "..\utils\utils.h"
 #include "..\utils\Log.h"
 #include "..\Tiles.h"
+
 // ------------------------------------------------------
 // constructor
 // ------------------------------------------------------
 PriceRegistry::PriceRegistry(ResourceRegistry* res_reg,BuildingRegistry* bld_reg) 
 	: _resource_registry(res_reg) , _building_registry(bld_reg) {
+
+	_definitions[0] = PriceDefinition(PT_WORK,'W',"Work");
+	_definitions[1] = PriceDefinition(PT_UPGRADE,'U',"Update");
+	_definitions[2] = PriceDefinition(PT_DELETE,'D',"Delete");
+	_definitions[3] = PriceDefinition(PT_BUILD,'B',"Build");
+	_definitions[4] = PriceDefinition(PT_PERMANENT,'P',"Permanent");
+	_definitions[5] = PriceDefinition(PT_REGULAR,'R',"Regular");
+	_definitions[6] = PriceDefinition(PT_UNKNOWN,'-',"Unknown");
 }
 
 // ------------------------------------------------------
@@ -32,6 +41,24 @@ int PriceRegistry::get_field_num() const {
 	return 7;
 }
 
+const char* PriceRegistry::translateWorkType(WorkType work_type) {
+	for ( int i = 0; i < PT_ITEM_COUNT; ++i ) {
+		if ( _definitions[i].type == work_type ) {
+			return _definitions[i].name;
+		}
+	}
+	return _definitions[PT_ITEM_COUNT-1].name;
+}
+
+WorkType PriceRegistry::findBySign(char s) {
+	for ( int i = 0; i < PT_ITEM_COUNT; ++i ) {
+		if ( _definitions[i].sign == s ) {
+			return _definitions[i].type;
+		}
+	}
+	return PT_UNKNOWN;
+}
+
 bool PriceRegistry::load_entry(const RegistryReader& reader,int index,RegistryEntry* entry) {
 	bool valid = true;
 	Sign s = reader.get_sign(index,"building");
@@ -41,10 +68,10 @@ bool PriceRegistry::load_entry(const RegistryReader& reader,int index,RegistryEn
 		valid = false;
 	}
 	entry->level = reader.get_int(index,"level");
-	entry->price_type = -1;
+	entry->work_type = PT_UNKNOWN;
 	char pt = reader.get_char(index,"work");
-	entry->price_type = reg::translate_work(pt);	
-	if ( entry->price_type == -1 ) {
+	entry->work_type = findBySign(pt);	
+	if ( entry->work_type == PT_UNKNOWN ) {
 		LOGEC("PriceRegistry") << "Invalid work " << pt << " at line " << reader.get_line_nr(index);
 		valid = false;
 	}
@@ -64,11 +91,11 @@ bool PriceRegistry::load_entry(const RegistryReader& reader,int index,RegistryEn
 // ------------------------------------------------------
 // get index
 // ------------------------------------------------------
-int PriceRegistry::getIndex(int price_type, int stage, int building_type, int level) {
+int PriceRegistry::getIndex(WorkType work_type, int stage, int building_type, int level) {
 	//printf("get index %s %d %d\n",reg::translate_work(price_type),stage,building_type,level);
 	for ( size_t i = 0; i < _items.size(); ++i ) {
 		RegistryEntry& entry = _items[i];
-		if (entry.price_type == price_type && entry.level == level && entry.building_type == building_type && entry.stage == stage) {
+		if (entry.work_type == work_type && entry.level == level && entry.building_type == building_type && entry.stage == stage) {
 			return i;
 		}
 	}
@@ -78,12 +105,12 @@ int PriceRegistry::getIndex(int price_type, int stage, int building_type, int le
 // ------------------------------------------------------
 // get costs
 // ------------------------------------------------------
-bool PriceRegistry::get(int price_type,int stage,int building_type,int level,Resources* resources) {
+bool PriceRegistry::get(WorkType work_type,int stage,int building_type,int level,Resources* resources) {
 	bool found = false;
 	//printf("get index %s %s %d %d\n",reg::translate_work(price_type),reg::translate_stage(stage),building_type,level);
 	for ( size_t i = 0; i < _items.size(); ++i ) {
 		RegistryEntry& entry = _items[i];
-		if (entry.price_type == price_type && entry.level == level && entry.building_type == building_type && entry.stage == stage) {
+		if (entry.work_type == work_type && entry.level == level && entry.building_type == building_type && entry.stage == stage) {
 			resources->set(entry.resource_id,entry.amount);
 			found = true;
 		}
@@ -92,15 +119,15 @@ bool PriceRegistry::get(int price_type,int stage,int building_type,int level,Res
 	return found;
 }
 
-bool PriceRegistry::get(int price_type,int stage,const Tile& tile,Resources* resources) {
-	return get(price_type,stage,tile.building_id,tile.level,resources);
+bool PriceRegistry::get(WorkType work_type,int stage,const Tile& tile,Resources* resources) {
+	return get(work_type,stage,tile.building_id,tile.level,resources);
 }
 
 // ------------------------------------------------------
 // get duration
 // ------------------------------------------------------
-int PriceRegistry::getDuration(int price_type, int building_type, int level) {
-	int idx = getIndex(price_type,00,building_type,level);
+int PriceRegistry::getDuration(WorkType work_type, int building_type, int level) {
+	int idx = getIndex(work_type,00,building_type,level);
 	if ( idx != -1 ) {
 		return _items[idx].duration;
 	}

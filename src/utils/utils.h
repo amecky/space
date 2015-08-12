@@ -11,9 +11,9 @@ namespace bits {
 
 namespace reg {
 
-	int translate_work(char c);
+	//int translate_work(char c);
 
-	const char* translate_work(int idx);
+	//const char* translate_work(int idx);
 
 	int translate_stage(char s);
 

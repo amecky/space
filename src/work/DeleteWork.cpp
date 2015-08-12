@@ -35,8 +35,9 @@ void DeleteWork::finish(Island* island, const Event& e) {
 	tiles->clear_state(e.tile_x, e.tile_y, TS_ACTIVE);
 	if (!gContext->price_registry.get(e.work_type, 2, e.building_id, e.level, &saved)) {
 		LOGC("DeleteWork") << "Delete - no resources to collect defined - removing right away";
-		removeBuilding(island,e.building_id, e.tile_x, e.tile_y);
+		island->removeBuilding(e.building_id, e.tile_x, e.tile_y);
 	}
+	island->removeWork(PT_REGULAR,e.tile_x,e.tile_y);
 }
 
 const int DeleteWork::getWorkType() const {

@@ -1,5 +1,17 @@
 #pragma once
 
+enum WorkType {
+	PT_WORK,
+	PT_UPGRADE,
+	PT_DELETE,
+	PT_BUILD,
+	PT_PERMANENT,
+	PT_REGULAR,
+	PT_UNKNOWN,
+	PT_ITEM_COUNT
+};
+
+
 struct Sign {
 
 	char _items[3];
